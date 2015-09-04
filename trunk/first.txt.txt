@@ -3,5 +3,6 @@
 int main()
 {
 	printf ("Hello World");
+	printf ("Commit");
 	return 0;
 }
