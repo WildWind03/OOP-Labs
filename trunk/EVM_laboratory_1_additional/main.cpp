@@ -11,7 +11,7 @@ int main()
 		printf ("count_of_numbers.txt has not been found");
 		return -1;
 	}
-	if (fscanf(input_file, "%ud", count_of_numbers) <= 0)
+	if (fscanf(input_file, "%ud", &count_of_numbers) <= 0)
 	{
 		printf ("Incorrect input");
 		return -1;
