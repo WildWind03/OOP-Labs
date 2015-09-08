@@ -8,12 +8,12 @@ int main()
 	input_file = fopen ("count_of_numbers.txt", "r");
 	if (input_file == NULL)
 	{
-		printf ("count_of_numbers.txt has not been found");
+		fprintf (input_file, "count_of_numbers.txt has not been found");
 		return -1;
 	}
 	if (fscanf(input_file, "%ud", &count_of_numbers) <= 0)
 	{
-		printf ("Incorrect input");
+		fprintf (input_file, "Incorrect input");
 		return -1;
 	}
 	FILE *output_file = NULL;
