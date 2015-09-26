@@ -1,4 +1,4 @@
-#include <cstring>
+#include <cstdlib>
 
 using value_type = int;
 class LinkedList
@@ -9,27 +9,52 @@ class LinkedList
 		node *next = nullptr;
 		node *prev = nullptr;
 	};
-    node last_node;
+    node *last_node;
     node *last;
 	node *first;
 	size_t list_size;
 public:
-	class iterator
-	{
+    class base_iterator
+    {
+    protected:
         node *current_node = nullptr;
+        void move_straight();
+        void move_back();
+        void equate(const base_iterator & other);
+    public:
+        base_iterator();
+        base_iterator(const base_iterator & other);
+    	bool operator!=(const base_iterator & other) const;
+    	bool operator==(const base_iterator & other) const;
+    	virtual ~base_iterator();
+    };
+
+	class iterator : public base_iterator
+	{
 	public:
 		iterator();
 		iterator(const iterator & other);
 		iterator & operator=(const iterator & other);
-    	bool operator!=(const iterator & other) const;
-    	bool operator==(const iterator & other) const;
     	value_type & operator*() const;
-    	value_type * operator->() const;
+        value_type * operator->() const;
     	iterator & operator++();
     	iterator operator++(int);
     	iterator & operator--();
     	iterator operator--(int);
     	~iterator();
+	};
+	class const_iterator : public base_iterator
+	{
+        const_iterator();
+        const_iterator(iterator & other); //аргумент const или обычный
+        const_iterator & operator=(const const_iterator & other);
+        const value_type & operator*() const;
+        const value_type * operator->() const;
+        const_iterator & operator++();
+    	const_iterator operator++(int);
+    	const_iterator & operator--();
+    	const_iterator operator--(int);
+    	~const_iterator();
 	};
 	LinkedList();
   	LinkedList(const LinkedList & other);
@@ -39,7 +64,11 @@ public:
   	value_type & back();
   	const value_type & back() const;
   	iterator begin();
+  	const iterator begin() const;
+  	const iterator cbegin() const;
   	iterator end();
+  	const iterator end() const;
+  	const iterator cend() const;
   	bool contains(const value_type & value) const;
   	size_t count(const value_type & value) const;
   	size_t size() const;
