@@ -56,7 +56,7 @@ LinkedList::base_iterator::~base_iterator() {}
 
 LinkedList::iterator::iterator() : LinkedList::base_iterator::base_iterator() {}
 
-LinkedList::iterator::iterator(const iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
+LinkedList::iterator::iterator(const LinkedList::iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
 
 LinkedList::iterator::iterator(LinkedList::node *my_node) : LinkedList::base_iterator::base_iterator(my_node) {}
 
@@ -109,9 +109,11 @@ LinkedList::iterator::~iterator() {}
 ///////////////////////////////////////////CONST_ITERATOR///////////////////////////////////////////////////////////////////
 LinkedList::const_iterator::const_iterator() : LinkedList::base_iterator::base_iterator() {}
 
-LinkedList::const_iterator::const_iterator(iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
+LinkedList::const_iterator::const_iterator(const const_iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
 
 LinkedList::const_iterator::const_iterator(LinkedList::node *my_node) : LinkedList::base_iterator::base_iterator(my_node) {}
+
+LinkedList::const_iterator::const_iterator(LinkedList::iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
 
 const value_type & LinkedList::const_iterator::operator*() const
 {
@@ -325,9 +327,26 @@ bool LinkedList::empty() const
     else return false;
 }
 
-LinkedList::iterator LinkedList::erase (LinkedList::const_iterator pos) //ÊÀÊÎÉ ÀĞÃÓÌÅÍÒ??
+LinkedList::iterator LinkedList::erase (LinkedList::const_iterator pos) //äğóæåñòâåííûé êëàññ
 {
+    node *next_node = pos.current_node -> next;
+    node *prev_node = pos.current_node -> prev;
+    node *cur_node = pos.current_node;
+    next_node -> prev = prev_node;
+    prev_node -> next = next_node;
+    delete(&cur_node);
+    return iterator(next_node);
+}
 
+LinkedList::iterator LinkedList::erase (LinkedList::const_iterator begin, LinkedList::const_iterator end) //ÄÎÄÅËÀÒÜ
+{
+    LinkedList::iterator iter;
+    for ( ; begin != end; )
+    {
+        iter(erase(begin).current_node);
+        begin = iter;
+    }
+    return iter;
 }
 
 

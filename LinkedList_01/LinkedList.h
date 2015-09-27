@@ -18,6 +18,7 @@ public:
     class base_iterator
     {
     protected:
+        friend class LinkedList;
         node *current_node = nullptr;
         void move_straight();
         void move_back();
@@ -48,9 +49,11 @@ public:
 	};
 	class const_iterator : public base_iterator
 	{
+    public:
         const_iterator();
-        const_iterator(iterator & other); //àðãóìåíò const èëè îáû÷íûé
+        const_iterator(const const_iterator & other); //CONST_ITERATOR, ITERATOR ÏÎÑËÀÁËÅÍÈÅ
         const_iterator(node *my_node);
+        const_iterator(iterator & other);
         const_iterator & operator=(const const_iterator & other);
         const value_type & operator*() const;
         const value_type * operator->() const;
@@ -78,8 +81,8 @@ public:
   	size_t size() const;
   	bool empty() const;
 
-  	iterator erase(iterator pos);
-  	iterator erase(iterator begin, iterator end);
+  	iterator erase(const_iterator pos);
+  	iterator erase(const_iterator begin, const_iterator end);
   	void clear();
   	size_t remove_all(const value_type & value);
   	bool remove_one(const value_type & value);
