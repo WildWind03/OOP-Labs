@@ -8,40 +8,45 @@ int main()
 }
 ///////////////////////////////////////////BASE_ITERATOR////////////////////////////////////////////////////////////////////
 
+LinkedList::base_iterator::base_iterator(LinkedList::node *my_node)
+{
+    current_node = my_node;
+}
+
 LinkedList::base_iterator::base_iterator()
 {
-    LinkedList::base_iterator::current_node = nullptr;
+    current_node = nullptr;
 }
 
 LinkedList::base_iterator::base_iterator(const base_iterator & other)
 {
-    LinkedList::base_iterator::current_node = other.current_node;
+    current_node = other.current_node;
 }
 
 void LinkedList::base_iterator::move_straight()
 {
-    LinkedList::base_iterator::current_node = LinkedList::base_iterator::current_node -> next;
+    current_node = current_node -> next;
 }
 
 void LinkedList::base_iterator::move_back()
 {
-    LinkedList::base_iterator::current_node = LinkedList::base_iterator::current_node -> prev;
+    current_node = current_node -> prev;
 }
 
 bool LinkedList::base_iterator::operator!=(const base_iterator & other) const
 {
-    if (LinkedList::base_iterator::current_node == other.current_node) return true;
+    if (current_node == other.current_node) return true;
     else return false;
 }
 
 bool LinkedList::base_iterator::operator==(const base_iterator & other) const
 {
-    return !LinkedList::base_iterator::operator!=(other);
+    return !operator!=(other);
 }
 
 void LinkedList::base_iterator::equate(const base_iterator & other)
 {
-    LinkedList::base_iterator::current_node = other.current_node;
+    current_node = other.current_node;
 }
 
 LinkedList::base_iterator::~base_iterator() {}
@@ -53,47 +58,49 @@ LinkedList::iterator::iterator() : LinkedList::base_iterator::base_iterator() {}
 
 LinkedList::iterator::iterator(const iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
 
+LinkedList::iterator::iterator(LinkedList::node *my_node) : LinkedList::base_iterator::base_iterator(my_node) {}
+
 LinkedList::iterator& LinkedList::iterator::operator=(const iterator & other)
 {
-    LinkedList::base_iterator::equate(other);
+    equate(other);
     return *this;
 }
 
 value_type & LinkedList::iterator::operator*() const
 {
-    return (*LinkedList::iterator::current_node).value;
+    return (*current_node).value;
 }
 
 value_type * LinkedList::iterator::operator->() const
 {
-    return &((*LinkedList::iterator::current_node).value);
+    return &((*current_node).value);
 }
 
 LinkedList::iterator & LinkedList::iterator::operator++()
 {
-    LinkedList::iterator::move_straight();
+    move_straight();
     return *this;
 }
 
 LinkedList::iterator & LinkedList::iterator::operator--()
 {
-    LinkedList::iterator::move_back();
+    move_back();
     return *this;
 }
 
 LinkedList::iterator LinkedList::iterator::operator++(int a)
 {
-    LinkedList::iterator temp;
-    temp.current_node = LinkedList::iterator::current_node;
-    LinkedList::iterator::current_node = LinkedList::iterator::current_node -> next;
+    iterator temp;
+    temp.current_node = current_node;
+    current_node = current_node -> next;
     return temp;
 }
 
 LinkedList::iterator LinkedList::iterator::operator--(int b)
 {
-    LinkedList::iterator temp;
-    temp.current_node = LinkedList::iterator::current_node;
-    LinkedList::iterator::current_node = LinkedList::iterator::current_node -> prev;
+    iterator temp;
+    temp.current_node = current_node;
+    current_node = current_node -> prev;
     return temp;
 }
 
@@ -104,41 +111,43 @@ LinkedList::const_iterator::const_iterator() : LinkedList::base_iterator::base_i
 
 LinkedList::const_iterator::const_iterator(iterator & other) : LinkedList::base_iterator::base_iterator(other) {}
 
+LinkedList::const_iterator::const_iterator(LinkedList::node *my_node) : LinkedList::base_iterator::base_iterator(my_node) {}
+
 const value_type & LinkedList::const_iterator::operator*() const
 {
-    return (*LinkedList::const_iterator::current_node).value;
+    return (*current_node).value;
 }
 
 const value_type * LinkedList::const_iterator::operator->() const
 {
-    return &((*LinkedList::const_iterator::current_node).value);
+    return &((*current_node).value);
 }
 
 LinkedList::const_iterator & LinkedList::const_iterator::operator++()
 {
-    LinkedList::base_iterator::move_straight();
+    move_straight();
     return *this;
 }
 
 LinkedList::const_iterator & LinkedList::const_iterator::operator--()
 {
-    LinkedList::base_iterator::move_back();
+    move_back();
     return *this;
 }
 
 LinkedList::const_iterator LinkedList::const_iterator::operator++(int a)
 {
-    LinkedList::const_iterator temp;
-    temp.current_node = LinkedList::const_iterator::current_node;
-    LinkedList::const_iterator::current_node = LinkedList::const_iterator::current_node -> next;
+    const_iterator temp;
+    temp.current_node = current_node;
+    current_node = current_node -> next;
     return temp;
 }
 
 LinkedList::const_iterator LinkedList::const_iterator::operator--(int b)
 {
-    LinkedList::const_iterator temp;
-    temp.current_node = LinkedList::const_iterator::current_node;
-    LinkedList::const_iterator::current_node = LinkedList::const_iterator::current_node -> prev;
+    const_iterator temp;
+    temp.current_node = current_node;
+    current_node = current_node -> prev;
     return temp;
 }
 
@@ -146,112 +155,163 @@ LinkedList::const_iterator::~const_iterator() {}
 
 ///////////////////////////////////////////LINKED_LIST//////////////////////////////////////////////////////////////////////
 
+LinkedList::node* LinkedList::create_new_node()
+{
+    node *temp;
+    try
+    {
+        temp = new node;
+    }
+    catch (std::bad_alloc)
+    {
+        std::cerr << "Linked List :: There isn't sufficient memory!" << std::endl;
+        exit(-1);
+    }
+    return temp;
+}
+
 LinkedList::LinkedList()
 {
-    LinkedList::list_size = 0;
-    LinkedList::last_node = (LinkedList::node*) malloc (sizeof(LinkedList::node));
-    LinkedList::first = LinkedList::last_node;
-    LinkedList::last = LinkedList::last_node;
+    list_size = 0;
+    last_node = create_new_node();
+    first = last_node;
+    last = last_node;
 }
 
 
 LinkedList::LinkedList(const LinkedList & other)
 {
-    LinkedList::list_size = other.size();
-    if (LinkedList::list_size == 0)
+    list_size = other.size();
+    if (size() == 0)
     {
-        LinkedList::last_node = (LinkedList::node*) malloc (sizeof(LinkedList::node));
-        LinkedList::first = LinkedList::last_node;
-        LinkedList::last = LinkedList::last_node;
+        last_node = create_new_node();
+        last_node -> next = nullptr;
+        last_node -> prev = nullptr;
+        last_node -> value = value_type();
+        first = last_node;
+        last = last_node;
     }
     else
     {
-        LinkedList::first = (LinkedList::node*) malloc (sizeof(LinkedList::node));
-        LinkedList::first -> value = other.first -> value;
-        LinkedList::node *temp_this, *temp_other;
+        first = create_new_node();
+        first -> value = other.first -> value;
+        first -> prev = nullptr;
+        node *temp_this, *temp_other;
         temp_this = LinkedList::first;
         temp_other = other.first;
-        for (int i = 1; i < LinkedList::list_size; i++)
+        for (size_t i = 1; i < size(); i++)
         {
+            temp_this -> next = create_new_node();
+            temp_this -> next -> prev = temp_this;
             temp_this = temp_this -> next;
             temp_other = temp_other -> next;
-            temp_this = (LinkedList::node*) malloc (sizeof(LinkedList::node));
             temp_this -> value = temp_other -> value;
         }
+        temp_this -> next = last_node;
+        last = temp_this;
     }
 }
 
 LinkedList::~LinkedList()
 {
-    free(LinkedList::last_node);
+    clear();
+    delete(last_node);
 }
 
 void LinkedList::clear()
 {
-
+    node *temp_next, *temp_current;
+    temp_next = first -> next;
+    temp_current = first;
+    for (size_t i = 0; i < size(); i++)
+    {
+        delete(temp_current);
+        temp_current = temp_next;
+        temp_next = temp_next -> next;
+    }
+    first = last_node;
+    last = last_node;
 }
 
 value_type & LinkedList::front()
 {
-    return LinkedList::first -> value;
+    return first -> value;
 }
 
 const value_type & LinkedList::front() const
 {
-    return LinkedList::front(); //абсолютно одинаквые реализации?
+    return front(); //абсолютно одинаквые реализации?
 }
 
 value_type & LinkedList::back()
 {
-    return LinkedList::last -> value;
+    return last -> value;
 }
 
 const value_type & LinkedList::back() const
 {
-    return LinkedList::back();
+    return back();
 }
 
 LinkedList::iterator LinkedList::begin()
 {
-
+    iterator my_iterator(this -> first);
+    return my_iterator;
 }
 
 const LinkedList::iterator LinkedList::begin() const
 {
-
+    const iterator my_iterator(this -> first);
+    return my_iterator;
 }
 
 const LinkedList::iterator LinkedList::cbegin() const
 {
-
+    const iterator my_iterator(this -> first);
+    return my_iterator;
 }
 
 LinkedList::iterator LinkedList::end()
 {
-
+    iterator my_iterator(this -> last);
+    return my_iterator;
 }
 
 const LinkedList::iterator LinkedList::cend() const
 {
-
+    const iterator my_iterator(this -> last);
+    return my_iterator;
 }
 
 const LinkedList::iterator LinkedList::end() const
 {
-
+    const iterator my_iterator(this -> last);
+    return my_iterator;
 }
 
 bool LinkedList::contains(const value_type & value) const
 {
+    node *temp;
+    temp = first;
     for (size_t i = 0; i < LinkedList::size(); i++)
     {
-
+        if (temp -> value == value) return true;
+        temp = temp -> next;
     }
+    return false;
 }
 
 size_t LinkedList::count(const value_type & value) const
 {
-
+    size_t freq = 0;
+    node *temp;
+    temp = first;
+    for (size_t i = 0; i < LinkedList::size(); i++)
+    {
+        if (temp -> value == value) freq++;
+        temp = temp -> next;
+    }
+    return freq;
 }
 
 size_t LinkedList::size() const
@@ -261,8 +321,13 @@ size_t LinkedList::size() const
 
 bool LinkedList::empty() const
 {
-    if(!LinkedList::size()) return true;
+    if(!size()) return true;
     else return false;
+}
+
+LinkedList::iterator LinkedList::erase (LinkedList::const_iterator pos) //КАКОЙ АРГУМЕНТ??
+{
+
 }
 
 

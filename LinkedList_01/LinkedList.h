@@ -13,6 +13,7 @@ class LinkedList
     node *last;
 	node *first;
 	size_t list_size;
+	node *create_new_node ();
 public:
     class base_iterator
     {
@@ -24,6 +25,7 @@ public:
     public:
         base_iterator();
         base_iterator(const base_iterator & other);
+        base_iterator(node *my_node);
     	bool operator!=(const base_iterator & other) const;
     	bool operator==(const base_iterator & other) const;
     	virtual ~base_iterator();
@@ -34,6 +36,7 @@ public:
 	public:
 		iterator();
 		iterator(const iterator & other);
+		iterator(node *my_node);
 		iterator & operator=(const iterator & other);
     	value_type & operator*() const;
         value_type * operator->() const;
@@ -47,6 +50,7 @@ public:
 	{
         const_iterator();
         const_iterator(iterator & other); //аргумент const или обычный
+        const_iterator(node *my_node);
         const_iterator & operator=(const const_iterator & other);
         const value_type & operator*() const;
         const value_type * operator->() const;
