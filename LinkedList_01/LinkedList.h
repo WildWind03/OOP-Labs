@@ -3,6 +3,7 @@
 using value_type = int;
 class LinkedList
 {
+private:
     struct node
 	{
 		value_type value = value_type();
@@ -14,11 +15,16 @@ class LinkedList
 	node *first;
 	size_t list_size;
 	node *create_new_node ();
+	void copy_list(const LinkedList & other);
 public:
+    class base_iterator;
+    class const_iterator;
+    class iterator;
     class base_iterator
     {
     protected:
         friend class LinkedList;
+        explicit base_iterator(node *my_node);
         node *current_node = nullptr;
         void move_straight();
         void move_back();
@@ -26,7 +32,6 @@ public:
     public:
         base_iterator();
         base_iterator(const base_iterator & other);
-        base_iterator(node *my_node);
     	bool operator!=(const base_iterator & other) const;
     	bool operator==(const base_iterator & other) const;
     	virtual ~base_iterator();
@@ -37,7 +42,8 @@ public:
 	public:
 		iterator();
 		iterator(const iterator & other);
-		iterator(node *my_node);
+        iterator(node *my_node);
+		explicit iterator (const_iterator & other);
 		iterator & operator=(const iterator & other);
     	value_type & operator*() const;
         value_type * operator->() const;
@@ -51,10 +57,11 @@ public:
 	{
     public:
         const_iterator();
-        const_iterator(const const_iterator & other); //CONST_ITERATOR, ITERATOR ÏÎÑËÀÁËÅÍÈÅ
+        const_iterator(const const_iterator & other); //CONST_ITERATOR, ITERATOR
         const_iterator(node *my_node);
         const_iterator(iterator & other);
         const_iterator & operator=(const const_iterator & other);
+        const_iterator & operator=(iterator other);
         const value_type & operator*() const;
         const value_type * operator->() const;
         const_iterator & operator++();
