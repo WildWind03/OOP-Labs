@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdlib>
 #include <cstdio>
 #include "LinkedList.h"
 #include <stdexcept>
@@ -194,15 +193,7 @@ LinkedList::const_iterator::~const_iterator() {}
 LinkedList::node* LinkedList::create_new_node()
 {
     node *temp;
-    try
-    {
-        temp = new node;
-    }
-    catch (std::bad_alloc)
-    {
-        std::cerr << "Linked List :: There isn't sufficient memory!" << std::endl;
-        exit(-1);
-    }
+    temp = new node;
     temp -> next = nullptr;
     temp -> prev = nullptr;
     temp -> value = value_type();
@@ -212,40 +203,31 @@ LinkedList::node* LinkedList::create_new_node()
 LinkedList::LinkedList()
 {
     list_size = 0;
-    last_node = create_new_node();
+    try
+    {
+        last_node = create_new_node();
+    }
+    catch (std::bad_alloc error)
+    {
+        std::cerr << error.what() << std::endl;
+        exit(-1);
+    }
     first = last_node;
     last = last_node;
 }
 
 void LinkedList::copy_list(const LinkedList & other)
 {
-    list_size = other.size();
-    if (0 == size())
+    LinkedList::const_iterator other_iter = other.begin();
+    if (0 != other.size())
     {
-        last_node = create_new_node();
-        first = last_node;
-        last = last_node;
+        push_back(*other_iter);
     }
-    else
+    for (size_t i = 1; i < other.size(); i++)
     {
-        LinkedList::const_iterator other_iter = other.begin();
-        first = create_new_node();
-        first -> value = *other_iter;
-        first -> prev = nullptr;
-        node *temp_this;
-        temp_this = first;
-        for (size_t i = 1; i < size(); i++)
-        {
-            temp_this -> next = create_new_node();
-            temp_this -> next -> prev = temp_this;
-            temp_this = temp_this -> next;
-            try {other_iter++;}
-            catch (std::range_error error) {std::cerr << error.what() << std::endl;}
-            temp_this -> value = *other_iter;
-        }
-        temp_this -> next = last_node;
-        last = temp_this;
-        last_node -> prev = last;
+        try {++other_iter;}
+        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+        push_back(*other_iter);
     }
 }
 LinkedList::LinkedList(const LinkedList & other) : LinkedList()
@@ -271,7 +253,7 @@ value_type & LinkedList::front()
 
 const value_type & LinkedList::front() const
 {
-    return front(); //абсолютно одинаквые реализации?
+    return front();
 }
 
 value_type & LinkedList::back()
@@ -335,11 +317,12 @@ size_t LinkedList::count(const value_type & value) const
 {
     size_t freq = 0;
     const_iterator iter(begin());
-    for (size_t i = 0; i < size(); i++)
+    if (*iter == value) freq++;
+    for (size_t i = 1; i < size(); i++)
     {
-        if (*iter == value) freq++;
         try {iter++;}
         catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+        if (*iter == value) freq++;
     }
     return freq;
 }
@@ -355,15 +338,19 @@ bool LinkedList::empty() const
     else return false;
 }
 
-LinkedList::iterator LinkedList::erase (iterator pos) //дружественный класс
+LinkedList::iterator LinkedList::erase (iterator pos)
 {
-    node *cur_node = pos.current_node; //last_node
+    node *cur_node = pos.current_node;
     if (cur_node == last_node) return pos;
-    node *next_node = pos.current_node -> next; // !=nullptr
+    node *next_node = pos.current_node -> next;
     node *prev_node = pos.current_node -> prev;
     next_node -> prev = prev_node;
     if (nullptr != prev_node) prev_node -> next = next_node;
-    else first = next_node;
+    else
+    {
+        first = next_node;
+        first -> prev = nullptr;
+    }
     if (last==cur_node)
     {
         if (1 == size()) last = last_node;
@@ -399,7 +386,7 @@ size_t LinkedList::remove_all (const value_type & value)
 bool LinkedList::remove_one(const value_type & value)
 {
     if (size() == 0) return false;
-    iterator iter = begin(); //почему не работает iter = (); iter = begin();
+    iterator iter = begin();
     if (*iter == value)
     {
         erase(iter);
@@ -448,12 +435,12 @@ void LinkedList::push_front(const value_type & value)
 
 LinkedList::iterator LinkedList::insert(iterator before, const value_type & value)
 {
-    node *back_node = before.current_node -> prev; // nullptr node
-    node *front_node = before.current_node; // last_node last_node
+    node *back_node = before.current_node -> prev;
+    node *front_node = before.current_node;
     node *new_node = create_new_node();
     new_node -> value = value;
-    new_node -> prev = back_node; //nullptr node
-    new_node -> next = front_node; //last_node last_node
+    new_node -> prev = back_node;
+    new_node -> next = front_node;
     list_size++;
     front_node -> prev = new_node;
     if (front_node==last_node)
@@ -475,32 +462,47 @@ LinkedList::iterator LinkedList::insert(iterator before, const value_type & valu
 
 bool LinkedList::operator!=(const LinkedList & other) const
 {
-    if (other==*this) return false;
-    return true;
+    return !(other == *this);
 }
 bool LinkedList::operator==(const LinkedList & other) const
 {
+    if (other.size() != size()) return false;
     iterator other_iter = other.begin();
     iterator this_iter = begin();
-    for (size_t i = 0; i < size(); i++)
+    if (*other_iter != *this_iter) return false;
+    for (size_t i = 1; i < size(); i++)
     {
-        if (*other_iter != *this_iter) return false;
         try {other_iter++; this_iter++;}
         catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+        if (*other_iter != *this_iter) return false;
     }
     return true;
 }
 LinkedList LinkedList::operator+(const LinkedList & other) const
 {
-    node *this_last = last;
-    node *other_first = other.first;
-    this_last -> next = other.first;
-    other_first -> prev = this_last;
-    delete(last_node);
+    LinkedList list2;
+    LinkedList::const_iterator iter = begin();
+    LinkedList::const_iterator iter1 = other.begin();
+    if (0 != size()) list2.push_back(*iter);
+    for (size_t i = 1; i < size(); i++)
+    {
+        list2.push_back(*(++iter));
+    }
+    if (0 != other.size()) list2.push_back (*iter1);
+    for (size_t i = 1; i < other.size(); i++)
+    {
+        list2.push_back(*(++iter1));
+    }
+    return list2;
 }
 LinkedList & LinkedList::operator+=(const LinkedList & other)
 {
-    *this = *this + other;
+    LinkedList::const_iterator iter = other.begin();
+    if (0 != other.size()) push_back(*iter);
+    for (size_t i = 1; i < other.size(); i++)
+    {
+        push_back(*(++iter));
+    }
     return *this;
 }
 LinkedList & LinkedList::operator+=(const value_type & value)
@@ -510,7 +512,28 @@ LinkedList & LinkedList::operator+=(const value_type & value)
 }
 LinkedList & LinkedList::operator=(const LinkedList & other)
 {
-    clear();
-    copy_list(other);
+    LinkedList *mcpy = new LinkedList;
+    try
+    {
+        mcpy -> copy_list(*this);
+    }
+    catch (std::bad_alloc error)
+    {
+        std::cerr << error.what() << std::endl;
+        return *this;
+    }
+    try
+    {
+        copy_list(other);
+    }
+    catch (std::bad_alloc error)
+    {
+        std::cerr << error.what() << std::endl;
+        this -> ~LinkedList();
+        this -> first = mcpy -> first;
+        this -> last = mcpy -> last;
+        this -> last_node = mcpy -> last_node;
+    }
+    mcpy -> ~LinkedList();
     return *this;
 }
