@@ -50,7 +50,9 @@ LinkedList::base_iterator::~base_iterator() {}
 ///////////////////////////////////////////ITERATOR/////////////////////////////////////////////////////////////////////////
 
 LinkedList::iterator::iterator() : base_iterator() {}
+
 LinkedList::iterator::iterator(const iterator & other) : base_iterator(other) {}
+
 LinkedList::iterator::iterator(node *my_node) : base_iterator(my_node) {}
 
 LinkedList::iterator & LinkedList::iterator::operator=(const iterator & other)
@@ -225,8 +227,7 @@ void LinkedList::copy_list(const LinkedList & other)
     }
     for (size_t i = 1; i < other.size(); i++)
     {
-        try {++other_iter;}
-        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+        ++other_iter;
         push_back(*other_iter);
     }
 }
@@ -253,7 +254,7 @@ value_type & LinkedList::front()
 
 const value_type & LinkedList::front() const
 {
-    return front();
+    return first -> value;
 }
 
 value_type & LinkedList::back()
@@ -263,7 +264,7 @@ value_type & LinkedList::back()
 
 const value_type & LinkedList::back() const
 {
-    return back();
+    return last -> value;
 }
 
 LinkedList::iterator LinkedList::begin()
@@ -306,8 +307,7 @@ bool LinkedList::contains(const value_type & value) const
     if (*iter == value) return true;
     for (size_t i = 1; i < size(); i++)
     {
-        try {iter++;}
-        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+        ++iter;
         if (*iter == value) return true;
     }
     return false;
@@ -320,8 +320,7 @@ size_t LinkedList::count(const value_type & value) const
     if (*iter == value) freq++;
     for (size_t i = 1; i < size(); i++)
     {
-        try {iter++;}
-        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+	++iter;
         if (*iter == value) freq++;
     }
     return freq;
@@ -341,7 +340,7 @@ bool LinkedList::empty() const
 LinkedList::iterator LinkedList::erase (iterator pos)
 {
     node *cur_node = pos.current_node;
-    if (cur_node == last_node) return pos;
+    if (cur_node == last_node || pos.current_node == nullptr) return pos;
     node *next_node = pos.current_node -> next;
     node *prev_node = pos.current_node -> prev;
     next_node -> prev = prev_node;
@@ -359,7 +358,7 @@ LinkedList::iterator LinkedList::erase (iterator pos)
             last = prev_node;
         }
     }
-    delete(&cur_node);
+    delete(cur_node);
     list_size--;
     return iterator(next_node);
 }
@@ -385,7 +384,7 @@ size_t LinkedList::remove_all (const value_type & value)
 
 bool LinkedList::remove_one(const value_type & value)
 {
-    if (size() == 0) return false;
+    if (0 == size()) return false;
     iterator iter = begin();
     if (*iter == value)
     {
@@ -394,8 +393,7 @@ bool LinkedList::remove_one(const value_type & value)
     }
     for (size_t i = 1; i < size(); i++)
     {
-        try {iter++;}
-        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+	++iter;
         if (*iter == value)
         {
             erase(iter);
@@ -407,19 +405,18 @@ bool LinkedList::remove_one(const value_type & value)
 
 void LinkedList::pop_back()
 {
-    if (size() == 0) return;
+    if (0 == size()) return;
     else
     {
         iterator iter = end();
-        try {--iter;}
-        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+	--iter;
         erase (iter);
     }
 }
 
 void LinkedList::pop_front()
 {
-    if (size() == 0) return;
+    if (0 == size()) return;
     else erase (begin());
 }
 
@@ -455,9 +452,7 @@ LinkedList::iterator LinkedList::insert(iterator before, const value_type & valu
     {
         first = new_node;
     }
-    try {--before;}
-    catch (std::range_error error) {std::cerr << error.what() << std::endl;}
-    return before;
+    return --before;
 }
 
 bool LinkedList::operator!=(const LinkedList & other) const
@@ -472,8 +467,8 @@ bool LinkedList::operator==(const LinkedList & other) const
     if (*other_iter != *this_iter) return false;
     for (size_t i = 1; i < size(); i++)
     {
-        try {other_iter++; this_iter++;}
-        catch (std::range_error error) {std::cerr << error.what() << std::endl;}
+	++other_iter;
+	++this_iter;
         if (*other_iter != *this_iter) return false;
     }
     return true;
@@ -519,6 +514,7 @@ LinkedList & LinkedList::operator=(const LinkedList & other)
     }
     catch (std::bad_alloc error)
     {
+	delete (mcpy);
         std::cerr << error.what() << std::endl;
         return *this;
     }
@@ -533,7 +529,8 @@ LinkedList & LinkedList::operator=(const LinkedList & other)
         this -> first = mcpy -> first;
         this -> last = mcpy -> last;
         this -> last_node = mcpy -> last_node;
-    }
-    mcpy -> ~LinkedList();
+	return *this;
+    };
+    delete(mcpy);
     return *this;
 }
