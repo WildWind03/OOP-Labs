@@ -1,5 +1,6 @@
-#include <gtest/gtest.h>
 #include "LinkedList.h"
+#include <gtest/gtest.h>
+#include <utility>
 
 using namespace std;
 
@@ -156,6 +157,18 @@ TEST_F (LinkedListTest, copy_constructor_)
     my_list.clear();
     LinkedList copy2_of_my_list(my_list);
     EXPECT_TRUE (copy2_of_my_list == my_list);
+    for (size_t i = 0; i < 51; i++)
+    {
+        my_list.push_back(i);
+    }
+    EXPECT_ANY_THROW (LinkedList cpy(my_list));
+}
+
+TEST_F (LinkedListTest, move_construct_)
+{
+    LinkedList copy_of_my_list (std::move(my_list));
+    EXPECT_EQ (copy_of_my_list.front(), a1);
+    EXPECT_EQ (copy_of_my_list.back(), a3);
 }
 
 TEST_F (LinkedListTest, erase_one_)
@@ -446,8 +459,10 @@ TEST_F (LinkedListTest, operator_eq)
         list1.push_back (i);
     }
     EXPECT_FALSE (list1 == my_list);
+    my_list = list1;
+    my_list = my_list;
+    EXPECT_TRUE(my_list == list1);
 }
-
 
 TEST_F (LinkedListTest, ITERATOR_copy_)
 {
@@ -468,6 +483,13 @@ TEST_F (LinkedListTest, ITERATOR_operator_equal_)
     LinkedList::iterator iter (my_list.begin());
     LinkedList::iterator iter1 = iter;
     EXPECT_TRUE (iter == iter1);
+}
+
+TEST_F (LinkedListTest, ITERATOR_operator_not_equal_)
+{
+    LinkedList::iterator iter (my_list.begin());
+    LinkedList::iterator iter1 (--my_list.end());
+    EXPECT_TRUE (iter != iter1);
 }
 
 TEST_F (LinkedListTest, ITERATOR_operator_star_)
@@ -562,6 +584,13 @@ TEST_F (LinkedListTest, CONST_ITERATOR_operator_equal_)
     LinkedList::const_iterator iter1 = iter;
     iter1 = iter;
     EXPECT_TRUE (iter == iter1);
+}
+
+TEST_F (LinkedListTest, CONST_ITERATOR_operator_not_equal_)
+{
+    LinkedList::const_iterator iter (my_list.begin());
+    LinkedList::const_iterator iter1 (--my_list.end());
+    EXPECT_TRUE (iter != iter1);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_operator_star_)

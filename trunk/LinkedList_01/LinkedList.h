@@ -1,8 +1,10 @@
+#pragma once
+#include "LinkedListImpl.h"
 #include <cstdlib>
 #include <string>
 #include <iostream>
 #include <stdexcept>
-#include "LinkedListImpl.h"
+#include <cstdio>
 
 using namespace std;
 using value_type = int;

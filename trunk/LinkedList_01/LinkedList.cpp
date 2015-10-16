@@ -1,9 +1,4 @@
-#include <iostream>
-#include <cstdio>
 #include "LinkedList.h"
-#include <stdexcept>
-
-#define TEST
 
 ///////////////////////////////////////////ITERATOR/////////////////////////////////////////////////////////////////////////
 
@@ -164,7 +159,14 @@ LinkedList::LinkedList()
 
 LinkedList::LinkedList(const LinkedList & other)
 {
-	list = new LinkedListImpl(*(other.list));
+	try
+	{
+		list = new LinkedListImpl(*(other.list));
+	}
+    catch (std::bad_alloc &error)
+    {
+        throw;
+    }
 }
 
 LinkedList::~LinkedList()
@@ -212,7 +214,7 @@ const LinkedList::iterator LinkedList::begin() const
 const LinkedList::iterator LinkedList::cbegin() const
 {
     iterator my_iterator;
-    *(my_iterator.iter_impl) = list -> begin();
+    *(my_iterator.iter_impl) = list -> cbegin();
     return my_iterator;
 }
 
@@ -226,7 +228,7 @@ LinkedList::iterator LinkedList::end()
 const LinkedList::iterator LinkedList::cend() const
 {
     iterator my_iterator;
-    *(my_iterator.iter_impl) = list -> end();
+    *(my_iterator.iter_impl) = list -> cend();
     return my_iterator;
 }
 
@@ -318,15 +320,17 @@ bool LinkedList::operator==(const LinkedList & other) const
 
 LinkedList LinkedList::operator+(const LinkedList & other) const
 {
-	LinkedList my_list;
-	//*(my_list.list) = list -> operator+(*(other.list));
-	return my_list;
+	LinkedListImpl *impl_list = new LinkedListImpl (list -> operator+(*(other.list)));
+	LinkedList new_list;
+	delete (new_list.list);
+	new_list.list = impl_list;
+	return new_list;
 }
 
 LinkedList & LinkedList::operator+=(const LinkedList & other)
 {
 	list -> operator+=(*(other.list));
-    return *this;
+	return *this;
 }
 LinkedList & LinkedList::operator+=(const value_type & value)
 {

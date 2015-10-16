@@ -1,6 +1,8 @@
+#pragma once
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <cstdio>
 #include <stdexcept>
 
 using namespace std;
@@ -62,6 +64,7 @@ private:
 
 	node *create_new_node ();
 	void copy_list(const LinkedListImpl & other);
+	void destroy_list();
 
 	class base_iterator_impl
 	{
@@ -69,6 +72,7 @@ private:
 	    explicit base_iterator_impl(node *my_node);
 	    base_iterator_impl();
 	    base_iterator_impl(const base_iterator_impl & other);
+
 	protected:
 	    friend class LinkedListImpl;
 
@@ -78,10 +82,10 @@ private:
 	    void move_straight();
 	    void move_back();
 	    void equate(const base_iterator_impl & other);
+
 	public:
 	    bool operator!=(const base_iterator_impl & other) const;
 	    bool operator==(const base_iterator_impl & other) const;
-
 	    ~base_iterator_impl();
 	};
 
@@ -89,6 +93,7 @@ public:
 	class iterator_impl : public base_iterator_impl
 	{
     	explicit iterator_impl(node *my_node); 
+
   	public:
  	    friend class LinkedListImpl;
 
@@ -107,6 +112,7 @@ public:
 	class const_iterator_impl : public base_iterator_impl
 	{
 		explicit const_iterator_impl(node *my_node);
+
 	public:
 	    friend class LinkedListImpl;
 		const_iterator_impl();
@@ -129,14 +135,10 @@ public:
 	LinkedListImpl(const LinkedListImpl & other); 
 	~LinkedListImpl();
 	value_type & front(); 
-	const value_type & front() const;
 	value_type & back();
-	const value_type & back() const;
-	iterator_impl begin();
-	const iterator_impl begin() const;
+	iterator_impl begin();;
 	const iterator_impl cbegin() const;
 	iterator_impl end(); 
-	const iterator_impl end() const;
 	const iterator_impl cend() const;
 	bool contains(const value_type & value) const;
 	size_t count(const value_type & value) const;
