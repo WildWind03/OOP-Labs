@@ -24,7 +24,6 @@ TEST_F (LinkedListTest, constructor_)
 {
     LinkedList list1;
     EXPECT_EQ (list1.size(), 0);
-    EXPECT_EQ (list1.front(), list1.back());
 }
 
 TEST_F (LinkedListTest, front_)
@@ -32,8 +31,8 @@ TEST_F (LinkedListTest, front_)
     EXPECT_EQ (my_list.front(), a1);
     my_list.pop_front();
     EXPECT_EQ (my_list.front(), a2);
-    LinkedList list1;
-    EXPECT_EQ (list1.front(), list1.back());
+    my_list.clear();
+    EXPECT_ANY_THROW (my_list.front());
 }
 
 TEST_F (LinkedListTest, back_)
@@ -41,20 +40,27 @@ TEST_F (LinkedListTest, back_)
     EXPECT_EQ (my_list.back(), a3);
     my_list.pop_back();
     EXPECT_EQ (my_list.back(), a2);
-    LinkedList list2;
-    EXPECT_EQ (list2.front(), list2.back());
+    my_list.clear();
+    EXPECT_ANY_THROW (my_list.back());
 }
 
 TEST_F (LinkedListTest, front_const_)
 {
     const LinkedList list2(my_list);
     EXPECT_EQ (list2.front(), a1);
+    my_list.clear();
+    const LinkedList list1(my_list);
+    EXPECT_ANY_THROW(list1.front());
 }
+
 
 TEST_F (LinkedListTest, back_const_)
 {
     const LinkedList list2 (my_list);
     EXPECT_EQ (list2.back(), a3);
+    my_list.clear();
+    const LinkedList list1(my_list);
+    EXPECT_ANY_THROW(list1.back());
 }
 
 TEST_F (LinkedListTest, push_back_)
@@ -80,98 +86,86 @@ TEST_F (LinkedListTest, push_front_)
     EXPECT_EQ (my_list.back(), a1);
 }
 
+
+
 TEST_F (LinkedListTest, begin_)
 {
-    my_list.clear();
     LinkedList::const_iterator my_iter = my_list.begin();
-    EXPECT_EQ (*my_iter, my_list.front());
-    my_list.push_front(a1);
-    my_iter = my_list.begin();
     EXPECT_EQ (*my_iter, a1);
-    my_list.push_front(a2);
-    EXPECT_EQ (*my_iter, a1);
+    EXPECT_EQ (*(++my_iter), a2);
+    EXPECT_EQ (*(++my_iter), a3);
+    my_list.clear();
+    EXPECT_ANY_THROW(my_list.begin());
 }
+
 
 TEST_F (LinkedListTest, end_)
 {
+    LinkedList::const_iterator my_iter = my_list.end();
+    EXPECT_EQ (*(--my_iter), a3);
+    EXPECT_EQ (*(--my_iter), a2);
+    EXPECT_EQ (*(--my_iter), a1);
     my_list.clear();
-    LinkedList::const_iterator my_iter;
-    my_list.push_back(a1);
-    my_iter = my_list.end();
-    --my_iter;
-    EXPECT_EQ (*my_iter, a1);
-    my_list.push_back(a2);
-    EXPECT_EQ (*my_iter, a1);
+    EXPECT_ANY_THROW(my_list.end());
 }
 
 TEST_F (LinkedListTest, begin_const_)
 {
-    my_list.clear();
     const LinkedList list2(my_list);
-    const LinkedList::iterator my_iter (list2.begin());
-    EXPECT_EQ (*my_iter, list2.front());
-    my_list.push_front(a1);
-    const LinkedList list3(my_list);
-    const LinkedList::iterator iter2 (list3.begin());
-    EXPECT_EQ (*iter2, a1);
-    const LinkedList list4(my_list);
-    const LinkedList::iterator iter3 (list4.begin());
-    my_list.push_front(a2);
-    EXPECT_EQ (*iter3, a1);
+    LinkedList::iterator my_iter (list2.begin());
+    EXPECT_EQ (*my_iter, a1);
+    EXPECT_EQ (*(++my_iter), a2);
+    const LinkedList list1;
+    EXPECT_ANY_THROW(list1.begin());
 }
 
 TEST_F (LinkedListTest, end_const_)
 {
     const LinkedList list2(my_list);
-    LinkedList::iterator my_list_iter (my_list.end());
-    const LinkedList::iterator my_iter (list2.end());
-    EXPECT_EQ (*my_iter, *my_list_iter);
+    LinkedList::iterator my_iter (list2.end());
+    EXPECT_EQ (a3, *(--my_iter));
+    EXPECT_EQ (a2, *(--my_iter));
+    const LinkedList list1;
+    EXPECT_ANY_THROW(list1.end());
 }
 
 TEST_F (LinkedListTest, cbegin_)
 {
-    my_list.clear();
     const LinkedList list2(my_list);
-    const LinkedList::iterator my_iter (list2.cbegin());
-    EXPECT_EQ (*my_iter, list2.front());
-    my_list.push_front(a1);
-    const LinkedList list3(my_list);
-    const LinkedList::iterator iter2 (list3.cbegin());
-    EXPECT_EQ (*iter2, a1);
-    const LinkedList list4(my_list);
-    const LinkedList::iterator iter3 (list4.cbegin());
-    my_list.push_front(a2);
-    EXPECT_EQ (*iter3, a1);
+    LinkedList::iterator my_iter (list2.cbegin());
+    EXPECT_EQ (*my_iter, a1);
+    EXPECT_EQ (*(++my_iter), a2);
+    const LinkedList list1;
+    EXPECT_ANY_THROW(list1.cbegin());
 }
 
 TEST_F (LinkedListTest, cend_)
 {
     const LinkedList list2(my_list);
-    LinkedList::iterator my_list_iter (my_list.cend());
-    const LinkedList::iterator my_iter (list2.cend());
-    EXPECT_EQ (*my_iter, *my_list_iter);
+    LinkedList::iterator my_iter (list2.cend());
+    EXPECT_EQ (a3, *(--my_iter));
+    EXPECT_EQ (a2, *(--my_iter));
+    const LinkedList list1;
+    EXPECT_ANY_THROW(list1.cend());
 }
 
 TEST_F (LinkedListTest, copy_constructor_)
 {
-    my_list.clear();
     LinkedList copy_of_my_list(my_list);
-    EXPECT_EQ (my_list, copy_of_my_list);
-    for (size_t i = 0; i < count; i++)
-    {
-        my_list.push_back(i);
-    }
+    EXPECT_TRUE (my_list == copy_of_my_list);
+    my_list.clear();
     LinkedList copy2_of_my_list(my_list);
-    EXPECT_EQ(copy2_of_my_list, my_list);
+    EXPECT_TRUE (copy2_of_my_list == my_list);
 }
 
 TEST_F (LinkedListTest, erase_one_)
 {
-    my_list.clear();
     LinkedList::iterator iter = my_list.begin();
     LinkedList new_list(my_list);
     my_list.erase(iter);
-    EXPECT_EQ (my_list, new_list);
+    EXPECT_EQ (my_list.front(), a2);
+    EXPECT_ANY_THROW(my_list.erase(my_list.end()));
+    my_list.clear();
     for (size_t i = 0; i < count; i++)
     {
         my_list.push_back(i);
@@ -203,9 +197,6 @@ TEST_F (LinkedListTest, erase_one_)
 TEST_F (LinkedListTest, erase_interval_)
 {
     my_list.clear();
-    EXPECT_EQ(my_list.end(), my_list.begin());
-    my_list.erase(my_list.begin(), my_list.end());
-    EXPECT_EQ (my_list.front(), my_list.back());
     for (size_t i = 0; i < count; i++)
     {
         my_list.push_back(i);
@@ -213,10 +204,8 @@ TEST_F (LinkedListTest, erase_interval_)
     LinkedList my_list2 (my_list);
     my_list.erase(my_list.begin(), my_list.end());
     EXPECT_TRUE (my_list.empty());
-    LinkedList::iterator iter_start;
-    LinkedList::iterator iter_end;
-    iter_start = my_list2.begin();
-    iter_end = my_list2.end();
+    LinkedList::iterator iter_start = my_list2.begin();
+    LinkedList::iterator iter_end = my_list2.end();
     --(--(--iter_end));
     EXPECT_EQ (*iter_end, 7);
     my_list2.erase (iter_start, iter_end);
@@ -275,11 +264,13 @@ TEST_F (LinkedListTest, remove_all_)
 
 TEST_F (LinkedListTest, contains_)
 {
+   EXPECT_TRUE (my_list.contains(a1));
+   EXPECT_TRUE (my_list.contains(a2));
+   EXPECT_TRUE (my_list.contains(a3));
+   my_list.pop_back();
+   EXPECT_FALSE (my_list.contains(a3));
    my_list.clear();
    EXPECT_FALSE (my_list.contains(a1));
-   my_list.push_back (a1);
-   EXPECT_TRUE (my_list.contains(a1));
-   EXPECT_FALSE (my_list.contains(a2));
 }
 
 TEST_F (LinkedListTest, count_)
@@ -325,6 +316,7 @@ TEST_F (LinkedListTest, pop_back_)
     EXPECT_EQ (my_list.back(), a1);
     my_list.pop_back();
     EXPECT_TRUE (my_list.empty());
+    EXPECT_ANY_THROW(my_list.pop_back());
 }
 
 TEST_F (LinkedListTest, pop_front_)
@@ -336,6 +328,7 @@ TEST_F (LinkedListTest, pop_front_)
     EXPECT_EQ (my_list.front(), a3);
     my_list.pop_front();
     EXPECT_TRUE (my_list.empty());
+    EXPECT_ANY_THROW(my_list.pop_front());
 }
 
 TEST_F (LinkedListTest, insert_)
@@ -377,6 +370,7 @@ TEST_F (LinkedListTest, operator_equal_)
     list2.push_back (a4);
     EXPECT_FALSE (list2 == my_list);
     list2.clear();
+    EXPECT_FALSE (my_list == list2);
     my_list.clear();
     EXPECT_TRUE (list2 == my_list);
 }
@@ -386,9 +380,11 @@ TEST_F (LinkedListTest, operator_plus)
     LinkedList list2;
     LinkedList list3;
     LinkedList list4;
-    list4 = list2 + list3;
+    list4 = list2 + list3; // 0 0
     EXPECT_TRUE (list4 == list2);
-    list4 = my_list + list2;
+    list4 = my_list + list2; // 1 0
+    EXPECT_TRUE (list4 == my_list);
+    list4 = list2 + my_list;
     EXPECT_TRUE (list4 == my_list);
     list2.push_back(a4);
     list2.push_back(a3);
@@ -419,6 +415,8 @@ TEST_F (LinkedListTest, operator_eq_plus)
     EXPECT_TRUE (list1 == list2);
     list1+=my_list;
     EXPECT_TRUE (list1 == my_list);
+    my_list+=list2;
+    EXPECT_TRUE (my_list == list1);
     list1.clear();
     list1.push_back(a4);
     list1.push_back(a3);
@@ -426,7 +424,7 @@ TEST_F (LinkedListTest, operator_eq_plus)
     list1.push_back(a1);
     list2 = list1 + my_list;
     list1+=my_list;
-    EXPECT_EQ (list1, list2);
+    EXPECT_TRUE (list1 == list2);
 }
 
 TEST_F (LinkedListTest, operator_eq_plus_value)
@@ -435,22 +433,29 @@ TEST_F (LinkedListTest, operator_eq_plus_value)
     list1+=a1;
     list1+=a2;
     list1+=a3;
-    EXPECT_EQ (list1, my_list);
+    EXPECT_TRUE (list1 == my_list);
 }
 
 TEST_F (LinkedListTest, operator_eq)
 {
     LinkedList list1;
     list1 = my_list;
-    EXPECT_EQ (list1, my_list);
+    EXPECT_TRUE (list1 == my_list);
+    for (size_t i = 0; i < count; i++)
+    {
+        list1.push_back (i);
+    }
+    EXPECT_FALSE (list1 == my_list);
 }
+
 
 TEST_F (LinkedListTest, ITERATOR_copy_)
 {
     LinkedList::iterator iter (my_list.begin());
     LinkedList::iterator iter1 (iter);
-    EXPECT_EQ (iter, iter1);
+    EXPECT_TRUE (iter == iter1);
 }
+
 
 TEST_F (LinkedListTest, ITERATOR_constructor_from_node_)
 {
@@ -461,10 +466,8 @@ TEST_F (LinkedListTest, ITERATOR_constructor_from_node_)
 TEST_F (LinkedListTest, ITERATOR_operator_equal_)
 {
     LinkedList::iterator iter (my_list.begin());
-    LinkedList::iterator iter1;
-    EXPECT_NE (iter, iter1);
-    iter1 = iter;
-    EXPECT_EQ (iter, iter1);
+    LinkedList::iterator iter1 = iter;
+    EXPECT_TRUE (iter == iter1);
 }
 
 TEST_F (LinkedListTest, ITERATOR_operator_star_)
@@ -472,7 +475,12 @@ TEST_F (LinkedListTest, ITERATOR_operator_star_)
     LinkedList::iterator iter (my_list.begin());
     EXPECT_EQ (*iter, a1);
     iter = my_list.end();
+    EXPECT_ANY_THROW(*iter);
     EXPECT_EQ (*(--iter), a3);
+    LinkedList::iterator iter1;
+    EXPECT_ANY_THROW(*iter1);
+    iter1 = my_list.end();
+    EXPECT_ANY_THROW(*iter1);
 }
 
 TEST_F (LinkedListTest, ITERATOR_operator_arrow_)
@@ -481,6 +489,10 @@ TEST_F (LinkedListTest, ITERATOR_operator_arrow_)
     EXPECT_EQ (*(iter.operator->()), a1);
     iter = my_list.end();
     EXPECT_EQ (*((--iter).operator->()), a3);
+    LinkedList::iterator iter1;
+    EXPECT_ANY_THROW(iter1.operator->());
+    iter1 = my_list.end();
+    EXPECT_ANY_THROW(iter1.operator->());
 }
 
 TEST_F (LinkedListTest, ITERATOR_plus_plus_operator_)
@@ -488,7 +500,9 @@ TEST_F (LinkedListTest, ITERATOR_plus_plus_operator_)
     LinkedList::iterator iter (my_list.begin());
     EXPECT_EQ (*iter, a1);
     EXPECT_EQ (*(++(++iter)), a3);
-    EXPECT_THROW (++iter, std::range_error);
+    EXPECT_ANY_THROW (++iter);
+    iter = my_list.end();
+    EXPECT_ANY_THROW(++iter);
 }
 
 TEST_F (LinkedListTest, ITERATOR_operator_plus_plus_)
@@ -498,7 +512,9 @@ TEST_F (LinkedListTest, ITERATOR_operator_plus_plus_)
     iter++;
     iter++;
     EXPECT_EQ (*iter, a3);
-    EXPECT_THROW (iter++, std::range_error);
+    EXPECT_ANY_THROW (iter++);
+    iter = my_list.end();
+    EXPECT_ANY_THROW(iter++);
 }
 
 TEST_F (LinkedListTest, ITERATOR_minus_minus_operator_)
@@ -506,7 +522,7 @@ TEST_F (LinkedListTest, ITERATOR_minus_minus_operator_)
     LinkedList::iterator iter (my_list.end());
     EXPECT_EQ (*(--iter), a3);
     EXPECT_EQ (*(--(--iter)), a1);
-    ASSERT_THROW (--iter, std::range_error);
+    EXPECT_ANY_THROW(--iter);
 }
 
 TEST_F (LinkedListTest, ITERATOR_operator_minus_minus_)
@@ -517,35 +533,35 @@ TEST_F (LinkedListTest, ITERATOR_operator_minus_minus_)
     iter--;
     iter--;
     EXPECT_EQ ((*iter), a1);
-    ASSERT_THROW (iter--, std::range_error);
+    EXPECT_ANY_THROW (iter--);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_copy_)
 {
     LinkedList::const_iterator iter (my_list.begin());
     LinkedList::const_iterator iter1 (iter);
-    EXPECT_EQ (iter, iter1);
+    EXPECT_TRUE (iter == iter1);
 }
 TEST_F (LinkedListTest, CONST_ITERATOR_constuctor_from_iterator)
 {
     LinkedList::iterator iter (my_list.begin());
     LinkedList::const_iterator iter1 (iter);
-    EXPECT_EQ (iter, iter1);
+    EXPECT_TRUE (iter == iter1);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_constructor_from_node_)
 {
-    LinkedList::const_iterator iter (my_list.begin());
+    LinkedList::const_iterator iter;
+    iter = my_list.begin();
     EXPECT_EQ (*iter, my_list.front());
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_operator_equal_)
 {
     LinkedList::const_iterator iter (my_list.begin());
-    LinkedList::const_iterator iter1;
-    EXPECT_NE (iter, iter1);
+    LinkedList::const_iterator iter1 = iter;
     iter1 = iter;
-    EXPECT_EQ (iter, iter1);
+    EXPECT_TRUE (iter == iter1);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_operator_star_)
@@ -553,7 +569,12 @@ TEST_F (LinkedListTest, CONST_ITERATOR_operator_star_)
     LinkedList::const_iterator iter (my_list.begin());
     EXPECT_EQ (*iter, a1);
     iter = my_list.end();
+    EXPECT_ANY_THROW(*iter);
     EXPECT_EQ (*(--iter), a3);
+    LinkedList::const_iterator iter1;
+    EXPECT_ANY_THROW(*iter1);
+    iter1 = my_list.end();
+    EXPECT_ANY_THROW(*iter1);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_operator_arrow_)
@@ -562,6 +583,10 @@ TEST_F (LinkedListTest, CONST_ITERATOR_operator_arrow_)
     EXPECT_EQ (*(iter.operator->()), a1);
     iter = my_list.end();
     EXPECT_EQ (*((--iter).operator->()), a3);
+    LinkedList::const_iterator iter1;
+    EXPECT_ANY_THROW(iter1.operator->());
+    iter1 = my_list.end();
+    EXPECT_ANY_THROW(iter1.operator->());
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_plus_plus_operator_)
@@ -569,7 +594,9 @@ TEST_F (LinkedListTest, CONST_ITERATOR_plus_plus_operator_)
     LinkedList::const_iterator iter (my_list.begin());
     EXPECT_EQ (*iter, a1);
     EXPECT_EQ (*(++(++iter)), a3);
-    EXPECT_THROW (++iter, std::range_error);
+    EXPECT_ANY_THROW (++iter);
+    iter = my_list.end();
+    EXPECT_ANY_THROW(++iter);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_operator_plus_plus_)
@@ -579,7 +606,9 @@ TEST_F (LinkedListTest, CONST_ITERATOR_operator_plus_plus_)
     iter++;
     iter++;
     EXPECT_EQ (*iter, a3);
-    EXPECT_THROW (iter++, std::range_error);
+    EXPECT_ANY_THROW (iter++);
+    iter = my_list.end();
+    EXPECT_ANY_THROW(iter++);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_minus_minus_operator_)
@@ -587,7 +616,7 @@ TEST_F (LinkedListTest, CONST_ITERATOR_minus_minus_operator_)
     LinkedList::const_iterator iter (my_list.end());
     EXPECT_EQ (*(--iter), a3);
     EXPECT_EQ (*(--(--iter)), a1);
-    ASSERT_THROW (--iter, std::range_error);
+    EXPECT_ANY_THROW (--iter);
 }
 
 TEST_F (LinkedListTest, CONST_ITERATOR_operator_minus_minus_)
@@ -598,7 +627,7 @@ TEST_F (LinkedListTest, CONST_ITERATOR_operator_minus_minus_)
     iter--;
     iter--;
     EXPECT_EQ ((*iter), a1);
-    ASSERT_THROW (iter--, std::range_error);
+    EXPECT_ANY_THROW (iter--);
 }
 
 int main(int argc, char **argv)
