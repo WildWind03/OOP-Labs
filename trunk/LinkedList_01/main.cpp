@@ -7,6 +7,7 @@ using namespace std;
 class LinkedListTest : public ::testing::Test
 {
 public:
+    
     LinkedList my_list = LinkedList();
     const int a1 = 1;
     const int a2 = 2;

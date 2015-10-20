@@ -28,6 +28,7 @@ private:
 		        	return false;
 		        }
 		    }
+		    
 		    bool is_this_first()
 		    {
 		      	if (prev == nullptr) 

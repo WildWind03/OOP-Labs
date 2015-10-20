@@ -20,6 +20,7 @@ public:
 	class iterator
 	{
 		LinkedListImpl::iterator_impl *iter_impl;
+		
   	public:
  		friend class LinkedList;
 
