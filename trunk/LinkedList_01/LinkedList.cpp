@@ -159,14 +159,7 @@ LinkedList::LinkedList()
 
 LinkedList::LinkedList(const LinkedList & other)
 {
-	try
-	{
-		list = new LinkedListImpl(*(other.list));
-	}
-    catch (std::bad_alloc &error)
-    {
-        throw;
-    }
+	list = new LinkedListImpl(*(other.list));
 }
 
 LinkedList::~LinkedList()

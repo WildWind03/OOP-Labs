@@ -19,32 +19,16 @@ private:
 
 		    bool is_this_last_node()
 		    {
-		    	if (next == nullptr)
+		    	if (nullptr == next)
 		    	{
 		    		return true;
 		    	}
-		    	else
-		    	{
-		    		return false;
-		    	}
-		    }
-
-		    bool is_next_last()
-		    {
-		    	if (is_this_last_node() == true)
-		    	{
-		    		throw (std::range_error("Next node is out of LinkedListImpl"));
-		    	}
-		     	if (next -> next == nullptr)
-		        {
-		        	return true;
-		        }
 		        else
 		        {
 		        	return false;
 		        }
 		    }
-		    bool is_prev_last()
+		    bool is_this_first()
 		    {
 		      	if (prev == nullptr) 
 		      	{
@@ -138,8 +122,10 @@ public:
 	value_type & back();
 	iterator_impl begin();;
 	const iterator_impl cbegin() const;
+	const iterator_impl begin() const;
 	iterator_impl end(); 
 	const iterator_impl cend() const;
+	const iterator_impl end() const;
 	bool contains(const value_type & value) const;
 	size_t count(const value_type & value) const;
 	size_t size() const;

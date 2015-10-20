@@ -20,7 +20,7 @@ LinkedListImpl::base_iterator_impl::base_iterator_impl(const base_iterator_impl 
 
 void LinkedListImpl::base_iterator_impl::move_straight()
 {
-    if (current_node -> is_next_last())
+    if (current_node -> is_this_last_node())
     {
         throw (std::range_error(range_error_message));
     }
@@ -29,7 +29,7 @@ void LinkedListImpl::base_iterator_impl::move_straight()
 
 void LinkedListImpl::base_iterator_impl::move_back()
 {
-    if (current_node -> is_prev_last())
+    if (current_node -> is_this_first())
     {
         throw (std::range_error(range_error_message));
     }
@@ -119,7 +119,7 @@ LinkedListImpl::iterator_impl & LinkedListImpl::iterator_impl::operator--()
 
 LinkedListImpl::iterator_impl LinkedListImpl::iterator_impl::operator++(int a)
 {
-    if (current_node -> is_next_last())
+    if (current_node -> is_this_last_node())
     {
         throw (std::range_error(range_error_message));
     }
@@ -130,7 +130,7 @@ LinkedListImpl::iterator_impl LinkedListImpl::iterator_impl::operator++(int a)
 
 LinkedListImpl::iterator_impl LinkedListImpl::iterator_impl::operator--(int b)
 {
-    if (current_node -> is_prev_last())
+    if (current_node -> is_this_first())
     {
         throw (std::range_error(range_error_message));
     }
@@ -203,7 +203,7 @@ LinkedListImpl::const_iterator_impl & LinkedListImpl::const_iterator_impl::opera
 
 LinkedListImpl::const_iterator_impl LinkedListImpl::const_iterator_impl::operator++(int a)
 {
-    if (current_node -> is_next_last())
+    if (current_node -> is_this_last_node())
     {
         throw (std::range_error(range_error_message));;
     }
@@ -214,7 +214,7 @@ LinkedListImpl::const_iterator_impl LinkedListImpl::const_iterator_impl::operato
 
 LinkedListImpl::const_iterator_impl LinkedListImpl::const_iterator_impl::operator--(int b)
 {
-    if (current_node -> is_prev_last())
+    if (current_node -> is_this_first())
     {
         throw (std::range_error(range_error_message));
     }
@@ -249,16 +249,10 @@ void LinkedListImpl::copy_list(const LinkedListImpl & other)
 {
 	if (0 != other.size())
 	{
-	    LinkedListImpl::const_iterator_impl other_iter = other.cbegin();
-	    if (0 != other.size())
-	    {
-	        push_back(*other_iter);
-	    }
-	    for (size_t i = 1; i < other.size(); i++)
-	    {
-	        ++other_iter;
-	        push_back(*other_iter);
-	    }
+        for (const auto & v : other)
+        {
+            push_back(v);
+        }
 	}
 }
 
@@ -327,6 +321,12 @@ LinkedListImpl::iterator_impl LinkedListImpl::begin()
     return my_iterator_impl;
 }
 
+const LinkedListImpl::iterator_impl LinkedListImpl::begin() const
+{
+    return cbegin();
+}
+
+
 const LinkedListImpl::iterator_impl LinkedListImpl::cbegin() const
 {
 	if (first == last_node)
@@ -347,6 +347,11 @@ LinkedListImpl::iterator_impl LinkedListImpl::end()
     return my_iterator_impl;
 }
 
+const LinkedListImpl::iterator_impl LinkedListImpl::end() const
+{
+    return cend();
+}
+
 const LinkedListImpl::iterator_impl LinkedListImpl::cend() const
 {
 	if (last == last_node)
@@ -363,18 +368,12 @@ bool LinkedListImpl::contains(const value_type & value) const
 	{
 		return false;
 	}
-    const_iterator_impl iter(cbegin());
-    if (*iter == value) 
+    for (const auto & v : *this)
     {
-    	return true;
-    }
-    for (size_t i = 1; i < size(); i++)
-    {
-        ++iter;
-        if (*iter == value)
+        if (v == value) 
         {
-        	return true;
-        } 
+            return true;
+        }
     }
     return false;
 }
@@ -386,17 +385,11 @@ size_t LinkedListImpl::count(const value_type & value) const
 		return false;
 	}
     size_t freq = 0;
-    const_iterator_impl iter(cbegin());
-    if (*iter == value)
+    for (const auto & v : *this)
     {
-    	++freq;
-    }
-    for (size_t i = 1; i < size(); i++)
-    {
-		++iter;
-        if (*iter == value)
+        if (v == value) 
         {
-        	++freq;
+            ++freq;
         }
     }
     return freq;
@@ -481,19 +474,14 @@ bool LinkedListImpl::remove_one (const value_type & value)
     	return false;
     }
     iterator_impl iter = begin();
-    if (*iter == value)
+    for (size_t i = 0; i < size(); i++)
     {
-        erase(iter);
-        return true;
-    }
-    for (size_t i = 1; i < size(); i++)
-    {
-		++iter;
         if (*iter == value)
         {
             erase (iter);
             return true;
         }
+        ++iter;
     }
     return false;
 }
@@ -604,14 +592,9 @@ LinkedListImpl & LinkedListImpl::operator+=(const LinkedListImpl & other)
 	{
 		return *this;
 	}
-    LinkedListImpl::const_iterator_impl iter = other.cbegin();
-    if (0 != other.size())
+    for (const auto & v : other)
     {
-    	push_back(*iter);
-    }
-    for (size_t i = 1; i < other.size(); i++)
-    {
-        push_back(*(++iter));
+        push_back(v);
     }
     return *this;
 }

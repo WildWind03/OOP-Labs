@@ -374,6 +374,11 @@ TEST_F (LinkedListTest, operator_equal_)
 {
     LinkedList list2;
     EXPECT_FALSE (list2 == my_list);
+    list2.push_back (a2);
+    list2.push_back (a2);
+    list2.push_back (a2);
+    EXPECT_FALSE (list2 == my_list);
+    list2.clear();
     list2.push_back (a1);
     EXPECT_FALSE (list2 == my_list);
     list2.push_back (a2);
@@ -522,7 +527,6 @@ TEST_F (LinkedListTest, ITERATOR_plus_plus_operator_)
     LinkedList::iterator iter (my_list.begin());
     EXPECT_EQ (*iter, a1);
     EXPECT_EQ (*(++(++iter)), a3);
-    EXPECT_ANY_THROW (++iter);
     iter = my_list.end();
     EXPECT_ANY_THROW(++iter);
 }
@@ -534,7 +538,6 @@ TEST_F (LinkedListTest, ITERATOR_operator_plus_plus_)
     iter++;
     iter++;
     EXPECT_EQ (*iter, a3);
-    EXPECT_ANY_THROW (iter++);
     iter = my_list.end();
     EXPECT_ANY_THROW(iter++);
 }
@@ -623,7 +626,6 @@ TEST_F (LinkedListTest, CONST_ITERATOR_plus_plus_operator_)
     LinkedList::const_iterator iter (my_list.begin());
     EXPECT_EQ (*iter, a1);
     EXPECT_EQ (*(++(++iter)), a3);
-    EXPECT_ANY_THROW (++iter);
     iter = my_list.end();
     EXPECT_ANY_THROW(++iter);
 }
@@ -635,7 +637,6 @@ TEST_F (LinkedListTest, CONST_ITERATOR_operator_plus_plus_)
     iter++;
     iter++;
     EXPECT_EQ (*iter, a3);
-    EXPECT_ANY_THROW (iter++);
     iter = my_list.end();
     EXPECT_ANY_THROW(iter++);
 }
