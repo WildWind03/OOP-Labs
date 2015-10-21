@@ -25,6 +25,7 @@ bool LinkedList::iterator::operator==(const const_iterator & other) const
 LinkedList::iterator & LinkedList::iterator::operator=(const iterator & other)
 {
 	iter_impl -> operator=(*other.iter_impl);
+
     return *this;
 }
 
@@ -41,24 +42,28 @@ value_type * LinkedList::iterator::operator->() const
 LinkedList::iterator & LinkedList::iterator::operator++()
 {
     iter_impl -> operator++();
+
     return *this;
 }
 
 LinkedList::iterator & LinkedList::iterator::operator--()
 {
     iter_impl -> operator--();
+
     return *this;
 }
 
 LinkedList::iterator LinkedList::iterator::operator++(int a)
 {
 	iter_impl -> operator++(a);
+
 	return *this;
 }
 
 LinkedList::iterator LinkedList::iterator::operator--(int b)
 {
 	iter_impl -> operator--(b);
+
 	return *this;
 }
 
@@ -96,12 +101,14 @@ bool LinkedList::const_iterator::operator==(const const_iterator & other) const
 LinkedList::const_iterator & LinkedList::const_iterator::operator=(const const_iterator & other)
 {
     const_iter_impl -> operator=(*(other.const_iter_impl));
+
     return *this;
 }
 
 LinkedList::const_iterator & LinkedList::const_iterator::operator=(const iterator & other)
 {
     const_iter_impl -> operator=(*(other.iter_impl));
+
     return *this;
 }
 
@@ -118,24 +125,28 @@ const value_type * LinkedList::const_iterator::operator->() const
 LinkedList::const_iterator & LinkedList::const_iterator::operator++()
 {
 	const_iter_impl -> operator++();
+
 	return *this;
 }
 
 LinkedList::const_iterator & LinkedList::const_iterator::operator--()
 {
 	const_iter_impl -> operator--();
+
 	return *this;
 }
 
 LinkedList::const_iterator LinkedList::const_iterator::operator++(int a)
 {
 	const_iter_impl -> operator++(a);
+
 	return *this;
 }
 
 LinkedList::const_iterator LinkedList::const_iterator::operator--(int b)
 {
 	const_iter_impl -> operator--(b);
+
 	return *this;
 }
 
@@ -196,6 +207,7 @@ LinkedList::iterator LinkedList::begin()
 {
     iterator my_iterator;
     *(my_iterator.iter_impl) = list -> begin();
+
     return my_iterator;
 }
 
@@ -208,6 +220,7 @@ const LinkedList::iterator LinkedList::cbegin() const
 {
     iterator my_iterator;
     *(my_iterator.iter_impl) = list -> cbegin();
+
     return my_iterator;
 }
 
@@ -215,6 +228,7 @@ LinkedList::iterator LinkedList::end()
 {
     iterator my_iterator;
     *(my_iterator.iter_impl) = list -> end();
+
     return my_iterator;
 }
 
@@ -222,6 +236,7 @@ const LinkedList::iterator LinkedList::cend() const
 {
     iterator my_iterator;
     *(my_iterator.iter_impl) = list -> cend();
+
     return my_iterator;
 }
 
@@ -254,6 +269,7 @@ LinkedList::iterator LinkedList::erase (const_iterator pos)
 {
 	iterator my_iter;
 	(*my_iter.iter_impl) = list -> erase (*(pos.const_iter_impl));
+
 	return my_iter;
 }
 
@@ -261,6 +277,7 @@ LinkedList::iterator LinkedList::erase (const_iterator begin, const_iterator end
 {
 	iterator my_iter;
 	(*my_iter.iter_impl) = list -> erase (*(begin.const_iter_impl), *(end.const_iter_impl));
+
 	return my_iter;
 }
 
@@ -299,6 +316,7 @@ LinkedList::iterator LinkedList::insert(iterator before, const value_type & valu
 {
 	iterator my_iter;
 	*(my_iter.iter_impl) = list -> insert (*(before.iter_impl), value);
+
 	return my_iter;
 }
 
@@ -315,19 +333,31 @@ LinkedList LinkedList::operator+(const LinkedList & other) const
 {
 	LinkedListImpl *impl_list = new LinkedListImpl (list -> operator+(*(other.list)));
 	LinkedList new_list;
+
 	delete (new_list.list);
+
 	new_list.list = impl_list;
+
 	return new_list;
 }
 
 LinkedList & LinkedList::operator+=(const LinkedList & other)
 {
-	list -> operator+=(*(other.list));
+	LinkedList this_copy(*this);
+
+	this_copy.list -> operator+=(*(other.list));
+
+	delete list;
+
+	list = this_copy.list;
+	this_copy.list = nullptr;
+
 	return *this;
 }
 LinkedList & LinkedList::operator+=(const value_type & value)
 {
     list -> operator+=(value);
+
     return *this;
 }
 LinkedList & LinkedList::operator=(const LinkedList & other)
@@ -336,17 +366,23 @@ LinkedList & LinkedList::operator=(const LinkedList & other)
 	{
 		return *this;
 	}
+
 	LinkedList copy_of_list(other);
+
 	delete(list);
+
 	list = copy_of_list.list;
 	copy_of_list.list = nullptr;
+
 	return *this;
 }
 
 LinkedList & LinkedList::operator=(LinkedList && other)
 {
     delete(list);
+
     list = other.list;
     other.list = nullptr;
+
     return *this;
 }
