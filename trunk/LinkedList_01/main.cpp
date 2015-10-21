@@ -9,11 +9,14 @@ class LinkedListTest : public ::testing::Test
 public:
     
     LinkedList my_list = LinkedList();
+
     const int a1 = 1;
     const int a2 = 2;
     const int a3 = 3;
     const int a4 = 4;
+    
     size_t count = 10;
+
     virtual void SetUp()
     {
         my_list.push_back(a1);
@@ -444,6 +447,19 @@ TEST_F (LinkedListTest, operator_eq_plus)
     list2 = list1 + my_list;
     list1+=my_list;
     EXPECT_TRUE (list1 == list2);
+    list1.clear();
+    list1.push_back(a4);
+    list2.clear();
+    my_list.clear();
+    for (size_t i = 0; i < 42; i++)
+    {
+        list2.push_back(i);
+        my_list.push_back(i);
+    }
+    EXPECT_ANY_THROW(list2+=list1);
+    EXPECT_TRUE (my_list == list2);
+    EXPECT_ANY_THROW(list1+=list2);
+    EXPECT_EQ (list1.back(), a4);
 }
 
 TEST_F (LinkedListTest, operator_eq_plus_value)
@@ -665,5 +681,6 @@ int main(int argc, char **argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
     std::cout << RUN_ALL_TESTS() << std::endl;
+
     return 0;
 }
