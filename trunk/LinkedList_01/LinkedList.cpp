@@ -343,21 +343,11 @@ LinkedList LinkedList::operator+(const LinkedList & other) const
 
 LinkedList & LinkedList::operator+=(const LinkedList & other)
 {
-	LinkedListImpl *this_copy = new LinkedListImpl(*list);
-	
-	try
-	{
-		*this_copy+=(*(other.list));
-	}
-	catch (std::bad_alloc & error)
-	{
-		delete(this_copy);
-		throw;
-	}
+	LinkedList this_copy(*this);
 
-	delete list;
+	this_copy.list -> operator+=(*(other.list));
 
-	list = this_copy;
+	*this = std::move(this_copy);
 
 	return *this;
 }
@@ -371,7 +361,7 @@ LinkedList & LinkedList::operator+=(const value_type & value)
 
 LinkedList & LinkedList::operator=(const LinkedList & other)
 {
-	if (*this == other)
+	if (this == &other)
 	{
 		return *this;
 	}
