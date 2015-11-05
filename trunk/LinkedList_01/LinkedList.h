@@ -82,11 +82,11 @@ public:
 	const value_type & back() const;
 	
 	iterator begin();
-	const iterator begin() const;
-	const iterator cbegin() const;
+	const_iterator begin() const;
+	const_iterator cbegin() const;
 	iterator end(); 
-	const iterator end() const;
-	const iterator cend() const;
+	const_iterator end() const;
+	const_iterator cend() const;
 
 	bool contains(const value_type & value) const;
 	size_t count(const value_type & value) const;

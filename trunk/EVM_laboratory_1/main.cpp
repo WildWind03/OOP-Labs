@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>
 
 int main()
 {
@@ -59,7 +58,6 @@ int main()
     printf ("The array has been sorted!\n");
     long total_time = end_time - start_time;
     printf ("The program has been working for %ld milliseconds (or %ld.%ld seconds)\n", total_time, total_time / 1000, total_time - ((long)(total_time / 1000)) * 1000);
-    system ("PAUSE");
     fclose(output_file);
 	fclose(input_file);
 	return 0;

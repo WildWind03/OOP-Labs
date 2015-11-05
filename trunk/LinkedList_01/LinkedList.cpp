@@ -211,14 +211,14 @@ LinkedList::iterator LinkedList::begin()
     return my_iterator;
 }
 
-const LinkedList::iterator LinkedList::begin() const
+LinkedList::const_iterator LinkedList::begin() const
 {
     return cbegin();
 }
 
-const LinkedList::iterator LinkedList::cbegin() const
+LinkedList::const_iterator LinkedList::cbegin() const
 {
-    iterator my_iterator;
+    const_iterator my_iterator;
     *(my_iterator.iter_impl) = list -> cbegin();
 
     return my_iterator;
@@ -232,15 +232,15 @@ LinkedList::iterator LinkedList::end()
     return my_iterator;
 }
 
-const LinkedList::iterator LinkedList::cend() const
+LinkedList::const_iterator LinkedList::cend() const
 {
-    iterator my_iterator;
+    const_iterator my_iterator;
     *(my_iterator.iter_impl) = list -> cend();
 
     return my_iterator;
 }
 
-const LinkedList::iterator LinkedList::end() const
+LinkedList::iterator LinkedList::end() const
 {
     return cend();
 }

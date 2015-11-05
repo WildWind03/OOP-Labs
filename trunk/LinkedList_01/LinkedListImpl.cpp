@@ -358,20 +358,20 @@ LinkedListImpl::iterator_impl LinkedListImpl::begin()
     return my_iterator_impl;
 }
 
-const LinkedListImpl::iterator_impl LinkedListImpl::begin() const
+LinkedListImpl::const_iterator_impl LinkedListImpl::begin() const
 {
     return cbegin();
 }
 
 
-const LinkedListImpl::iterator_impl LinkedListImpl::cbegin() const
+LinkedListImpl::const_iterator_impl LinkedListImpl::cbegin() const
 {
 	if (first == last_node)
 	{
         throw (std::range_error(empty_list_str));
 	}
 
-    const iterator_impl my_iterator_impl(first);
+    const_iterator_impl my_iterator_impl(first);
 
     return my_iterator_impl;
 }
@@ -388,19 +388,19 @@ LinkedListImpl::iterator_impl LinkedListImpl::end()
     return my_iterator_impl;
 }
 
-const LinkedListImpl::iterator_impl LinkedListImpl::end() const
+LinkedListImpl::const_iterator_impl LinkedListImpl::end() const
 {
     return cend();
 }
 
-const LinkedListImpl::iterator_impl LinkedListImpl::cend() const
+LinkedListImpl::const_iterator_impl LinkedListImpl::cend() const
 {
 	if (last == last_node)
 	{
         throw (std::range_error(empty_list_str));
 	}
 
-    const iterator_impl my_iterator_impl(last_node);
+    const_iterator_impl my_iterator_impl(last_node);
 
     return my_iterator_impl;
 }

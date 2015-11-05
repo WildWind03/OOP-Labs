@@ -136,11 +136,11 @@ public:
 	value_type & back();
 
 	iterator_impl begin();;
-	const iterator_impl cbegin() const;
-	const iterator_impl begin() const;
+	const_iterator_impl cbegin() const;
+	const_iterator_impl begin() const;
 	iterator_impl end(); 
-	const iterator_impl cend() const;
-	const iterator_impl end() const;
+	const_iterator_impl cend() const;
+	const_iterator_impl end() const;
 
 	bool contains(const value_type & value) const;
 	size_t count(const value_type & value) const;
