@@ -19,4 +19,16 @@ void Cell::destroy()
 	myState = DESTROYED;
 }
 
+bool isFree()
+{
+	if (nullptr == myShip)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 Cell::~Cell() {}

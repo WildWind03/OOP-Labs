@@ -1,12 +1,13 @@
 #pragma once
-#include "optionparser.h"
-#include "GameConf.h"
+
+//#include "optionparser.h"
+#include "Controller.h"
 
 int main (int argc, char *argv[])
 {
-	GameConf conf();
+	GameConf conf("ConsoleGamer", "RandGamer", 1);
 
-	Game myGame(&conf);
+	Controller constroller(&conf);
 
 	myGame.init();
 	myGame.begin();

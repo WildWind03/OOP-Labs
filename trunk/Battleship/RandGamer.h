@@ -3,6 +3,8 @@
 
 class RandGamer : public Gamer
 {
+
+static bool vertOrHor() const;
 	
 public:
 
@@ -10,4 +12,6 @@ public:
 
 	void placeShips(Field *field);
 	void makeShot();
+
+	~RandGamer();
 };

@@ -1,11 +1,19 @@
 #pragma once 
+
 #include "GameConf.h"
 #include "GamerFactory.h"
 
-class Game
+class Game : public Subject
 {
 
-	GameConf *conf;
+	/*class EndOfGameHandler
+	{
+	public:
+		virtual void OnGameEnded() = 0;
+	};
+	*/
+
+	//EndOfGameHandler *eogh;
 
 	Field *fField.
 	Field *sField;

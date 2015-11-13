@@ -2,7 +2,7 @@
 
 Game::Game (GameConf *conf)
 {
-	conf = conf;
+	//conf = conf;
 
 	currentRound = 0;
 
@@ -12,7 +12,7 @@ Game::Game (GameConf *conf)
 	fField = new Field();
 	sField = new Field();
 	
-	myView = new ConsoleView();
+	//myView = new ConsoleView();
 }
 
 void Game::init()

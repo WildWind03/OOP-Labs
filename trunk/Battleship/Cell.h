@@ -10,6 +10,8 @@ class Cell
 
 	Ship *myShip;
 
+	bool isFree() const;
+
 public:
 	
 	Cell();
