@@ -19,7 +19,7 @@ void Cell::destroy()
 	myState = DESTROYED;
 }
 
-bool isFree()
+bool Cell::isFree() const
 {
 	if (nullptr == myShip)
 	{

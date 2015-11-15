@@ -1,35 +1,41 @@
 #pragma once
 
+#include "Gamer.h"
+#include "ConsoleGamer.h"
+#include "RandGamer.h"
+#include "OptGamer.h"
+#include <iostream>
+#include <string>
+#include <cstdio>
+
 class GamerFactory
 {
 
-	const string consoleGamer = "ConsoleGamer";
-	const string randGamer = "RandGamer";
-	const string optGamer = "OptGamer";
-
 public:
 
-	static Gamer* CreateGamer(std::string type)
+	static Gamer* CreateGamer(std::string type, View *view, Field *myField, Field *aField)
 	{
-		switch(type)
-		{
-			case consoleGamer :
+        Gamer *gm = NULL;
 
-				return ConsoleGamer();
+        const std::string consoleGamer = "ConsoleGamer";
+        const std::string randGamer = "RandGamer";
+        const std::string optGamer = "OptGamer";
 
-				break;
+        if (consoleGamer == type)
+        {
+            gm = new ConsoleGamer(static_cast<ConsoleView*> (view), myField, aField);
+        }
 
-			case randGamer :
+        if (randGamer == type)
+        {
+            gm = new RandGamer(myField, aField);
+        }
 
-				return RandGamer();
+        if (optGamer == type)
+        {
+            gm = new OptGamer(myField, aField);
+        }
 
-				break;
-
-			case OptGamer :
-
-				return OptGamer();
-
-				break;
-		}
+		return gm;
 	}
 };

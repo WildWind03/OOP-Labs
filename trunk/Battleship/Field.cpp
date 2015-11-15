@@ -1,13 +1,43 @@
 #include "Field.h"
 
-Field::Field(size_t size = defaultValue)
+Field::Field(size_t height, size_t length)
 {
-	this -> size = size;
+	this -> height = height;
+	this -> length = length;
 
-	for (size_t i = 0; i < size * size; ++i)
+	for (size_t i = 0; i < height * length; ++i)
 	{
 		cells.push_back(new Cell());
 	}
+}
+
+void Field::addShip(Ship *ship, bool isVertical, size_t pos)
+{
+	size_t cPos = pos;
+	
+	if (true == isVertical)
+	{
+		for (size_t i = 0; i < ship -> getSize(); ++i)
+		{
+			Cell *myCell = getCellByNum(cPos);
+			myCell -> addShip(ship);
+			cPos = cPos + getLength();
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i < ship -> getSize(); ++i)
+		{
+			Cell *myCell = getCellByNum(cPos);
+			myCell -> addShip(ship);
+			++cPos;
+		}
+	}	
+}
+
+size_t Field::getSize() const
+{
+	return getHeight() * getLength();
 }
 
 size_t Field::getHeight() const
@@ -20,7 +50,7 @@ size_t Field::getLength() const
 	return length;
 }
 
-size_t Field::getRandPos()
+size_t Field::getRandPos() const
 {
 	std::default_random_engine rng;	
 
@@ -35,11 +65,11 @@ Cell* Field::getCellByNum(size_t num)
 {
 	if (num >= 0 && num < height * length)
 	{
-		return field -> cells[num];
+		return cells[num];
 	}
 	else
 	{
-		throw std::out_of_range(out_of_range_str);
+		throw std::range_error (out_of_range_str);
 	}
 }
 
@@ -79,7 +109,7 @@ bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
 
 Field::~Field()
 {
-	for (size_t i = 0; i < size * size; ++i)
+	for (size_t i = 0; i < height * length; ++i)
 	{
 		delete(cells[i]);
 	}

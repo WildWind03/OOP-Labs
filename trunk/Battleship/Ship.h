@@ -1,6 +1,6 @@
 #pragma once
-#include "Field.h"
-#include "Cell.h"
+
+#include <cstdio>
 
 class Ship
 {
@@ -8,8 +8,8 @@ class Ship
 	size_t destrSize;
 
 public:
-	
-	Ship(bool isVertical, size_t size, size_t pos, Field *field);
+
+	Ship(size_t size);
 
 	size_t getSize() const;
 

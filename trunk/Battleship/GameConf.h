@@ -1,10 +1,11 @@
 #pragma once
+
+#include <cstdio>
+#include <iostream>
 #include <string>
-#include <stdio.h>
 
 class GameConf
 {
-
 	std::string fPlayer;
 	std::string sPlayer;
 
@@ -16,7 +17,7 @@ public:
 
 	std::string getFPlayer();
 	std::string getSPlayer();
-	
+
 	size_t getCountRound();
 
 	~GameConf();

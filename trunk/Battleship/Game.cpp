@@ -1,41 +1,29 @@
 #include "Game.h"
 
-Game::Game (GameConf *conf)
+Game::Game (Gamer *g1, Gamer *g2)
 {
-	//conf = conf;
-
-	currentRound = 0;
-
-	fGamer = GamerFactory.CreateGamer(conf.getFPlayer);
-	sGamer = GamerFactory.CreateGamer(conf.getSPlayer);
-
-	fField = new Field();
-	sField = new Field();
-	
-	//myView = new ConsoleView();
-}
-
-void Game::init()
-{
-	fGamer -> placeShips();
-	sGamer -> placeShips();
+	this -> g1 = g1;
+	this -> g2 = g2;
 }
 
 void Game::begin()
 {
-	++currentRound;
+	g1 -> placeShips();
+	g2 -> placeShips();
 
-	while(true)
+	while (true)
 	{
-		fGamer -> makeShot();
-		sGamer -> makeShot();
+		g1 -> makeShot();
+		g2 -> makeShot();
 	}
+}
+
+void Game::notify()
+{
+
 }
 
 Game::~Game()
 {
-	delete(fGamer);
-	delete(sGamer);
-	delete(fField);
-	delete(sField);
+
 }

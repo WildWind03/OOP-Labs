@@ -1,17 +1,20 @@
 #pragma once
+
 #include "Field.h"
+#include "Gamer.h"
+#include <cstdio>
 
 class RandGamer : public Gamer
 {
 
-static bool vertOrHor() const;
-	
+    bool vertOrHor() const;
+
 public:
 
-	RandGamer();
+	RandGamer(Field *myField, Field *aField);
 
-	void placeShips(Field *field);
-	void makeShot();
+	void placeShips();
+	void makeShot() {}
 
 	~RandGamer();
 };
