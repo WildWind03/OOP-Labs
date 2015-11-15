@@ -1,8 +1,8 @@
 #include "RandGamer.h"
 
-RandGamer::RandGamer() : Gamer() 
+RandGamer::RandGamer(Field *myField, Field *aField) : Gamer(myField, aField) 
 {
-
+	
 }
 
 bool RandGamer::vertOrHor() const
@@ -15,7 +15,7 @@ bool RandGamer::vertOrHor() const
 
     if (0 == dist_a_b(rng))
     {
-    	return false
+    	return false;
     }
     else
     {
@@ -23,7 +23,7 @@ bool RandGamer::vertOrHor() const
     }	
 }
 
-void RandGamer::placeShips(Field *field)
+void RandGamer::placeShips()
 {
 	for (size_t i = 1; i < 5; i++)
 	{
@@ -31,15 +31,18 @@ void RandGamer::placeShips(Field *field)
 		{
 			while(1)
 			{
-				size_t pos = field -> getRandPos();
+				size_t pos = myField -> getRandPos();
 
-				bool vertOrHor = RandGame::vertOrHor();
+				bool isVertical = vertOrHor();
 
-				Cell* myCell = field -> getCellByNum(pos);
+				Cell* myCell = myField -> getCellByNum(pos);
 
-				if (field -> isPosCorrectForShip(pos, i, vertOrHor))
+				if (myField -> isPosCorrectForShip(pos, i, isVertical))
 				{
-					Ship *my_ship = new Ship(vertOrHor, i, pos, field);
+					Ship *myShip = new Ship(i);
+
+					myField -> addShip(myShip, isVertical , pos);
+					
 					break;
 				}
 			}

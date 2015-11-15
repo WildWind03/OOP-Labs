@@ -1,25 +1,20 @@
 #pragma once
 
 #include "Observer.h"
+#include "Point.h"
+#include <cstdio>
 
 class View : public Observer
 {
+protected:
 
-	static size_t getNumByChar(const char & c) const;
-
-	const size_t height;
-	const size_t width;
-
-	size_t getHeight() const;
-	size_t getWidth() const;
+	View() {}
 
 public:
 
-	View() = delete;
+	virtual Point getPlaceForShips() = 0;
 
-	virtual size_t getPlaceForShips();
+	virtual void paint() = 0;
 
-	virtual void paint();
-
-	virtual ~View();
+	virtual ~View() {}
 };

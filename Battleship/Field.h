@@ -1,29 +1,37 @@
 #pragma once
+
 #include "Cell.h"
 #include "Ship.h"
+#include <iostream>
+#include <string>
 #include <vector>
+#include <cstdio>
+#include <random>
+#include <ctime>
+#include <limits>
+#include <cstdlib>
+#include <stdexcept>
 
 class Field
 {
 	size_t height;
 	size_t length;
 
-	const size_t defaultHeight = 10;
-	const size_t defaultLength = 10;
-	const size_t defaultSize = 10;
+	const std::string out_of_range_str = "Error: trying to get cell out of field";
 
-	const string out_of_range_str = "Error: trying to get cell out of field";
+	std::vector <Cell*> cells;
+	std::vector <Ship*> ships;
 
-	vector <Cell*> cells;
-	
 public:
+	Field (size_t height, size_t length);
 
-	Field (size_t size = defaultValue);
-	Field (size_t height = defaultHeight, size_t length = defaultLength); 
+	void addShip(Ship *ship, bool isVertical, size_t pos);
 
 	size_t getLength() const;
 
 	size_t getHeight() const;
+
+	size_t getSize() const;
 
 	Cell* getCellByNum(size_t num);
 
@@ -32,4 +40,4 @@ public:
 	bool isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor);
 
 	~Field();
-}
+};

@@ -10,13 +10,13 @@ class Cell
 
 	Ship *myShip;
 
-	bool isFree() const;
-
 public:
 	
 	Cell();
 
 	void addShip(Ship *myShip);
+	
+	bool isFree() const;
 
 	void destroy();
 

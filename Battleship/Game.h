@@ -1,35 +1,23 @@
-#pragma once 
+#pragma once
 
 #include "GameConf.h"
 #include "GamerFactory.h"
+#include "Subject.h"
+#include "Field.h"
+#include <cstdio>
 
 class Game : public Subject
 {
-
-	/*class EndOfGameHandler
-	{
-	public:
-		virtual void OnGameEnded() = 0;
-	};
-	*/
-
-	//EndOfGameHandler *eogh;
-
-	Field *fField.
-	Field *sField;
-
-	Gamer *fGamer;
-	Gamer *sGamer;
-
-	size_t currentRound;
+	Gamer *g1;
+	Gamer *g2;
 
 public:
 
-	Game(GameConf *conf);
-
-	void init();
+	Game(Gamer *g1, Gamer *g2);
 
 	void begin();
+
+	virtual void notify();
 
 	~Game();
 };

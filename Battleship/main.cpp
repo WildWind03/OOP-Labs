@@ -1,16 +1,17 @@
-#pragma once
-
 //#include "optionparser.h"
 #include "Controller.h"
+#include "GameConf.h"
 
 int main (int argc, char *argv[])
 {
-	GameConf conf("ConsoleGamer", "RandGamer", 1);
+    std::string p1 = "ConsoleGamer";
+    std::string p2 = "RandGamer";
 
-	Controller constroller(&conf);
+	GameConf conf(p1, p2, 1);
 
-	myGame.init();
-	myGame.begin();
-	
+	Controller controller(&conf);
+
+	controller.beginGame();
+
 	return 0;
 }
