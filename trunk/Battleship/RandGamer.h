@@ -2,12 +2,13 @@
 
 #include "Field.h"
 #include "Gamer.h"
+#include "FieldPoint.h"
 #include <cstdio>
 
 class RandGamer : public Gamer
 {
 
-    bool vertOrHor() const;
+    bool isVertical() const;
 
 public:
 

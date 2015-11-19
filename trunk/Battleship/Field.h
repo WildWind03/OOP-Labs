@@ -2,6 +2,7 @@
 
 #include "Cell.h"
 #include "Ship.h"
+#include "FieldPoint.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -15,31 +16,35 @@
 class Field
 {
 	size_t height;
-	size_t length;
+	size_t width;
 
 	const std::string out_of_range_str = "Error: trying to get cell out of field";
 
 	std::vector <Cell*> cells;
 	std::vector <Ship*> ships;
 
-	Cell* getCellByNum(size_t num);
+	Cell * getCellByNum(size_t h, size_t w);
+
+	size_t fromHWToPos(size_t h, size_t w) const;
+
+	bool isPointInField(size_t h, size_t w) const;
 
 public:
-	Field (size_t height, size_t length);
+	Field (size_t height, size_t width);
 
-	void addShip(Ship *ship, bool isVertical, size_t pos);
+	void addShip(Ship *ship, const FieldPoint & p);
 
-	size_t getLength() const;
+	size_t getWidth() const;
 
 	size_t getHeight() const;
 
 	size_t getSize() const;
 
-	size_t getRandPos() const;
+	static size_t getRand(size_t start, size_t end);
 
-	std::string getStateOfCell(size_t n);
+	std::string getStateOfCell(size_t h, size_t w);
 
-	bool isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor);
+	bool isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p);
 
 	~Field();
 };

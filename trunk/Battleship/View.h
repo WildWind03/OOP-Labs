@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Observer.h"
-#include "Point.h"
+#include "FieldPoint.h"
 #include "Field.h"
 #include <cstdio>
 
@@ -13,7 +13,7 @@ protected:
 
 public:
 
-	virtual Point getPlaceForShips(size_t n) = 0;
+	virtual FieldPoint getFieldPoint(size_t sizeOfShip) = 0;
 
 	virtual void paint(Field *f) = 0;
 

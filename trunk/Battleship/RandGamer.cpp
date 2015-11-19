@@ -5,15 +5,9 @@ RandGamer::RandGamer(Field *myField, Field *aField) : Gamer(myField, aField)
 	
 }
 
-bool RandGamer::vertOrHor() const
+bool RandGamer::isVertical() const
 {
-	std::default_random_engine rng;
-
-	rng.seed(std::random_device()());
-
-    std::uniform_int_distribution<int> dist_a_b(0,1);
-
-    if (0 == dist_a_b(rng))
+    if (0 == Field::getRand(0,1))
     {
     	return false;
     }
@@ -29,17 +23,20 @@ void RandGamer::placeShips()
 	{
 		for (size_t k = i; k < 5; k++)
 		{
-			while(1)
+			while(true)
 			{
-				size_t pos = myField -> getRandPos();
+				size_t h = Field::getRand(0, myField -> getHeight());
+				size_t w = Field::getRand(0, myField -> getWidth());
 
-				bool isVertical = vertOrHor();
+				bool isVert = isVertical();
 
-				if (myField -> isPosCorrectForShip(pos, i, isVertical))
+				FieldPoint p(h, w, isVert);
+
+				if (myField -> isPosCorrectForShip(i, p))
 				{
 					Ship *myShip = new Ship(i);
 
-					myField -> addShip(myShip, isVertical , pos);
+					myField -> addShip(myShip, p);
 					
 					break;
 				}
@@ -48,6 +45,7 @@ void RandGamer::placeShips()
 		}
 	}
 }
+
 
 RandGamer::~RandGamer()
 {
