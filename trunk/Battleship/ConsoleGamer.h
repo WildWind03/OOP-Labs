@@ -11,13 +11,13 @@ class ConsoleGamer : public Gamer
 
 	ConsoleView *view;
 
-	bool checkPlace(size_t pos);
+	bool checkPoint(const Point & p) const;
 
 	BasePoint getPlaceForShip(size_t size);
 
 	size_t getPosByPoint(const Point & p) const;
 
-	bool checkPlace(size_t pos, size_t size, bool isVert);
+	bool checkPlace(size_t size, const Point & p);
 
 public:
 

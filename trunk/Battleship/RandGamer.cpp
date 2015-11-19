@@ -7,7 +7,7 @@ RandGamer::RandGamer(Field *myField, Field *aField) : Gamer(myField, aField)
 
 bool RandGamer::vertOrHor() const
 {
-	std::default_random_engine rng;	
+	std::default_random_engine rng;
 
 	rng.seed(std::random_device()());
 
@@ -34,8 +34,6 @@ void RandGamer::placeShips()
 				size_t pos = myField -> getRandPos();
 
 				bool isVertical = vertOrHor();
-
-				Cell* myCell = myField -> getCellByNum(pos);
 
 				if (myField -> isPosCorrectForShip(pos, i, isVertical))
 				{

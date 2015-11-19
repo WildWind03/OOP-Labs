@@ -22,6 +22,8 @@ class Field
 	std::vector <Cell*> cells;
 	std::vector <Ship*> ships;
 
+	Cell* getCellByNum(size_t num);
+
 public:
 	Field (size_t height, size_t length);
 
@@ -33,9 +35,9 @@ public:
 
 	size_t getSize() const;
 
-	Cell* getCellByNum(size_t num);
-
 	size_t getRandPos() const;
+
+	std::string getStateOfCell(size_t n);
 
 	bool isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor);
 

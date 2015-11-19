@@ -9,14 +9,29 @@ Cell::Cell()
 
 void Cell::addShip(Ship *myShip)
 {
-	myShip = myShip;
+	this -> myShip = myShip;
 	
-	myState = BUSY;
+	this -> myState = BUSY;
 }
 
 void Cell::destroy()
 {
 	myState = DESTROYED;
+}
+
+std::string Cell::getState() const
+{
+	if (myState == FREE)
+	{
+		return fr;
+	}
+
+	if (myState == BUSY)
+	{
+		return bs;
+	}
+
+	return ds;
 }
 
 bool Cell::isFree() const
