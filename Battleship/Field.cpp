@@ -1,47 +1,49 @@
 #include "Field.h"
 
-Field::Field(size_t height, size_t length)
+Field::Field(size_t height, size_t width)
 {
 	this -> height = height;
-	this -> length = length;
+	this -> width = width;
 
-	for (size_t i = 0; i < height * length; ++i)
+	for (size_t i = 0; i < height * width; ++i)
 	{
 		cells.push_back(new Cell());
 	}
 }
 
-void Field::addShip(Ship *ship, bool isVertical, size_t pos)
+bool Field::isPointInField(size_t h, size_t w) const
 {
-	size_t cPos = pos;
-	
-	if (true == isVertical)
+	if ((h > getHeight()) || (w > getWidth()) || (h < 0) || (w < 0))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+void Field::addShip(Ship *ship, const FieldPoint & p)
+{
+	if (true == p.isVertical())
 	{
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
-			Cell *myCell = getCellByNum(cPos);
-
+			Cell *myCell = getCellByNum(p.getHeight() + i, p.getWidth());
 			myCell -> addShip(ship);
-
-			cPos = cPos + getLength();
 		}
 	}
 	else
 	{
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
-			Cell *myCell = getCellByNum(cPos);
-
+			Cell *myCell = getCellByNum(p.getHeight(), p.getWidth() + i);
 			myCell -> addShip(ship);
-
-			++cPos;
 		}
 	}	
 }
 
 size_t Field::getSize() const
 {
-	return getHeight() * getLength();
+	return getHeight() * getWidth();
 }
 
 size_t Field::getHeight() const
@@ -49,27 +51,21 @@ size_t Field::getHeight() const
 	return height;
 }
 
-size_t Field::getLength() const
+size_t Field::getWidth() const
 {
-	return length;
+	return width;
 }
 
-size_t Field::getRandPos() const
+size_t Field::fromHWToPos(size_t h, size_t w) const
 {
-	std::default_random_engine rng;	
-
-	rng.seed(std::random_device()());
-
-    std::uniform_int_distribution<size_t> dist_a_b(0, height * length);
-
-    return dist_a_b(rng);
+	return h * getWidth() + w;
 }
 
-Cell* Field::getCellByNum(size_t num)
+Cell* Field::getCellByNum(size_t h, size_t w)
 {
-	if (num >= 0 && num < height * length)
+	if (isPointInField(h,w))
 	{
-		return cells[num];
+		return cells[h * getWidth() + w];
 	}
 	else
 	{
@@ -77,18 +73,23 @@ Cell* Field::getCellByNum(size_t num)
 	}
 }
 
-bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
+bool Field::isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p)
 {
-	if (false == vertOrHor) //horizontal
+	if (false == isPointInField(p.getHeight(), p.getWidth()))
 	{
-		if (pos % getHeight() + size > getLength())
+		return false;
+	}
+
+	if (false == p.isVertical())
+	{
+		if (p.getWidth() + sizeOfShip > getWidth())
 		{
 			return false;
 		}
 
-		for (size_t i = 0; i < size; ++i)
+		for (size_t i = 0; i < sizeOfShip; ++i)
 		{
-			Cell* temp = getCellByNum(pos + i);
+			Cell* temp = getCellByNum(p.getHeight(), p.getWidth() + i);
 
 			if (false == temp -> isFree())
 			{
@@ -98,16 +99,16 @@ bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
 
 		return true;
 	}
-	else // vertical
+	else
 	{
-		if (pos + (size - 1) * getLength() > getSize())
+		if (p.getHeight() + sizeOfShip > getHeight())
 		{
 			return false;
 		}
 
-		for (size_t i = 0; i < size; ++i)
+		for (size_t i = 0; i < sizeOfShip; ++i)
 		{
-			Cell* temp = getCellByNum(pos + i * length);
+			Cell* temp = getCellByNum(p.getHeight() + i, p.getWidth());
 			
 			if (false == temp -> isFree())
 			{
@@ -119,15 +120,27 @@ bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
 	}
 }
 
-std::string Field::getStateOfCell(size_t n)
+size_t Field::getRand(size_t start, size_t end)
 {
-	Cell *c = getCellByNum(n);
+   	std::default_random_engine rng;
+
+	rng.seed(std::random_device()());
+
+   	std::uniform_int_distribution<int> dist_a_b(start, end);
+   	
+   	return dist_a_b(rng);
+}
+
+std::string Field::getStateOfCell(size_t h, size_t w)
+{
+	Cell *c = getCellByNum(h, w);
+
 	return c -> getState();
 }
 
 Field::~Field()
 {
-	for (size_t i = 0; i < height * length; ++i)
+	for (size_t i = 0; i < getSize(); ++i)
 	{
 		delete(cells[i]);
 	}

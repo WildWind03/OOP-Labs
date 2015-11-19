@@ -1,7 +1,7 @@
 #pragma once
 
 #include "View.h"
-#include "Point.h"
+#include "FieldPoint.h"
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -9,22 +9,24 @@
 class ConsoleView : public View
 {
 
-	const std::string rangeErrorStr = "Typed cell doesn't exist";
-	const std::string orientErrorStr = "Orientation isn't correct. Use 'V' for vertical and 'H' for horizontal orientation";
+	const std::string rangeErrorStr = "Typed cell doesn't exist. Try again";
+	const std::string orientErrorStr = "Orientation isn't correct. Use 'V' for vertical and 'H' for horizontal orientations. Try again";
+	const std::string busyErrorStr = "The position is busy. Try again";
+	const std::string typeStr = "Type a point which you want to place your ship on. Size of ship is ";	
 
-	size_t getNumByChar(const char c);
+	size_t getNumByChar(char c) const;
 
-	bool getOrient(char c);
+	bool getOrient(char c) const;
 
 public:
 
 	ConsoleView();
 
-	virtual Point getPlaceForShips(size_t i);
+	virtual FieldPoint getFieldPoint(size_t sizeOfShip);
 
-	virtual void printInputError();
+	virtual void printInputError() const;
 
 	virtual void paint(Field *f);
 
-	~ConsoleView();
+	virtual ~ConsoleView();
 };
