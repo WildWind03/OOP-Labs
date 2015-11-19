@@ -20,9 +20,11 @@ public:
 
 	ConsoleView();
 
-	virtual Point getPlaceForShips();
+	virtual Point getPlaceForShips(size_t i);
 
-	virtual void paint();
+	virtual void printInputError();
+
+	virtual void paint(Field *f);
 
 	~ConsoleView();
 };

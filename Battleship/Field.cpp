@@ -20,7 +20,9 @@ void Field::addShip(Ship *ship, bool isVertical, size_t pos)
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
 			Cell *myCell = getCellByNum(cPos);
+
 			myCell -> addShip(ship);
+
 			cPos = cPos + getLength();
 		}
 	}
@@ -29,7 +31,9 @@ void Field::addShip(Ship *ship, bool isVertical, size_t pos)
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
 			Cell *myCell = getCellByNum(cPos);
+
 			myCell -> addShip(ship);
+
 			++cPos;
 		}
 	}	
@@ -75,10 +79,13 @@ Cell* Field::getCellByNum(size_t num)
 
 bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
 {
-	Cell* myCell = getCellByNum(pos);
-
-	if (true == vertOrHor)
+	if (false == vertOrHor) //horizontal
 	{
+		if (pos % getHeight() + size > getLength())
+		{
+			return false;
+		}
+
 		for (size_t i = 0; i < size; ++i)
 		{
 			Cell* temp = getCellByNum(pos + i);
@@ -91,8 +98,13 @@ bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
 
 		return true;
 	}
-	else
+	else // vertical
 	{
+		if (pos + (size - 1) * getLength() > getSize())
+		{
+			return false;
+		}
+
 		for (size_t i = 0; i < size; ++i)
 		{
 			Cell* temp = getCellByNum(pos + i * length);
@@ -105,6 +117,12 @@ bool Field::isPosCorrectForShip(size_t pos, size_t size, bool vertOrHor)
 
 		return true;	
 	}
+}
+
+std::string Field::getStateOfCell(size_t n)
+{
+	Cell *c = getCellByNum(n);
+	return c -> getState();
 }
 
 Field::~Field()
