@@ -10,7 +10,11 @@ class RandGamer : public Gamer
 
     bool isVertical() const;
 
+    FieldPoint getCorrectFieldPoint(size_t sizeOfShip);
+
 public:
+
+	RandGamer() = delete;
 
 	RandGamer(Field *myField, Field *aField);
 

@@ -8,8 +8,8 @@ Game::Game (Gamer *g1, Gamer *g2)
 
 void Game::begin()
 {
-	g1 -> placeShips();
 	g2 -> placeShips();
+	g1 -> placeShips();
 
 	while (true)
 	{
