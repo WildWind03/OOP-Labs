@@ -5,6 +5,24 @@ RandGamer::RandGamer(Field *myField, Field *aField) : Gamer(myField, aField)
 	
 }
 
+FieldPoint RandGamer::getCorrectFieldPoint(size_t sizeOfShip)
+{
+	while(true)
+	{
+		size_t h = Field::getRand(0, myField -> getHeight());
+		size_t w = Field::getRand(0, myField -> getWidth());
+
+		bool isVert = isVertical();
+
+		FieldPoint p(h, w, isVert);
+
+		if (true == myField -> isPosCorrectForShip(sizeOfShip, p))
+		{
+			return p;
+		}
+	}
+}
+
 bool RandGamer::isVertical() const
 {
     if (0 == Field::getRand(0,1))
@@ -25,21 +43,13 @@ void RandGamer::placeShips()
 		{
 			while(true)
 			{
-				size_t h = Field::getRand(0, myField -> getHeight());
-				size_t w = Field::getRand(0, myField -> getWidth());
+				FieldPoint p = getCorrectFieldPoint(i);
 
-				bool isVert = isVertical();
+				Ship *myShip = new Ship(i);
 
-				FieldPoint p(h, w, isVert);
-
-				if (myField -> isPosCorrectForShip(i, p))
-				{
-					Ship *myShip = new Ship(i);
-
-					myField -> addShip(myShip, p);
+				myField -> addShip(myShip, p);
 					
-					break;
-				}
+				break;
 			}
 
 		}

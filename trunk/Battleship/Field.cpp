@@ -13,7 +13,7 @@ Field::Field(size_t height, size_t width)
 
 bool Field::isPointInField(size_t h, size_t w) const
 {
-	if ((h > getHeight()) || (w > getWidth()) || (h < 0) || (w < 0))
+	if ((h >= getHeight()) || (w >= getWidth()) || (h < 0) || (w < 0))
 	{
 		return false;
 	}
@@ -73,13 +73,32 @@ Cell* Field::getCellByNum(size_t h, size_t w)
 	}
 }
 
-bool Field::isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p)
+bool Field::isCellBusy(const size_t h, const size_t w)
 {
-	if (false == isPointInField(p.getHeight(), p.getWidth()))
+	return getCellByNum(h, w) -> isFree();
+}
+
+bool Field::isCloseCellsFree(const size_t h, const size_t w)
+{
+	for (size_t i = h - 1; i <= h + 1; ++i)
 	{
-		return false;
+		for (size_t k = w - 1; k <= w + 1; ++k)
+		{
+			if (true == isPointInField(i, k))
+			{
+				if (true == isCellBusy(i, k))
+				{
+					return false;
+				}
+			}
+		}
 	}
 
+	return true;
+}
+
+bool Field::isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p)
+{
 	if (false == p.isVertical())
 	{
 		if (p.getWidth() + sizeOfShip > getWidth())
@@ -89,9 +108,7 @@ bool Field::isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p)
 
 		for (size_t i = 0; i < sizeOfShip; ++i)
 		{
-			Cell* temp = getCellByNum(p.getHeight(), p.getWidth() + i);
-
-			if (false == temp -> isFree())
+			if (false == isCloseCellsFree(p.getHeight(), p.getWidth() + i))
 			{
 				return false;
 			}
@@ -107,10 +124,8 @@ bool Field::isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p)
 		}
 
 		for (size_t i = 0; i < sizeOfShip; ++i)
-		{
-			Cell* temp = getCellByNum(p.getHeight() + i, p.getWidth());
-			
-			if (false == temp -> isFree())
+		{		
+			if (false == isCloseCellsFree(p.getHeight() + i, p.getWidth()))
 			{
 				return false;
 			}

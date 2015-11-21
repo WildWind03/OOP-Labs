@@ -29,6 +29,8 @@ class Field
 
 	bool isPointInField(size_t h, size_t w) const;
 
+	bool isCloseCellsFree(const size_t h, const size_t w);
+
 public:
 	Field (size_t height, size_t width);
 
@@ -39,6 +41,8 @@ public:
 	size_t getHeight() const;
 
 	size_t getSize() const;
+
+	bool isCellBusy(const size_t h, const size_t w);
 
 	static size_t getRand(size_t start, size_t end);
 
