@@ -3,22 +3,21 @@
 #include "Field.h"
 #include "Gamer.h"
 #include "FieldPoint.h"
+#include "myRand.h"
+
 #include <cstdio>
 
 class RandGamer : public Gamer
 {
 
-    bool isVertical() const;
-
-    FieldPoint getCorrectFieldPoint(size_t sizeOfShip);
-
 public:
 
 	RandGamer() = delete;
 
-	RandGamer(Field *myField, Field *aField);
+	RandGamer(Field & myField, Field & aField);
 
-	void placeShips();
+	FieldPoint getPoint(const size_t sizeOfShip);
+
 	void makeShot() {}
 
 	~RandGamer();

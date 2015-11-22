@@ -13,9 +13,9 @@ class GamerFactory
 
 public:
 
-	static Gamer* CreateGamer(std::string type, View *view, Field *myField, Field *aField)
+	static Gamer * CreateGamer(std::string type, Field & myField, Field & aField)
 	{
-        Gamer *gm = NULL;
+        Gamer * gm = nullptr;
 
         const std::string consoleGamer = "ConsoleGamer";
         const std::string randGamer = "RandGamer";
@@ -23,7 +23,7 @@ public:
 
         if (consoleGamer == type)
         {
-            gm = new ConsoleGamer(static_cast<ConsoleView*> (view), myField, aField);
+            gm = new ConsoleGamer(myField, aField);
         }
 
         if (randGamer == type)

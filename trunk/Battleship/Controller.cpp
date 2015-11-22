@@ -5,17 +5,15 @@ Controller::Controller (GameConf *conf)
 	countOfRounds = conf -> getCountRound();
 	currentRound = 0;
 
-	view = new ConsoleView();
-
 	fField = new Field(10, 10);
 	sField = new Field(10, 10);
 	fFieldAttack = new Field (10, 10);
 	sFieldAttack = new Field (10, 10);
 
-	fGamer = GamerFactory::CreateGamer(conf -> getFPlayer(), view, fField, fFieldAttack);
-	sGamer = GamerFactory::CreateGamer(conf -> getSPlayer(), view, sField, sFieldAttack);
+	fGamer = GamerFactory::CreateGamer(conf -> getFPlayer(), *fField, *fFieldAttack);
+	sGamer = GamerFactory::CreateGamer(conf -> getSPlayer(), *sField, *sFieldAttack);
 
-	game = new Game(fGamer, sGamer);
+	game = new Game(*fGamer, *sGamer, *fField, *sField);
 }
 
 void Controller::beginGame()

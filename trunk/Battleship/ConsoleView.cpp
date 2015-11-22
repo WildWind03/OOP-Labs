@@ -5,12 +5,12 @@ ConsoleView::ConsoleView () : View()
 	
 }
 
-void ConsoleView::printInputError() const
+void ConsoleView::printError(const std::string er) const
 {
-	std::cout << inputErrorStr << std::endl;
+	std::cout << er << std::endl;
 }
 
-FieldPoint ConsoleView::getFieldPoint(size_t sizeOfShip)
+FieldPoint ConsoleView::getFieldPoint(const size_t sizeOfShip)
 {
 	char c;
 	size_t h, w;
@@ -41,12 +41,12 @@ FieldPoint ConsoleView::getFieldPoint(size_t sizeOfShip)
 	return FieldPoint(h, w, isVertical);
 }
 
-void ConsoleView::paint(Field *f)
+void ConsoleView::paint(const Field & f)
 {
 	std::cout << "\n  ";
 
-	size_t height = f -> getHeight();
-	size_t length = f -> getWidth();
+	size_t height = f.getHeight();
+	size_t length = f.getWidth();
 
 	size_t counter = 0;
 
@@ -58,27 +58,27 @@ void ConsoleView::paint(Field *f)
 		++curSym;
 	}
 
-	for (size_t i = 0; i < f -> getHeight(); ++i)
+	for (size_t i = 0; i < f.getHeight(); ++i)
 	{
 		std::cout << "\n" << counter << " ";
 
 		++counter;
 
-		for (size_t k = 0; k < f -> getWidth(); ++k)
+		for (size_t k = 0; k < f.getWidth(); ++k)
 		{
-			std::string state = f -> getStateOfCell(i, k);
+			CellState state = f.getStateOfCell(i, k);
 
-			if ("FREE" == state)
+			if (CellState::FREE == state)
 			{
 				std::cout << "-";
 			}
 
-			if ("BUSY" == state)
+			if (CellState::BUSY == state)
 			{
 				std::cout << "*";
 			}
 
-			if ("DESTROYED" == state)
+			if (CellState::DESTROYED == state)
 			{
 				std::cout << "X";
 			}

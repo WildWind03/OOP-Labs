@@ -2,7 +2,7 @@
 
 Cell::Cell()
 {
-	myState = FREE;
+	myState = CellState::FREE;
 
 	myShip = nullptr;	
 }
@@ -11,39 +11,37 @@ void Cell::addShip(Ship *myShip)
 {
 	this -> myShip = myShip;
 	
-	this -> myState = BUSY;
+	this -> myState = CellState::BUSY;
 }
 
 void Cell::destroy()
 {
-	myState = DESTROYED;
+	myState = CellState::DESTROYED;
 }
 
-std::string Cell::getState() const
+CellState Cell::getState() const
 {
-	if (myState == FREE)
-	{
-		return fr;
-	}
-
-	if (myState == BUSY)
-	{
-		return bs;
-	}
-
-	return ds;
+	return myState;
 }
 
 bool Cell::isFree() const
 {
-	if (nullptr == myShip)
+	if (CellState::FREE == myState)
 	{
 		return true;
 	}
-	else
+	
+	return false;
+}
+
+bool Cell::isBusy() const
+{
+	if (CellState::BUSY == myState)
 	{
-		return false;
+		return true;
 	}
+
+	return false;
 }
 
 Cell::~Cell() {}
