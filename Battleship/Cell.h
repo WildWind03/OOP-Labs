@@ -1,30 +1,30 @@
 #pragma once
 
 #include "Ship.h"
+#include "CellState.h"
+
 #include <string>
 #include <iostream>
 
 class Cell
 {
-	enum state {FREE, BUSY, DESTROYED};
-
-	state myState;
+	CellState myState;
 
 	Ship *myShip;
-
-	const std::string fr = "FREE";
-	const std::string bs = "BUSY";
-	const std::string ds = "DESTROYED";
 
 public:
 	
 	Cell();
 
+	Cell (const Cell & c) = delete;
+	Cell & operator=(const Cell & c) = delete;
+
 	void addShip(Ship *myShip);
 	
 	bool isFree() const;
+	bool isBusy() const;
 
-	std::string getState() const; 
+	CellState getState() const; 
 
 	void destroy();
 

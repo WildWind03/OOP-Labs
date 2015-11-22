@@ -3,6 +3,8 @@
 #include "Cell.h"
 #include "Ship.h"
 #include "FieldPoint.h"
+#include "myRand.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -18,37 +20,39 @@ class Field
 	size_t height;
 	size_t width;
 
-	const std::string out_of_range_str = "Error: trying to get cell out of field";
+	const std::string size_error_str = "A ship with such size can't be set there. Try again";
+	const std::string out_of_range_str = "Error! Trying to get cell out of field";
+	const std::string out_of_field_str = "Trying to place the ship out of the field";
+	const std::string place_error_str = "There is another ship close. Try again";
 
 	std::vector <Cell*> cells;
 	std::vector <Ship*> ships;
 
-	Cell * getCellByNum(size_t h, size_t w);
+	Cell & getCellByPoint(const size_t h, const size_t w) const;
 
-	size_t fromHWToPos(size_t h, size_t w) const;
+	size_t fromPointToPos(const size_t h, const size_t w) const;
 
-	bool isPointInField(size_t h, size_t w) const;
-
-	bool isCloseCellsFree(const size_t h, const size_t w);
+	bool isPointInField(const size_t h, const size_t w) const;
+	bool isCloseCellsFree(const size_t h, const size_t w) const;
+	bool isCellBusy(const size_t h, const size_t w) const;
+	bool isShipCloseCellsFree(const size_t sizeOfShip, const FieldPoint & p) const;
+	bool isWholeShipOnField(const size_t sizeOfShip, const FieldPoint &p) const;
 
 public:
-	Field (size_t height, size_t width);
+
+	Field() = delete;
+	Field & operator= (const Field & f) = delete;
+	Field(const Field & f) = delete;
+
+	Field (const size_t height = 10, const size_t width = 10);
 
 	void addShip(Ship *ship, const FieldPoint & p);
 
 	size_t getWidth() const;
-
 	size_t getHeight() const;
-
 	size_t getSize() const;
 
-	bool isCellBusy(const size_t h, const size_t w);
-
-	static size_t getRand(size_t start, size_t end);
-
-	std::string getStateOfCell(size_t h, size_t w);
-
-	bool isPosCorrectForShip(size_t sizeOfShip, const FieldPoint & p);
+	CellState getStateOfCell(const size_t h, const size_t w) const;
 
 	~Field();
 };

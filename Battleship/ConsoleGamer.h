@@ -11,14 +11,16 @@ class ConsoleGamer : public Gamer
 
 	ConsoleView *view;
 
-	FieldPoint getCorrectFieldPoint(size_t sizeOfShip);
-
 public:
 
 	ConsoleGamer() = delete;
-	ConsoleGamer(ConsoleView *view, Field *myField, Field *aField);
+	ConsoleGamer(const ConsoleGamer & g) = delete;
+	ConsoleGamer & operator= (const ConsoleGamer & g) = delete;
 
-	void placeShips();
+	ConsoleGamer(Field & myField, Field & aField);
+
+	FieldPoint getPoint(const size_t sizeOfShip);
+	
 	void makeShot();
 
 	~ConsoleGamer();

@@ -13,9 +13,9 @@ protected:
 
 public:
 
-	virtual FieldPoint getFieldPoint(size_t sizeOfShip) = 0;
+	virtual FieldPoint getFieldPoint(const size_t sizeOfShip) = 0;
 
-	virtual void paint(Field *f) = 0;
+	virtual void paint(const Field & f) = 0;
 
 	virtual ~View() {}
 };

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Field.h"
+#include "FieldPoint.h"
 
 #include <cstdio>
 
@@ -10,20 +11,19 @@ class Gamer
 
 protected:
 
-	Field *enemyField;
-	Field *myField;
+	Field & enemyField;
+	Field & myField;
 
 	Gamer() = delete;
 
-    Gamer(Field *myField, Field *aField) 
+    Gamer(Field & myField, Field & aField) : enemyField(enemyField), myField(myField)
     {
-    	this -> myField = myField;
-    	this -> enemyField = aField;
+    	
     }
 
 public:
 
-	virtual void placeShips()=0;
+	virtual FieldPoint getPoint(const size_t sizeOfShip)=0;
 
 	virtual void makeShot()=0;
 };

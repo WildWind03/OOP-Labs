@@ -2,6 +2,8 @@
 
 #include "View.h"
 #include "FieldPoint.h"
+#include "Field.h"
+
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -22,11 +24,11 @@ public:
 
 	ConsoleView();
 
-	virtual FieldPoint getFieldPoint(size_t sizeOfShip);
+	virtual FieldPoint getFieldPoint(const size_t sizeOfShip);
 
-	virtual void printInputError() const;
+	virtual void printError(const std::string er) const;
 
-	virtual void paint(Field *f);
+	virtual void paint(const Field & f);
 
 	virtual ~ConsoleView();
 };
