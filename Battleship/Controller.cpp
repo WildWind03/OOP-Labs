@@ -1,8 +1,8 @@
 #include "Controller.h"
 
-Controller::Controller (GameConf *conf)
+Controller::Controller (GameConf  & conf)
 {
-	countOfRounds = conf -> getCountRound();
+	countOfRounds = conf.getCountRound();
 	currentRound = 0;
 
 	fField = new Field(10, 10);
@@ -10,8 +10,8 @@ Controller::Controller (GameConf *conf)
 	fFieldAttack = new Field (10, 10);
 	sFieldAttack = new Field (10, 10);
 
-	fGamer = GamerFactory::CreateGamer(conf -> getFPlayer(), *fField, *fFieldAttack);
-	sGamer = GamerFactory::CreateGamer(conf -> getSPlayer(), *sField, *sFieldAttack);
+	fGamer = GamerFactory::CreateGamer(conf.getFPlayer(), *fField, *fFieldAttack);
+	sGamer = GamerFactory::CreateGamer(conf.getSPlayer(), *sField, *sFieldAttack);
 
 	game = new Game(*fGamer, *sGamer, *fField, *sField);
 }

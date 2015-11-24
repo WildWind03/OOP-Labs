@@ -1,22 +1,24 @@
 #pragma once
 
+#include "GamerType.h"
+
 #include <cstdio>
 #include <iostream>
 #include <string>
 
 class GameConf
 {
-	std::string fPlayer;
-	std::string sPlayer;
+	GamerType fPlayer;
+	GamerType sPlayer;
 
 	size_t countRound;
 
 public:
 
-	GameConf(std::string fPlayer, std::string sPlayer, size_t countRound);
+	GameConf(GamerType fPlayer, GamerType sPlayer, size_t countRound);
 
-	std::string getFPlayer();
-	std::string getSPlayer();
+	GamerType getFPlayer();
+	GamerType getSPlayer();
 
 	size_t getCountRound();
 
