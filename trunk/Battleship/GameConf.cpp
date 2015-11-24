@@ -1,18 +1,18 @@
 #include "GameConf.h"
 
-GameConf::GameConf(std::string fPlayer, std::string sPlayer, size_t countRound)
+GameConf::GameConf(GamerType fPlayer, GamerType sPlayer, size_t countRound)
 {
 	this -> fPlayer = fPlayer;
 	this -> sPlayer = sPlayer;
 	this -> countRound = countRound;
 }
 
-std::string GameConf::getFPlayer()
+GamerType GameConf::getFPlayer()
 {
 	return fPlayer;
 }
 
-std::string GameConf::getSPlayer()
+GamerType GameConf::getSPlayer()
 {
 	return sPlayer;
 }

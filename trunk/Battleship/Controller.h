@@ -3,6 +3,8 @@
 #include "GameConf.h"
 #include "Game.h"
 #include "View.h"
+#include "GamerType.h"
+
 #include <cstdio>
 
 class Controller
@@ -25,7 +27,7 @@ class Controller
 
 public:
 
-	Controller(GameConf *conf);
+	Controller(GameConf & conf);
 
 	void beginGame();
 
