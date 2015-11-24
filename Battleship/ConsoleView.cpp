@@ -41,7 +41,7 @@ FieldPoint ConsoleView::getFieldPoint(const size_t sizeOfShip)
 	return FieldPoint(h, w, isVertical);
 }
 
-void ConsoleView::paint(const Field & f)
+void ConsoleView::paint(const FieldView & f)
 {
 	std::cout << "\n  ";
 
@@ -66,7 +66,7 @@ void ConsoleView::paint(const Field & f)
 
 		for (size_t k = 0; k < f.getWidth(); ++k)
 		{
-			CellState state = f.getStateOfCell(i, k);
+			/*CellState state = f.getStateOfCell(i, k);
 
 			if (CellState::FREE == state)
 			{
@@ -82,6 +82,7 @@ void ConsoleView::paint(const Field & f)
 			{
 				std::cout << "X";
 			}
+			*/
 
 		}
 	}

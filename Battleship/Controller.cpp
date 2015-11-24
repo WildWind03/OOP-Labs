@@ -7,13 +7,20 @@ Controller::Controller (GameConf  & conf)
 
 	fField = new Field(10, 10);
 	sField = new Field(10, 10);
-	fFieldAttack = new Field (10, 10);
-	sFieldAttack = new Field (10, 10);
 
-	fGamer = GamerFactory::CreateGamer(conf.getFPlayer(), *fField, *fFieldAttack);
-	sGamer = GamerFactory::CreateGamer(conf.getSPlayer(), *sField, *sFieldAttack);
+	fShots = new SimpleField (10, 10);
+	sShots = new SimpleField (10, 10);
 
-	game = new Game(*fGamer, *sGamer, *fField, *sField);
+	MyFieldView *fMyFieldView = new MyFieldView(*fField, *sShots);
+	MyFieldView *sMyFieldView = new MyFieldView(*sField, *fShots);
+
+	EnemyFieldView *fEnemyFieldView = new EnemyFieldView(*sField, *fShots);
+	EnemyFieldView *sEnemyFieldView = new EnemyFieldView(*fField, *sShots);
+
+	fGamer = GamerFactory::CreateGamer(conf.getFPlayer(), fMyFieldView, fEnemyFieldView);
+	sGamer = GamerFactory::CreateGamer(conf.getSPlayer(), sMyFieldView, sEnemyFieldView);
+
+	game = new Game(*fGamer, *sGamer, *fField, *sField, *fShots, *sShots);
 }
 
 void Controller::beginGame()
@@ -29,6 +36,6 @@ Controller::~Controller()
 	delete(sGamer);
 	delete(sField);
 	delete(fField);
-	delete(fFieldAttack);
-	delete(sFieldAttack);
+	delete(fShots);
+	delete(sShots);
 }

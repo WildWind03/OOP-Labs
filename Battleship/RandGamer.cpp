@@ -1,14 +1,14 @@
 #include "RandGamer.h"
 
-RandGamer::RandGamer(Field & myField, Field & aField) : Gamer(myField, aField) 
+RandGamer::RandGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV) : Gamer(myFieldV, enemyFieldV) 
 {
 	
 }
 
 FieldPoint RandGamer::getPoint(const size_t sizeOfShip)
 {
-	size_t h = myRand::getRand(0, myField.getHeight() - 1);
-	size_t w = myRand::getRand(0, myField.getWidth() - 1);
+	size_t h = myRand::getRand(0, myFieldV -> getHeight() - 1);
+	size_t w = myRand::getRand(0, myFieldV -> getWidth() - 1);
 
 	bool isVert = myRand::getRand(0,1);
 

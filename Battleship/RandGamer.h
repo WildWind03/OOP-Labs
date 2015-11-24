@@ -14,7 +14,7 @@ public:
 
 	RandGamer() = delete;
 
-	RandGamer(Field & myField, Field & aField);
+	RandGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV);
 
 	FieldPoint getPoint(const size_t sizeOfShip);
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Cell.h"
 #include "Ship.h"
 #include "FieldPoint.h"
 #include "myRand.h"
@@ -25,16 +24,13 @@ class Field
 	const std::string out_of_field_str = "Trying to place the ship out of the field";
 	const std::string place_error_str = "There is another ship close. Try again";
 
-	std::vector <Cell*> cells;
+	std::vector <Ship*> cells;
 	std::vector <Ship*> ships;
 
-	Cell & getCellByPoint(const size_t h, const size_t w) const;
-
-	size_t fromPointToPos(const size_t h, const size_t w) const;
+	size_t getPosFromPoint(const size_t h, const size_t w) const;
 
 	bool isPointInField(const size_t h, const size_t w) const;
 	bool isCloseCellsFree(const size_t h, const size_t w) const;
-	bool isCellBusy(const size_t h, const size_t w) const;
 	bool isShipCloseCellsFree(const size_t sizeOfShip, const FieldPoint & p) const;
 	bool isWholeShipOnField(const size_t sizeOfShip, const FieldPoint &p) const;
 
@@ -46,13 +42,13 @@ public:
 
 	Field (const size_t height = 10, const size_t width = 10);
 
-	void addShip(Ship *ship, const FieldPoint & p);
+	void attachShip(Ship *ship, const FieldPoint & p);
+
+	bool isShipOnCell(const size_t h, const size_t w) const;
 
 	size_t getWidth() const;
 	size_t getHeight() const;
 	size_t getSize() const;
-
-	CellState getStateOfCell(const size_t h, const size_t w) const;
 
 	~Field();
 };

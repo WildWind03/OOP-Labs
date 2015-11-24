@@ -7,7 +7,7 @@ Field::Field(const size_t height, const size_t width)
 
 	for (size_t i = 0; i < getSize(); ++i)
 	{
-		cells.push_back(new Cell());
+		cells.push_back(nullptr);
 	}
 }
 
@@ -21,7 +21,19 @@ bool Field::isPointInField(const size_t h, const size_t w) const
 	return true;
 }
 
-void Field::addShip(Ship *ship, const FieldPoint & p)
+bool Field::isShipOnCell(const size_t h, const size_t w) const
+{
+	size_t pos = getPosFromPoint(h, w);
+
+	if (nullptr == cells[pos])
+	{
+		return false;
+	}
+	
+	return true;
+}
+
+void Field::attachShip(Ship *ship, const FieldPoint & p)
 {
 	if (isPointInField(p.getHeight(), p.getWidth()) == false)
 	{
@@ -42,16 +54,16 @@ void Field::addShip(Ship *ship, const FieldPoint & p)
 	{
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
-			Cell & myCell = getCellByPoint(p.getHeight() + i, p.getWidth());
-			myCell.addShip(ship);
+			size_t pos = getPosFromPoint(p.getHeight() + i, p.getWidth());
+			cells[pos] = ship;
 		}
 	}
 	else
 	{
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
-			Cell & myCell = getCellByPoint(p.getHeight(), p.getWidth() + i);
-			myCell.addShip(ship);
+			size_t pos = getPosFromPoint(p.getHeight(), p.getWidth() + i);
+			cells[pos] = ship;
 		}
 	}	
 }
@@ -71,26 +83,9 @@ size_t Field::getWidth() const
 	return width;
 }
 
-size_t Field::fromPointToPos(const size_t h, const size_t w) const
+size_t Field::getPosFromPoint(const size_t h, const size_t w) const
 {
 	return h * getWidth() + w;
-}
-
-Cell & Field::getCellByPoint(const size_t h, const size_t w) const
-{
-	if (true == isPointInField(h,w))
-	{
-		return *(cells[h * getWidth() + w]);
-	}
-	else
-	{
-		throw std::range_error (out_of_range_str);
-	}
-}
-
-bool Field::isCellBusy(const size_t h, const size_t w) const
-{
-	return getCellByPoint(h, w).isBusy();
 }
 
 bool Field::isCloseCellsFree(const size_t h, const size_t w) const
@@ -106,7 +101,7 @@ bool Field::isCloseCellsFree(const size_t h, const size_t w) const
 			{
 				if (true == isPointInField(i, k))
 				{
-					if (true == isCellBusy(i, k))
+					if (true == isShipOnCell(i, k))
 					{
 						return false;
 					}
@@ -162,13 +157,6 @@ bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const FieldPoint & p)
 	}
 
 	return true;
-}
-
-CellState Field::getStateOfCell(const size_t h, const size_t w) const
-{
-	Cell & c = getCellByPoint(h, w);
-
-	return c.getState();
 }
 
 Field::~Field()

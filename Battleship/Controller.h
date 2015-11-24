@@ -4,6 +4,9 @@
 #include "Game.h"
 #include "View.h"
 #include "GamerType.h"
+#include "MyFieldView.h"
+#include "EnemyFieldView.h"
+
 
 #include <cstdio>
 
@@ -12,8 +15,8 @@ class Controller
 	Field *fField;
 	Field *sField;
 
-	Field *fFieldAttack;
-	Field *sFieldAttack;
+	SimpleField *fShots;
+	SimpleField *sShots;
 
 	Gamer *fGamer;
 	Gamer *sGamer;
