@@ -1,7 +1,7 @@
 #include "Game.h"
 
-Game::Game (Gamer & g1, Gamer & g2, Field & g1Field, Field & g2Field)
-			: g1 (g1), g2(g2), g1Field(g1Field), g2Field(g2Field)
+Game::Game (Gamer & g1, Gamer & g2, Field & g1Field, Field & g2Field, SimpleField & g1Shots, SimpleField & g2Shots)
+			: g1 (g1), g2(g2), g1Field(g1Field), g2Field(g2Field), g1Shots(g1Shots), g2Shots(g2Shots)
 {
 
 }
@@ -10,8 +10,8 @@ void Game::begin()
 {
 	placeShips(g2, g2Field);
 
-	ConsoleView v;
-	v.paint(g2Field);
+	//ConsoleView v;
+	//v.paint(g2Field);
 
 	placeShips(g1, g1Field);
 
@@ -38,7 +38,7 @@ void Game::placeShips (Gamer & g, Field  & f)
 
 					myShip = new Ship(i);
 
-					f.addShip(myShip, p);
+					f.attachShip(myShip, p);
 
 					break;
 				}
@@ -53,6 +53,11 @@ void Game::placeShips (Gamer & g, Field  & f)
 			}
 		}
 	}	
+}
+
+void Game::markShot(SimpleField & f)
+{
+
 }
 
 void Game::notify()

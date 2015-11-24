@@ -9,7 +9,7 @@ class OptGamer : public Gamer
 
 public:
 	
-	OptGamer(Field & myField, Field & aField) : Gamer (myField, aField) {}
+	OptGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV) : Gamer (myFieldV, enemyFieldV) {}
 
 	FieldPoint getPoint(const size_t sizeOfShip) {}
 	void makeShot(){}

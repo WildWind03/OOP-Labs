@@ -2,6 +2,8 @@
 
 #include "Field.h"
 #include "FieldPoint.h"
+#include "MyFieldView.h"
+#include "EnemyFieldView.h"
 
 #include <cstdio>
 
@@ -11,12 +13,12 @@ class Gamer
 
 protected:
 
-	Field & enemyField;
-	Field & myField;
+	MyFieldView * myFieldV;
+	EnemyFieldView * enemyFieldV;
 
 	Gamer() = delete;
 
-    Gamer(Field & myField, Field & aField) : enemyField(enemyField), myField(myField)
+    Gamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV) : enemyFieldV(enemyFieldV), myFieldV(myFieldV)
     {
     	
     }
@@ -26,4 +28,10 @@ public:
 	virtual FieldPoint getPoint(const size_t sizeOfShip)=0;
 
 	virtual void makeShot()=0;
+
+	virtual ~Gamer()
+	{
+		delete(enemyFieldV);
+		delete(myFieldV);
+	}
 };

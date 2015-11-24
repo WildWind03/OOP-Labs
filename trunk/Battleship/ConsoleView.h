@@ -3,6 +3,7 @@
 #include "View.h"
 #include "FieldPoint.h"
 #include "Field.h"
+#include "FieldView.h"
 
 #include <iostream>
 #include <string>
@@ -28,7 +29,7 @@ public:
 
 	virtual void printError(const std::string er) const;
 
-	virtual void paint(const Field & f);
+	virtual void paint(const FieldView & f);
 
 	virtual ~ConsoleView();
 };

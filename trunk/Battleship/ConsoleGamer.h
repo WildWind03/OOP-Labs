@@ -17,7 +17,7 @@ public:
 	ConsoleGamer(const ConsoleGamer & g) = delete;
 	ConsoleGamer & operator= (const ConsoleGamer & g) = delete;
 
-	ConsoleGamer(Field & myField, Field & aField);
+	ConsoleGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV);
 
 	FieldPoint getPoint(const size_t sizeOfShip);
 	
