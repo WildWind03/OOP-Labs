@@ -4,6 +4,8 @@
 #include "Gamer.h"
 #include "Field.h"
 #include "FieldPoint.h"
+#include "SimplePoint.h"
+
 #include <cstdio>
 
 class ConsoleGamer : public Gamer
@@ -19,9 +21,10 @@ public:
 
 	ConsoleGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV);
 
-	FieldPoint getPoint(const size_t sizeOfShip);
+	virtual FieldPoint getPoint(const size_t sizeOfShip);
 	
-	void makeShot();
+	virtual SimplePoint getPointForShot();
+	
 
 	~ConsoleGamer();
 };

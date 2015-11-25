@@ -4,10 +4,12 @@
 #include "FieldPoint.h"
 #include "Field.h"
 #include "FieldView.h"
+#include "SimplePoint.h"
 
 #include <iostream>
 #include <string>
 #include <stdexcept>
+#include <fstream>
 
 class ConsoleView : public View
 {
@@ -17,13 +19,19 @@ class ConsoleView : public View
 	const std::string inputErrorStr = "It's impossible to place the ship there. Try again";
 	const std::string typeStr = "Type a point which you want to place your ship on. Size of ship is ";	
 
+	const std::string typeShotStr = "Type a point which you want to strike on";
+
 	size_t getNumByChar(char c) const;
 
 	bool getOrient(char c) const;
 
+	std::ifstream in;
+
 public:
 
 	ConsoleView();
+
+	virtual SimplePoint getShotPoint();
 
 	virtual FieldPoint getFieldPoint(const size_t sizeOfShip);
 
