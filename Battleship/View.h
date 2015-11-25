@@ -4,6 +4,8 @@
 #include "FieldPoint.h"
 #include "Field.h"
 #include "FieldView.h"
+#include "SimplePoint.h"
+
 #include <cstdio>
 
 class View : public Observer
@@ -13,6 +15,8 @@ protected:
 	View() {}
 
 public:
+
+	virtual SimplePoint getShotPoint() = 0;
 
 	virtual FieldPoint getFieldPoint(const size_t sizeOfShip) = 0;
 

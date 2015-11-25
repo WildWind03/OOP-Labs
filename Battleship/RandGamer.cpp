@@ -17,6 +17,14 @@ FieldPoint RandGamer::getPoint(const size_t sizeOfShip)
 	return p;
 }
 
+SimplePoint RandGamer::getPointForShot()
+{
+	size_t h = myRand::getRand(0, myFieldV -> getHeight() - 1);
+	size_t w = myRand::getRand(0, myFieldV -> getWidth() - 1);
+
+	return SimplePoint(h, w);
+}
+
 RandGamer::~RandGamer()
 {
 

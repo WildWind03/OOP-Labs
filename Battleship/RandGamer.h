@@ -3,6 +3,7 @@
 #include "Field.h"
 #include "Gamer.h"
 #include "FieldPoint.h"
+#include "SimplePoint.h"
 #include "myRand.h"
 
 #include <cstdio>
@@ -16,9 +17,9 @@ public:
 
 	RandGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV);
 
-	FieldPoint getPoint(const size_t sizeOfShip);
+	virtual FieldPoint getPoint(const size_t sizeOfShip);
 
-	void makeShot() {}
+	virtual SimplePoint getPointForShot();
 
 	~RandGamer();
 };

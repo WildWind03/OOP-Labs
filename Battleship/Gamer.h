@@ -4,6 +4,7 @@
 #include "FieldPoint.h"
 #include "MyFieldView.h"
 #include "EnemyFieldView.h"
+#include "SimplePoint.h"
 
 #include <cstdio>
 
@@ -27,7 +28,7 @@ public:
 
 	virtual FieldPoint getPoint(const size_t sizeOfShip)=0;
 
-	virtual void makeShot()=0;
+	virtual SimplePoint getPointForShot()=0;
 
 	virtual ~Gamer()
 	{
