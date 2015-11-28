@@ -12,18 +12,10 @@
 
 class Controller
 {
-	Field *fField;
-	Field *sField;
-
-	SimpleField *fShots;
-	SimpleField *sShots;
-
-	Gamer *fGamer;
-	Gamer *sGamer;
+	Gamer *g1;
+	Gamer *g2;
 
 	Game *game;
-
-	View *view;
 
 	size_t currentRound;
 	size_t countOfRounds;

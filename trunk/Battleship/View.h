@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Observer.h"
-#include "FieldPoint.h"
+#include "ShipPoint.h"
 #include "Field.h"
 #include "FieldView.h"
-#include "SimplePoint.h"
+#include "ShotPoint.h"
 
 #include <cstdio>
 
-class View : public Observer
+class View
 {
 protected:
 
@@ -16,9 +15,9 @@ protected:
 
 public:
 
-	virtual SimplePoint getShotPoint() = 0;
+	virtual ShotPoint getShotPoint() = 0;
 
-	virtual FieldPoint getFieldPoint(const size_t sizeOfShip) = 0;
+	virtual ShipPoint getShipPoint(const size_t sizeOfShip) = 0;
 
 	virtual void paint(const FieldView & f) = 0;
 

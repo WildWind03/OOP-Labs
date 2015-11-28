@@ -1,38 +1,42 @@
 #pragma once
 
 #include "Field.h"
-#include "FieldPoint.h"
+#include "ShipPoint.h"
 #include "MyFieldView.h"
 #include "EnemyFieldView.h"
-#include "SimplePoint.h"
+#include "ShotPoint.h"
+#include "ShotState.h"
 
 #include <cstdio>
 
 
 class Gamer
 {
-
+	
 protected:
-
-	MyFieldView * myFieldV;
-	EnemyFieldView * enemyFieldV;
-
-	Gamer() = delete;
-
-    Gamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV) : enemyFieldV(enemyFieldV), myFieldV(myFieldV)
+	
+    Gamer()
     {
     	
     }
 
 public:
 
-	virtual FieldPoint getPoint(const size_t sizeOfShip)=0;
+	virtual void recieveError(const std::range_error & er) const
+	{
 
-	virtual SimplePoint getPointForShot()=0;
+	}
+
+	virtual void recieveShotState(ShotState state) const
+	{
+
+	}
+
+	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const = 0;
+	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const = 0;
 
 	virtual ~Gamer()
 	{
-		delete(enemyFieldV);
-		delete(myFieldV);
+
 	}
 };

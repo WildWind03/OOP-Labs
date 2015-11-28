@@ -2,24 +2,23 @@
 
 #include "Field.h"
 #include "Gamer.h"
-#include "FieldPoint.h"
-#include "SimplePoint.h"
+#include "ShipPoint.h"
+#include "ShotPoint.h"
 #include "myRand.h"
 
 #include <cstdio>
 
 class RandGamer : public Gamer
 {
-
 public:
 
-	RandGamer() = delete;
+	RandGamer();
 
-	RandGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV);
+	RandGamer (const RandGamer & g) = delete;
+	RandGamer & operator=(const RandGamer & g) = delete;
 
-	virtual FieldPoint getPoint(const size_t sizeOfShip);
-
-	virtual SimplePoint getPointForShot();
+	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const;
+	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const;
 
 	~RandGamer();
 };

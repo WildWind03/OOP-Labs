@@ -2,17 +2,18 @@
 
 #include "Gamer.h"
 #include "Field.h"
-#include "FieldPoint.h"
-#include "SimplePoint.h"
+#include "ShipPoint.h"
+#include "ShotPoint.h"
 
 class OptGamer : public Gamer
 {
 
 public:
 	
-	OptGamer(MyFieldView * myFieldV, EnemyFieldView * enemyFieldV) : Gamer (myFieldV, enemyFieldV) {}
+	OptGamer() : Gamer () {}
 
-	FieldPoint getPoint(const size_t sizeOfShip) {}
-	
-	virtual SimplePoint getPointForShot () {}
+	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const {}
+	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const {}
+
+	virtual ~OptGamer(){}
 };
