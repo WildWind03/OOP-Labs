@@ -15,23 +15,23 @@ class GamerFactory
 
 public:
 
-	static Gamer * CreateGamer(GamerType type, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV)
+	static Gamer * CreateGamer(GamerType type)
 	{
         Gamer * gm = nullptr;
 
         if (GamerType::consoleGamer == type)
         {
-            gm = new ConsoleGamer(myFieldV, enemyFieldV);
+            gm = new ConsoleGamer();
         }
 
         if (GamerType::randGamer == type)
         {
-            gm = new RandGamer(myFieldV, enemyFieldV);
+            gm = new RandGamer();
         }
 
         if (GamerType::optGamer == type)
         {
-            gm = new OptGamer(myFieldV, enemyFieldV);
+            gm = new OptGamer();
         }
 
 		return gm;

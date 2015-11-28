@@ -5,44 +5,61 @@ ConsoleView::ConsoleView () : View()
 	in.open("map.txt");	
 }
 
-SimplePoint ConsoleView::getShotPoint()
+void ConsoleView::typeShotState(ShotState state)
 {
-	char c;
+	switch(state)
+	{
+		case ShotState::MISSED :
+			std::cout << missedStr << std::endl;
+			break;
+
+		case ShotState::INJURED :
+			std::cout << injuredStr << std::endl;
+			break;
+
+		case ShotState::DESTROYED :
+			std::cout << destrStr << std::endl;
+			break;
+	}
+}
+
+ShotPoint ConsoleView::getShotPoint()
+{
+	char x;
 	size_t h, w;
 
 	std::cout << typeShotStr << std::endl;
-	///////////
-	////////// 
 
 	while (true)
 	{
-		std::cin >> c;
-		std::cin >> h;
-		//in >> c;
-		//in >> h;
-		//in >> orient;
+		std::string myStr;
+
+		std::getline(std::cin, myStr);
+
+		ShotParser sParser(myStr);
 
 		try
 		{
-			w = getNumByChar(c);
+			ShotPoint p = sParser.parse();
+
+			return p;
+
 			break;
 		}
-		catch (std::range_error & a)
+		catch (std::exception & a)
 		{
-			std::cout << a.what() << std::endl;
+			printError(a);
 			continue;
 		}
 	}
-
-	return SimplePoint(h, w);	
 }
 
-void ConsoleView::printError(const std::string er) const
+void ConsoleView::printError(const std::exception & er)
 {
-	std::cout << er << std::endl;
+	std::cout << er.what() << std::endl;
 }
 
-FieldPoint ConsoleView::getFieldPoint(const size_t sizeOfShip)
+ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 {
 	char c;
 	size_t h, w;
@@ -50,32 +67,30 @@ FieldPoint ConsoleView::getFieldPoint(const size_t sizeOfShip)
 	bool isVertical;
 
 	std::cout << typeStr << sizeOfShip << std::endl;
-	///////////
-	////////// 
 
 	while (true)
 	{
-		//std::cin >> c;
-		//std::cin >> h;
-		//std::cin >> orient;
-		in >> c;
-		in >> h;
-		in >> orient;
+		std::string myStr;
+
+		std::getline(in, myStr);
+
+		ShipParser sParser(myStr);
 
 		try
 		{
-			w = getNumByChar(c);
-			isVertical = getOrient(orient);
+			ShipPoint p = sParser.parse();
+
+			return p;
+
 			break;
 		}
-		catch (std::range_error & a)
+		catch (std::exception & a)
 		{
-			std::cout << a.what() << std::endl;
+			printError(a);
 			continue;
 		}
 	}
 
-	return FieldPoint(h, w, isVertical);
 }
 
 void ConsoleView::paint(const FieldView & f)
@@ -129,37 +144,7 @@ void ConsoleView::paint(const FieldView & f)
 		}
 	}
 
-	std::cout << "\n";
-}
-
-bool ConsoleView::getOrient(char c) const
-{
-	if ('V' == c)
-	{
-		return true;
-	}
-
-	if ('H' != c)
-	{
-		throw std::range_error(orientErrorStr);
-	}
-
-	return false;
-}
-
-size_t ConsoleView::getNumByChar(char c) const
-{
-	const char posOfA = 65;
-	const char posOfLastChar = 90;
-
-	if (c < posOfA || c > posOfLastChar)
-	{
-		throw std::range_error(rangeErrorStr);
-	}
-
-	size_t w = (size_t) (c - posOfA);
-
-	return w;
+	std::cout << std::endl << std::endl;
 }
 
 ConsoleView::~ConsoleView()

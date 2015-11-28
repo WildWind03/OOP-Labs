@@ -5,22 +5,10 @@ Controller::Controller (GameConf  & conf)
 	countOfRounds = conf.getCountRound();
 	currentRound = 0;
 
-	fField = new Field(10, 10);
-	sField = new Field(10, 10);
+	g1 = GamerFactory::CreateGamer(conf.getFPlayer());
+	g2 = GamerFactory::CreateGamer(conf.getSPlayer());
 
-	fShots = new SimpleField (10, 10);
-	sShots = new SimpleField (10, 10);
-
-	MyFieldView *fMyFieldView = new MyFieldView(*fField, *sShots);
-	MyFieldView *sMyFieldView = new MyFieldView(*sField, *fShots);
-
-	EnemyFieldView *fEnemyFieldView = new EnemyFieldView(*sField, *fShots);
-	EnemyFieldView *sEnemyFieldView = new EnemyFieldView(*fField, *sShots);
-
-	fGamer = GamerFactory::CreateGamer(conf.getFPlayer(), fMyFieldView, fEnemyFieldView);
-	sGamer = GamerFactory::CreateGamer(conf.getSPlayer(), sMyFieldView, sEnemyFieldView);
-
-	game = new Game(*fGamer, *sGamer, *fField, *sField, *fShots, *sShots);
+	game = new Game(*g1, *g2);
 }
 
 void Controller::beginGame()
@@ -30,12 +18,7 @@ void Controller::beginGame()
 
 Controller::~Controller()
 {
-	delete(view);
 	delete(game);
-	delete(fGamer);
-	delete(sGamer);
-	delete(sField);
-	delete(fField);
-	delete(fShots);
-	delete(sShots);
+	delete(g1);
+	delete(g2);
 }

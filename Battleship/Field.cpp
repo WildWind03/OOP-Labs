@@ -11,6 +11,15 @@ Field::Field(const size_t height, const size_t width)
 	}
 }
 
+void Field::destroyShipOnCell(const size_t h, const size_t w)
+{
+	size_t pos = getPosFromPoint(h, w);
+
+	Ship & myShip = *cells[pos];
+
+	myShip.takeDamage();
+}
+
 bool Field::isPointInField(const size_t h, const size_t w) const
 {
 	if ((h >= getHeight()) || (w >= getWidth()))
@@ -33,7 +42,7 @@ bool Field::isShipOnCell(const size_t h, const size_t w) const
 	return true;
 }
 
-void Field::attachShip(Ship *ship, const FieldPoint & p)
+void Field::attachShip(Ship *ship, const ShipPoint & p)
 {
 	if (isPointInField(p.getHeight(), p.getWidth()) == false)
 	{
@@ -113,7 +122,7 @@ bool Field::isCloseCellsFree(const size_t h, const size_t w) const
 	return true;
 }
 
-bool Field::isWholeShipOnField(const size_t sizeOfShip, const FieldPoint & p) const
+bool Field::isWholeShipOnField(const size_t sizeOfShip, const ShipPoint & p) const
 {
 	if (true == p.isVertical())
 	{
@@ -133,7 +142,7 @@ bool Field::isWholeShipOnField(const size_t sizeOfShip, const FieldPoint & p) co
 	return true;
 }
 
-bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const FieldPoint & p) const
+bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const ShipPoint & p) const
 {
 	if (false == p.isVertical())
 	{

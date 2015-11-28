@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Ship.h"
-#include "FieldPoint.h"
 #include "myRand.h"
+#include "ShipPoint.h"
 
 #include <iostream>
 #include <string>
@@ -25,14 +25,14 @@ class Field
 	const std::string place_error_str = "There is another ship close. Try again";
 
 	std::vector <Ship*> cells;
-	std::vector <Ship*> ships;
+	//std::vector <Ship*> ships;
 
 	size_t getPosFromPoint(const size_t h, const size_t w) const;
 
 	bool isPointInField(const size_t h, const size_t w) const;
 	bool isCloseCellsFree(const size_t h, const size_t w) const;
-	bool isShipCloseCellsFree(const size_t sizeOfShip, const FieldPoint & p) const;
-	bool isWholeShipOnField(const size_t sizeOfShip, const FieldPoint &p) const;
+	bool isShipCloseCellsFree(const size_t sizeOfShip, const ShipPoint & p) const;
+	bool isWholeShipOnField(const size_t sizeOfShip, const ShipPoint &p) const;
 
 public:
 
@@ -42,9 +42,11 @@ public:
 
 	Field (const size_t height = 10, const size_t width = 10);
 
-	void attachShip(Ship *ship, const FieldPoint & p);
+	void attachShip(Ship *ship, const ShipPoint & p);
 
 	bool isShipOnCell(const size_t h, const size_t w) const;
+
+	void destroyShipOnCell(const size_t h, const size_t w);
 
 	size_t getWidth() const;
 	size_t getHeight() const;
