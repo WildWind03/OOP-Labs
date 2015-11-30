@@ -6,16 +6,20 @@
 #include "GamerType.h"
 #include "MyFieldView.h"
 #include "EnemyFieldView.h"
+#include "Statistics.h"
+#include "ConsoleView.h"
 
 
 #include <cstdio>
 
 class Controller
 {
-	Gamer *g1;
-	Gamer *g2;
+	Gamer * g1;
+	Gamer * g2;
 
-	Game *game;
+	Game * game;
+
+	Statistics * stat;
 
 	size_t currentRound;
 	size_t countOfRounds;

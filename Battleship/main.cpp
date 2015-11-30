@@ -3,13 +3,18 @@
 #include "Controller.h"
 #include "GameConf.h"
 #include "GamerType.h"
+#include "ConsoleParser.h"
 
 int main (int argc, char *argv[])
 {
-    GamerType p1 = GamerType::consoleGamer;
-    GamerType p2 = GamerType::randGamer;
+	ConsoleParser parser(argc, argv);
 
-	GameConf conf(p1, p2, 1);
+	size_t countOfRounds = parser.getCountOfRounds();
+
+	GamerType p1 = parser.getFirstGamerType();
+    GamerType p2 = parser.getSecondGamerType();
+
+	GameConf conf(p1, p2, countOfRounds);
 
 	Controller controller(conf);
 

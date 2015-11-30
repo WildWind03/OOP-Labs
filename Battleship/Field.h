@@ -16,8 +16,8 @@
 
 class Field
 {
-	size_t height;
-	size_t width;
+	const size_t height;
+	const size_t width;
 
 	const std::string size_error_str = "A ship with such size can't be set there. Try again";
 	const std::string out_of_range_str = "Error! Trying to get cell out of field";
@@ -25,7 +25,7 @@ class Field
 	const std::string place_error_str = "There is another ship close. Try again";
 
 	std::vector <Ship*> cells;
-	//std::vector <Ship*> ships;
+	std::vector <Ship*> ships;
 
 	size_t getPosFromPoint(const size_t h, const size_t w) const;
 
@@ -46,7 +46,9 @@ public:
 
 	bool isShipOnCell(const size_t h, const size_t w) const;
 
-	void destroyShipOnCell(const size_t h, const size_t w);
+	bool destroyShipOnCell(const size_t h, const size_t w);
+
+	void clear();
 
 	size_t getWidth() const;
 	size_t getHeight() const;

@@ -6,6 +6,7 @@
 #include "EnemyFieldView.h"
 #include "ShotPoint.h"
 #include "ShotState.h"
+#include "Statistics.h"
 
 #include <cstdio>
 
@@ -22,14 +23,29 @@ protected:
 
 public:
 
-	virtual void recieveError(const std::range_error & er) const
+	virtual void onRecieveError(const std::range_error & er) const
 	{
 
 	}
 
-	virtual void recieveShotState(ShotState state) const
+	virtual void onRecieveShotState(ShotState state) const
 	{
 
+	}
+
+	virtual void onGetStatistics(const Statistics & stat) const
+	{
+
+	}
+
+	virtual void onGameEnded(bool isWon) const
+	{
+
+	}
+
+	virtual void onGameStarted() const
+	{
+		
 	}
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const = 0;
