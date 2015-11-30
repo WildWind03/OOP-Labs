@@ -1,23 +1,44 @@
 #include "Field.h"
 
-Field::Field(const size_t height, const size_t width)
+Field::Field(const size_t height, const size_t width) : height(height), width(width)
 {
-	this -> height = height;
-	this -> width = width;
-
 	for (size_t i = 0; i < getSize(); ++i)
 	{
 		cells.push_back(nullptr);
 	}
 }
 
-void Field::destroyShipOnCell(const size_t h, const size_t w)
+void Field::clear()
+{
+	for (size_t i = 0; i < ships.size(); ++i)
+	{
+		delete ships[i];
+	}
+
+	for (size_t i = 0; i < getSize(); ++i)
+	{
+		cells[i] = nullptr;
+	}
+
+	ships.clear();
+}
+
+bool Field::destroyShipOnCell(const size_t h, const size_t w)
 {
 	size_t pos = getPosFromPoint(h, w);
 
 	Ship & myShip = *cells[pos];
 
 	myShip.takeDamage();
+
+	if (true == myShip.isDestroyed())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 bool Field::isPointInField(const size_t h, const size_t w) const
@@ -58,6 +79,8 @@ void Field::attachShip(Ship *ship, const ShipPoint & p)
 	{
 		throw std::range_error (place_error_str);
 	}
+
+	ships.push_back(ship);
 
 	if (true == p.isVertical())
 	{
@@ -170,8 +193,8 @@ bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const ShipPoint & p) 
 
 Field::~Field()
 {
-	for (size_t i = 0; i < getSize(); ++i)
+	for (size_t i = 0; i < ships.size(); ++i)
 	{
-		delete(cells[i]);
+		delete ships[i];
 	}
 }

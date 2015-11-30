@@ -23,6 +23,26 @@ void ConsoleView::typeShotState(ShotState state)
 	}
 }
 
+void ConsoleView::printGameStartedStr()
+{
+	
+	std::cout << "The game has been begun!" << std::endl;
+	in.close();
+	in.open("map.txt");
+}
+
+void ConsoleView::printGameEndedStr(bool isWon)
+{
+	if (true == isWon)
+	{
+		std::cout << "Congratulations! You have won!" << std::endl;
+	}
+	else
+	{
+		std::cout << "Not bad! But you are loser!" << std::endl;
+	}
+}
+
 ShotPoint ConsoleView::getShotPoint()
 {
 	char x;
@@ -52,6 +72,13 @@ ShotPoint ConsoleView::getShotPoint()
 			continue;
 		}
 	}
+}
+
+void ConsoleView::printStatistics(const Statistics & stat)
+{
+	std::cout << "Total Games: " << stat.getCountOfGames() << std::endl;
+	std::cout << "Gamer 1 won " << stat.getG1Vic() << " games" << std::endl;
+	std::cout << "Gamer 2 won " << stat.getG2Vic() << " games" << std::endl;
 }
 
 void ConsoleView::printError(const std::exception & er)

@@ -8,6 +8,7 @@
 #include "FieldView.h"
 #include "ShotPoint.h"
 #include "ShotState.h"
+#include "Statistics.h"
 
 #include <iostream>
 #include <string>
@@ -32,10 +33,12 @@ public:
 	ConsoleView & operator= (const ConsoleView & v) = delete;
 
 	virtual ShotPoint getShotPoint();
-
 	virtual ShipPoint getShipPoint(const size_t sizeOfShip);
 
 	virtual void printError(const std::exception & er);
+	virtual void printStatistics(const Statistics & stat);
+	virtual void printGameEndedStr(bool isWon);
+	virtual void printGameStartedStr();
 
 	virtual void paint(const FieldView & f);
 
