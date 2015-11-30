@@ -1,0 +1,10 @@
+A 2 H
+A 4 H
+B 8 H
+C 5 H
+J 0 V
+D 0 V
+F 0 H
+D 3 H
+G 6 H
+E 9 H
