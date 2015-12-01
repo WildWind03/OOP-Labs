@@ -20,5 +20,5 @@ public:
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const;
 	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const;
 
-	~RandGamer();
+	virtual ~RandGamer();
 };

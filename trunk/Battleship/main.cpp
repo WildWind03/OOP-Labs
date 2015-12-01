@@ -1,5 +1,3 @@
-//#include "optionparser.h"
-
 #include "Controller.h"
 #include "GameConf.h"
 #include "GamerType.h"

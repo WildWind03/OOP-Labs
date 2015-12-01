@@ -23,27 +23,27 @@ protected:
 
 public:
 
-	virtual void onRecieveError(const std::range_error & er) const
+	virtual void onRecieveError(const std::range_error & er)
 	{
 
 	}
 
-	virtual void onRecieveShotState(ShotState state) const
+	virtual void onRecieveShotState(ShotState state)
 	{
 
 	}
 
-	virtual void onGetStatistics(const Statistics & stat) const
+	virtual void onGetStatistics(const Statistics & stat)
 	{
 
 	}
 
-	virtual void onGameEnded(bool isWon) const
+	virtual void onGameEnded(bool isWon)
 	{
 
 	}
 
-	virtual void onGameStarted() const
+	virtual void onGameStarted()
 	{
 		
 	}

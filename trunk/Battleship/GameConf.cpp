@@ -7,17 +7,17 @@ GameConf::GameConf(GamerType fPlayer, GamerType sPlayer, size_t countRound)
 	this -> countRound = countRound;
 }
 
-GamerType GameConf::getFPlayer()
+GamerType GameConf::getFPlayer() const
 {
 	return fPlayer;
 }
 
-GamerType GameConf::getSPlayer()
+GamerType GameConf::getSPlayer() const
 {
 	return sPlayer;
 }
 
-size_t GameConf::getCountRound()
+size_t GameConf::getCountRound() const
 {
 	return countRound;
 }

@@ -38,7 +38,7 @@ public:
 
 	virtual CellState getCellState(const size_t h, const size_t w) const = 0;
 
-	~FieldView()
+	virtual ~FieldView()
 	{
 		
 	}

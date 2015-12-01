@@ -19,6 +19,7 @@ class Field
 	const size_t height;
 	const size_t width;
 
+	const std::string wrongFiledSize = "Incorrect height of field";
 	const std::string size_error_str = "A ship with such size can't be set there. Try again";
 	const std::string out_of_range_str = "Error! Trying to get cell out of field";
 	const std::string out_of_field_str = "Trying to place the ship out of the field";
@@ -32,7 +33,7 @@ class Field
 	bool isPointInField(const size_t h, const size_t w) const;
 	bool isCloseCellsFree(const size_t h, const size_t w) const;
 	bool isShipCloseCellsFree(const size_t sizeOfShip, const ShipPoint & p) const;
-	bool isWholeShipOnField(const size_t sizeOfShip, const ShipPoint &p) const;
+	bool isWholeShipOnField(const size_t sizeOfShip, const ShipPoint & p) const;
 
 public:
 
@@ -42,13 +43,12 @@ public:
 
 	Field (const size_t height = 10, const size_t width = 10);
 
-	void attachShip(Ship *ship, const ShipPoint & p);
-
 	bool isShipOnCell(const size_t h, const size_t w) const;
 
 	bool destroyShipOnCell(const size_t h, const size_t w);
 
 	void clear();
+	void attachShip(Ship *ship, const ShipPoint & p);
 
 	size_t getWidth() const;
 	size_t getHeight() const;

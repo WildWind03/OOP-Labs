@@ -122,12 +122,12 @@ size_t Field::getPosFromPoint(const size_t h, const size_t w) const
 
 bool Field::isCloseCellsFree(const size_t h, const size_t w) const
 {
-	int h1 = h;
-	int w1 = w;
+	long long int h1 = h;
+	long long int w1 = w;
 	
-	for (int i = h1 - 1; i <= h1 + 1; ++i)
+	for (long long int i = h1 - 1; i <= h1 + 1; ++i)
 	{
-		for (int k = w1 - 1; k <= w1 + 1; ++k)
+		for (long long int k = w1 - 1; k <= w1 + 1; ++k)
 		{
 			if (i >= 0 && k >= 0)
 			{

@@ -5,7 +5,7 @@ ConsoleView::ConsoleView () : View()
 	in.open("map.txt");	
 }
 
-void ConsoleView::typeShotState(ShotState state)
+void ConsoleView::printShotState(ShotState state)
 {
 	switch(state)
 	{
@@ -26,7 +26,7 @@ void ConsoleView::typeShotState(ShotState state)
 void ConsoleView::printGameStartedStr()
 {
 	
-	std::cout << "The game has been begun!" << std::endl;
+	std::cout << beginGameStr << std::endl;
 	in.close();
 	in.open("map.txt");
 }
@@ -35,11 +35,11 @@ void ConsoleView::printGameEndedStr(bool isWon)
 {
 	if (true == isWon)
 	{
-		std::cout << "Congratulations! You have won!" << std::endl;
+		std::cout << winStr << std::endl;
 	}
 	else
 	{
-		std::cout << "Not bad! But you are loser!" << std::endl;
+		std::cout << loseStr << std::endl;
 	}
 }
 
@@ -61,10 +61,7 @@ ShotPoint ConsoleView::getShotPoint()
 		try
 		{
 			ShotPoint p = sParser.parse();
-
 			return p;
-
-			break;
 		}
 		catch (std::exception & a)
 		{
@@ -106,10 +103,7 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 		try
 		{
 			ShipPoint p = sParser.parse();
-
 			return p;
-
-			break;
 		}
 		catch (std::exception & a)
 		{
@@ -122,19 +116,20 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 
 void ConsoleView::paint(const FieldView & f)
 {
-	std::cout << "\n  ";
+	if (f.getHeight() > maxHeightOfField)
+	{
+		throw std::runtime_error(wrongHeightStr);
+	}
 
-	size_t height = f.getHeight();
-	size_t length = f.getWidth();
+	std::cout << "\n  ";
 
 	size_t counter = 0;
 
-	char curSym = 65;
+	char curSym = posOfAInAscii;
 
-	for (char i = 0; i < length; ++i)
+	for (size_t i = 0; i < f.getWidth(); ++i)
 	{
-		std::cout << curSym;
-		++curSym;
+		std::cout << curSym++;
 	}
 
 	for (size_t i = 0; i < f.getHeight(); ++i)

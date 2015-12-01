@@ -17,10 +17,14 @@ public:
 
 	GameConf(GamerType fPlayer, GamerType sPlayer, size_t countRound);
 
-	GamerType getFPlayer();
-	GamerType getSPlayer();
+	GameConf (const GameConf & conf) = delete;
+	GameConf & operator=(const GameConf & conf) = delete;
+	GameConf() = delete;
 
-	size_t getCountRound();
+	GamerType getFPlayer() const;
+	GamerType getSPlayer() const;
+
+	size_t getCountRound() const;
 
 	~GameConf();
 
