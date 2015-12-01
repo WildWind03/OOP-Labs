@@ -1,6 +1,6 @@
 #include "RandGamer.h"
 
-RandGamer::RandGamer()
+RandGamer::RandGamer() : Gamer()
 {
 	
 }
