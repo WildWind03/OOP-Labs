@@ -15,31 +15,30 @@ ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const Enem
 	view -> paint(enemyFieldV);
 
 	ShotPoint p = view -> getShotPoint();
-
 	return p;
 }
 
-void ConsoleGamer::onGameEnded(bool isWon) const
+void ConsoleGamer::onGameEnded(bool isWon)
 {
 	view -> printGameEndedStr(isWon);
 }
 
-void ConsoleGamer::onGameStarted() const
+void ConsoleGamer::onGameStarted()
 {
 	view -> printGameStartedStr();
 }
 
-void ConsoleGamer::onRecieveError(const std::range_error & er)  const
+void ConsoleGamer::onRecieveError(const std::range_error & er)
 {
 	view -> printError(er);
 }
 
-void ConsoleGamer::onRecieveShotState(ShotState state) const
+void ConsoleGamer::onRecieveShotState(ShotState state)
 {
-	view -> typeShotState(state);
+	view -> printShotState(state);
 }
 
-void ConsoleGamer::onGetStatistics(const Statistics & stat) const
+void ConsoleGamer::onGetStatistics(const Statistics & stat)
 {
 	view -> printStatistics(stat);
 }

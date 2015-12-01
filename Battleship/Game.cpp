@@ -65,10 +65,11 @@ void Game::onGameEnded()
 		g1.onGameEnded(false);
 		g2.onGameEnded(true);
 	}
+
 	throw std::runtime_error(gameEndedStr);
 }
 
-bool Game::makeShot(const Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots)
+bool Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots)
 {
 	ShotPoint p = g.getPointForShot(*myFieldV, *enemyFieldV);
 	
@@ -109,17 +110,10 @@ bool Game::makeShot(const Gamer & g, MyFieldView * myFieldV, EnemyFieldView * en
 	}
 }
 
-void Game::makeTurn(const Gamer & g)
+void Game::makeTurn (Gamer & g)
 {
 	while(true)
 	{
-		if (true == isGameEnded())
-		{
-			onGameEnded();
-
-			break;
-		}
-
 		try
 		{
 			bool isInjured;
@@ -137,13 +131,18 @@ void Game::makeTurn(const Gamer & g)
 			{
 				break;
 			}
+
+			if (true == isGameEnded())
+			{
+				onGameEnded();
+				break;
+			}
 		}
 		catch(std::range_error & er)
 		{
 			g.onRecieveError(er);
 			continue;
 		}
-
 	}
 }
 
@@ -192,7 +191,7 @@ void Game::beginGame()
 	}
 }
 
-void Game::placeShips (const Gamer & g, Field  & f)
+void Game::placeShips (Gamer & g, Field  & f)
 {
 	Ship *myShip = nullptr;
 
@@ -222,8 +221,6 @@ void Game::placeShips (const Gamer & g, Field  & f)
 				catch(std::range_error & er)
 				{
 					g.onRecieveError(er);
-					
-					continue;
 				}
 			}
 		}

@@ -11,7 +11,7 @@
 class ConsoleGamer : public Gamer
 {
 
-	ConsoleView *view;
+	ConsoleView * view;
 
 public:
 
@@ -23,11 +23,11 @@ public:
 	virtual ShipPoint getPointForShip (const size_t sizeOfShip, const MyFieldView & myFieldV) const;
 	virtual ShotPoint getPointForShot (const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const;
 	
-	virtual void onRecieveError(const std::range_error & er) const override;
-	virtual void onRecieveShotState(ShotState state) const override;
-	virtual void onGetStatistics(const Statistics & stat) const override;
-	virtual void onGameEnded(bool isWon) const override;
-	virtual void onGameStarted() const override;
+	virtual void onRecieveError(const std::range_error & er) override;
+	virtual void onRecieveShotState(ShotState state) override;
+	virtual void onGetStatistics(const Statistics & stat) override;
+	virtual void onGameEnded(bool isWon) override;
+	virtual void onGameStarted() override;
 
 	virtual ~ConsoleGamer();
 };

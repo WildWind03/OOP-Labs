@@ -20,8 +20,7 @@ class Controller
 	Game * game;
 
 	Statistics * stat;
-
-	size_t currentRound;
+	
 	size_t countOfRounds;
 
 public:

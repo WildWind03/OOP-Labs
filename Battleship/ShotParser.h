@@ -8,6 +8,7 @@
 
 class ShotParser : public BaseParser
 {
+	const size_t minLengthOfCorrectString = 3;
 
 public:
 	ShotParser(std::string str) : BaseParser(str)
@@ -16,13 +17,12 @@ public:
 	}
 
 	ShotParser() = delete;
-
 	ShotParser(const ShotParser & p) = delete;
 	ShotParser & operator=(const ShotParser & p) = delete;
 
 	ShotPoint parse()
 	{
-		if (str.size() < 3)
+		if (str.size() < minLengthOfCorrectString)
 		{
 			throw std::runtime_error(tooShortStr);
 		}

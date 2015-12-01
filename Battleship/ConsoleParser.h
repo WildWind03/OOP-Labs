@@ -8,24 +8,41 @@
 
 class ConsoleParser
 {
-	std::string consoleGamer  = "ConsoleGamer";
-	std::string randomGamer = "RandomGamer";
-	std::string optimalGamer = "OptimalGamer";
+	const std::string incorrectCountOfRounds = "Error! There is incorrect count of rounds!";
+	const std::string incorrectGamerType = "Error! Incorrect gamer type!";
+	const std::string incorrectInput = "Error! Incorrect input!";
+
+	const std::string consoleGamer  = "ConsoleGamer";
+	const std::string randomGamer = "RandomGamer";
+	const std::string optimalGamer = "OptimalGamer";
 
 	GamerType g1, g2;
 	size_t countOfRounds;
 
 public:
+
 	ConsoleParser(int argc, char *argv[])
 	{
 		int c = getopt(argc, argv, "r:f:s:");
+
+		size_t countR = 0;
+		size_t countF = 0;
+		size_t countS = 0;
 
 		while (c > 0)
 		{
 			switch(c)
 			{
 				case 'r' : 
-					countOfRounds = atoi(optarg);
+					try
+					{
+						countOfRounds = std::stoi(optarg);
+						++countR;
+					}
+					catch (const std::invalid_argument & er)
+					{
+						throw std::invalid_argument(incorrectCountOfRounds);
+					}
 					break;
 
 				case 'f' :
@@ -40,6 +57,12 @@ public:
 					if (consoleGamer == optarg)
 					{
 						g1 = GamerType::consoleGamer;
+					}
+					++countF;
+
+					if ((optarg != consoleGamer) && (optarg != optimalGamer) && (optarg != randomGamer))
+					{
+						throw std::invalid_argument (incorrectGamerType);
 					}
 
 					break;
@@ -59,10 +82,22 @@ public:
 						g2 = GamerType::consoleGamer;
 					}
 
+					++countS;
+
+					if ((optarg != consoleGamer) && (optarg != optimalGamer) && (optarg != randomGamer))
+					{
+						throw std::invalid_argument (incorrectGamerType);
+					}
+
 					break;
 			}
 
 			c = getopt(argc, argv, "r:f:s:");
+		}
+
+		if ((countR != 1) || (countF != 1) || (countS != 1))
+		{
+			throw std::invalid_argument(incorrectInput);
 		}		
 	}
 

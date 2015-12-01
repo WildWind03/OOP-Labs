@@ -1,9 +1,8 @@
 #include "Ship.h"
 
-Ship::Ship(size_t size)
+Ship::Ship(size_t size) : size(size), destrSize(0)
 {
-	this -> size = size;
-	this -> destrSize = 0;
+
 }
 
 size_t Ship::getSize() const
@@ -24,13 +23,13 @@ void Ship::takeDamage()
 	}
 	else
 	{
-		throw std::range_error(alreadyDestr);
+		throw std::runtime_error(alreadyDestr);
 	}
 }
 
 bool Ship::isDestroyed() const
 {
-	if (this -> destrSize == this -> size)
+	if (destrSize == size)
 	{
 		return true;
 	}

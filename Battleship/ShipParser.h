@@ -8,8 +8,9 @@
 
 class ShipParser : public BaseParser
 {
-
 	const std::string orientationErrorStr = "Orientation isn't correct! Try again";
+	
+	const size_t minLengthOfCorrectString = 5;
 
 	bool getOrient(char c) const
 	{
@@ -20,7 +21,7 @@ class ShipParser : public BaseParser
 
 		if ('H' != c)
 		{
-			throw std::runtime_error(orientationErrorStr);
+			throw std::invalid_argument(orientationErrorStr);
 		}
 
 		return false;
@@ -34,15 +35,14 @@ public:
 	}
 
 	ShipParser() = delete;
-
 	ShipParser(const ShipParser & p) = delete;
 	ShipParser & operator=(const ShipParser & p) = delete;
 
 	ShipPoint parse()
 	{
-		if (str.size() < 3)
+		if (str.size() < minLengthOfCorrectString)
 		{
-			throw std::runtime_error(tooShortStr);
+			throw std::invalid_argument(tooShortStr);
 		}
 
 		char x = str[0];

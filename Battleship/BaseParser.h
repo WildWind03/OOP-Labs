@@ -14,46 +14,49 @@ protected:
 	const std::string yIsNotCorrectStr = "Y is not correct! Try again";
 	const std::string xIsNotCorrectStr = "X is not correct! Try again";
 
-	BaseParser(std::string str)
-	{
-		this -> str = str;
-	}
+	const size_t posOfAInAscii = 65;
+	const size_t posOfZInAscii = 90;
 
-	BaseParser() = delete;
+	BaseParser(std::string str) : str(str)
+	{
+
+	}
 
 	size_t getNumFromStr(std::string str) const
 	{
-		for (size_t i = 0; i < str.size(); ++i)
+		size_t h;
+		
+		try
 		{
-			if ((str[i] < '0') || (str[i] > '9')) 
-			{
-				throw std::runtime_error(yIsNotCorrectStr);
-			}
+			h = std::stoi(str);
 		}
-
-		size_t h = std::stoi(str);
+		catch (const std::invalid_argument & er)
+		{
+			throw std::invalid_argument(yIsNotCorrectStr);
+		}
 
 		return h;
 	}
 
 	size_t getNumByChar(char c) const
 	{
-		const char posOfA = 65;
-		const char posOfLastChar = 90;
-
-		if (c < posOfA || c > posOfLastChar)
+		if (c < posOfAInAscii || c > posOfZInAscii)
 		{
 			throw std::runtime_error(xIsNotCorrectStr);
 		}
 
-		size_t w = (size_t) (c - posOfA);
+		size_t w = (size_t) (c - posOfAInAscii);
 
 		return w;
 	}
 
 public:
 
+	BaseParser() = delete;
+
 	BaseParser(const BaseParser & p) = delete;
+
+	BaseParser & operator= (const BaseParser & p) = delete;
 
 	void takeNewString(std::string str)
 	{

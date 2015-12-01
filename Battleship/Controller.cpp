@@ -3,7 +3,6 @@
 Controller::Controller (GameConf  & conf)
 {
 	countOfRounds = conf.getCountRound();
-	currentRound = 0;
 
 	g1 = GamerFactory::CreateGamer(conf.getFPlayer());
 	g2 = GamerFactory::CreateGamer(conf.getSPlayer());
@@ -32,8 +31,8 @@ void Controller::beginGame()
 	g1 -> onGetStatistics(*stat);
 	g2 -> onGetStatistics(*stat);
 
-	//ConsoleView view;
-	//view.printStatistics(*stat);
+	ConsoleView view;
+	view.printStatistics(*stat);
 }
 
 Controller::~Controller()

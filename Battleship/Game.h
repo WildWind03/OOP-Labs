@@ -44,8 +44,14 @@ class Game
 
 	bool isFirstGamerTurn() const;
 	bool isGameEnded() const;
-	bool makeShot(const Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots);
+
+	bool makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots);
+	void makeTurn(Gamer & g);
+	void markShot (ShotField & f, ShotPoint p);
+	
 	void beginGame();
+	void placeShips(Gamer & g, Field & f);
+
 
 public:
 
@@ -56,11 +62,7 @@ public:
 	Game (const Game & g) = delete;
 
 	void newGame();
-
-	void placeShips(const Gamer & g, Field & f);
-	void makeTurn(const Gamer & g);
-	void markShot (ShotField & f, ShotPoint p);
-
+	
 	bool isG1Won() const;
 
 	~Game();

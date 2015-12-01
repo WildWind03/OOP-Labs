@@ -16,8 +16,8 @@ public:
 	bool isShot(const size_t h, const size_t w) const;
 	bool isShip(const size_t h, const size_t w) const;
 
-	CellState getCellState(const size_t h, const size_t w) const;
+	virtual CellState getCellState(const size_t h, const size_t w) const;
 
-	~MyFieldView();
+	virtual ~MyFieldView();
 
 };
