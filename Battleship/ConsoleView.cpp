@@ -108,7 +108,6 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 		catch (std::exception & a)
 		{
 			printError(a);
-			continue;
 		}
 	}
 

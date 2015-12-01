@@ -169,8 +169,8 @@ void Game::newGame()
 	g1Shots -> clear();
 	g2Shots -> clear();
 
-	placeShips(g2, *g2Field);
 	placeShips(g1, *g1Field);
+	placeShips(g2, *g2Field);
 
 	beginGame();
 }
