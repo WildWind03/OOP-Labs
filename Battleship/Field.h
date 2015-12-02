@@ -20,10 +20,9 @@ class Field
 	const size_t width;
 
 	const std::string wrongFiledSize = "Incorrect height of field";
-	const std::string size_error_str = "A ship with such size can't be set there. Try again";
-	const std::string out_of_range_str = "Error! Trying to get cell out of field";
-	const std::string out_of_field_str = "Trying to place the ship out of the field";
-	const std::string place_error_str = "There is another ship close. Try again";
+	const std::string sizeErrorStr = "A ship with such size can't be set there. Try again";
+	const std::string outOfFieldStr = "Trying to place the ship out of the field";
+	const std::string placeErrorStr = "There is another ship close. Try again";
 
 	std::vector <Ship*> cells;
 	std::vector <Ship*> ships;

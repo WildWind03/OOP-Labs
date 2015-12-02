@@ -15,19 +15,16 @@ class Gamer
 {
 	
 protected:
+
+	bool isReady;
 	
     Gamer()
     {
-    	
+    	isReady = false;
     }
 
 public:
-
-	virtual void onRecieveError(const std::range_error & er)
-	{
-
-	}
-
+	
 	virtual void onRecieveShotState(ShotState state)
 	{
 
@@ -38,14 +35,24 @@ public:
 
 	}
 
-	virtual void onGameEnded(bool isWon)
+	virtual void onRecieveResultOfPlacingShip(bool isPlaced)
 	{
 
 	}
 
-	virtual void onGameStarted()
+	virtual void onGameEnded(bool isWon)
 	{
-		
+		isReady = false;
+	}
+
+	virtual void onGameStarted(size_t hField, size_t wField)
+	{
+		isReady = true;
+	}
+
+	bool isReadyToStart() const
+	{
+		return isReady;
 	}
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const = 0;

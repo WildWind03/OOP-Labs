@@ -140,16 +140,15 @@ void Game::makeTurn (Gamer & g)
 		}
 		catch(std::range_error & er)
 		{
-			g.onRecieveError(er);
-			continue;
+			g.onRecieveShotState(ShotState::ERROR);
 		}
 	}
 }
 
 void Game::newGame()
 {
-	g1.onGameStarted();
-	g2.onGameStarted();
+	g1.onGameStarted(hField, wField);
+	g2.onGameStarted(hField, wField);
 
 	countOfTurns = 0;
 	g1Cells = 0;
@@ -216,11 +215,13 @@ void Game::placeShips (Gamer & g, Field  & f)
 						f.attachShip(myShip, p);
 					}
 
+					g.onRecieveResultOfPlacingShip(true);
+
 					break;
 				}
 				catch(std::range_error & er)
 				{
-					g.onRecieveError(er);
+					g.onRecieveResultOfPlacingShip(false);
 				}
 			}
 		}
