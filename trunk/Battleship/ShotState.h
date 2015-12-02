@@ -1,3 +1,3 @@
 #pragma once
 
-enum class ShotState {MISSED, INJURED, DESTROYED};
+enum class ShotState {MISSED, INJURED, DESTROYED, ERROR};

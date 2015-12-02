@@ -2,9 +2,69 @@
 
 OptGamer::OptGamer() : Gamer () 
 {
-
+	st = GamerState::EXPLORE;
+	shotCounter = 0;
 }
 
+void OptGamer::fillShotList(size_t hField, size_t wField)
+{
+	stShots.clear();
+
+	for (size_t i = 0; i < hField; ++i)
+	{
+		for (size_t k = 0; k < wField; ++k)
+		{
+			ShotPoint p(i, k);
+
+			stShots.push_back(p);
+		}
+	}
+
+	std::random_shuffle(stShots.begin(), stShots.end());
+}
+/*void OptGamer::init()
+{
+	/*standartShots.clear();
+
+	for (size_t i = 3; i <= 15; i = i + 4)
+	{
+		for (size_t k = 0; k <= 3; ++k)
+		{
+			ShotPoint p(k, i - k);
+			standartShots.push_back(p);
+		}
+	}
+}
+
+bool OptGamer::isInitialized() const
+{
+	return initialized;
+}
+*/
+
+ShotPoint OptGamer::getNextStandartShot() const
+{
+	return stShots[shotCounter];
+}
+
+void OptGamer::onGameEnded(bool isWon)
+{
+	isReady = false;
+}
+
+void OptGamer::onGameStarted(size_t h, size_t w)
+{
+	isReady = true;
+	shotCounter = 0;
+	st = GamerState::EXPLORE;
+	fillShotList(h, w);
+}
+
+void OptGamer::onRecieveShotState(ShotState state)
+{
+	++shotCounter;
+}
+ 
 ShipPoint OptGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const 
 {
 	size_t h, w;
@@ -61,7 +121,21 @@ ShipPoint OptGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView &
 
 ShotPoint OptGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const 
 {
+	if (GamerState::EXPLORE == st) 
+	{
+		ShotPoint p = getNextStandartShot();
 
+		//enemyFieldV.isPossibleToBeShipThere(p);
+
+		return p;
+	}
+	else
+	{
+		return ShotPoint(0, 0);
+	}
 }
 
-OptGamer::~OptGamer(){}
+OptGamer::~OptGamer()
+{
+
+}

@@ -20,12 +20,20 @@ void ConsoleView::printShotState(ShotState state)
 		case ShotState::DESTROYED :
 			std::cout << destrStr << std::endl;
 			break;
+
+		case ShotState::ERROR :
+			std::cout << wrongShotPointStr << std::endl;
+			break;
 	}
+}
+
+void ConsoleView::printPlacingShipError()
+{
+	std::cout << wrongPosForShip << std::endl;
 }
 
 void ConsoleView::printGameStartedStr()
 {
-	
 	std::cout << beginGameStr << std::endl;
 	in.close();
 	in.open("map.txt");
@@ -65,7 +73,7 @@ ShotPoint ConsoleView::getShotPoint()
 		}
 		catch (std::exception & a)
 		{
-			printError(a);
+			printShotState(ShotState::ERROR);
 			continue;
 		}
 	}
@@ -76,11 +84,6 @@ void ConsoleView::printStatistics(const Statistics & stat)
 	std::cout << "Total Games: " << stat.getCountOfGames() << std::endl;
 	std::cout << "Gamer 1 won " << stat.getG1Vic() << " games" << std::endl;
 	std::cout << "Gamer 2 won " << stat.getG2Vic() << " games" << std::endl;
-}
-
-void ConsoleView::printError(const std::exception & er)
-{
-	std::cout << er.what() << std::endl;
 }
 
 ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
@@ -107,7 +110,7 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 		}
 		catch (std::exception & a)
 		{
-			printError(a);
+			printPlacingShipError();
 		}
 	}
 

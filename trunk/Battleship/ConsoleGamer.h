@@ -23,11 +23,11 @@ public:
 	virtual ShipPoint getPointForShip (const size_t sizeOfShip, const MyFieldView & myFieldV) const;
 	virtual ShotPoint getPointForShot (const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const;
 	
-	virtual void onRecieveError(const std::range_error & er) override;
+    virtual void onRecieveResultOfPlacingShip(bool isPlaced) override;
 	virtual void onRecieveShotState(ShotState state) override;
 	virtual void onGetStatistics(const Statistics & stat) override;
 	virtual void onGameEnded(bool isWon) override;
-	virtual void onGameStarted() override;
+	virtual void onGameStarted(size_t hField, size_t wField) override;
 
 	virtual ~ConsoleGamer();
 };

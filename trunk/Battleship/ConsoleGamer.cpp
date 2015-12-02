@@ -21,16 +21,21 @@ ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const Enem
 void ConsoleGamer::onGameEnded(bool isWon)
 {
 	view -> printGameEndedStr(isWon);
+	isReady = false;
 }
 
-void ConsoleGamer::onGameStarted()
+void ConsoleGamer::onGameStarted(size_t hField, size_t wField)
 {
 	view -> printGameStartedStr();
+	isReady = true;
 }
 
-void ConsoleGamer::onRecieveError(const std::range_error & er)
+void ConsoleGamer::onRecieveResultOfPlacingShip(bool isPlaced)
 {
-	view -> printError(er);
+	if (false == isPlaced)
+	{
+		view -> printPlacingShipError();
+	}
 }
 
 void ConsoleGamer::onRecieveShotState(ShotState state)

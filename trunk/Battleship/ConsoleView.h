@@ -23,6 +23,8 @@ class ConsoleView : public View
 	const std::string winStr = "Congratulations! You have won!";
 	const std::string loseStr = "Not bad! But you are loser!";
 	const std::string wrongHeightStr = "Error! The height of the field is incorrect!";
+	const std::string wrongShotPointStr = "Incorrect shot! Try again";
+	const std::string wrongPosForShip = "It's impossible to place the ship there";
 	
 	const std::string missedStr = "Missed!";
 	const std::string injuredStr = "Injured!";
@@ -43,10 +45,10 @@ public:
 	virtual ShotPoint getShotPoint();
 	virtual ShipPoint getShipPoint(const size_t sizeOfShip);
 
-	void printError(const std::exception & er);
 	void printStatistics(const Statistics & stat);
 	void printGameEndedStr(bool isWon);
 	void printGameStartedStr();
+	void printPlacingShipError();
 	void printShotState(ShotState state);
 
 	void paint(const FieldView & f);

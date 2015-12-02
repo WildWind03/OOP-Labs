@@ -67,17 +67,17 @@ void Field::attachShip(Ship *ship, const ShipPoint & p)
 {
 	if (isPointInField(p.getHeight(), p.getWidth()) == false)
 	{
-		throw std::range_error(out_of_field_str);
+		throw std::range_error(outOfFieldStr);
 	}
 
 	if (isWholeShipOnField(ship -> getSize(), p) == false)
 	{
-		throw std::range_error (size_error_str);
+		throw std::range_error (sizeErrorStr);
 	}
 
 	if (isShipCloseCellsFree(ship -> getSize(), p) == false)
 	{
-		throw std::range_error (place_error_str);
+		throw std::range_error (placeErrorStr);
 	}
 
 	ships.push_back(ship);

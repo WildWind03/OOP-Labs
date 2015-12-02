@@ -4,8 +4,8 @@
 
 class ShotPoint
 {
-	const size_t height;
-	const size_t width;
+	size_t height;
+	size_t width;
 	
 public:
 	ShotPoint() = delete;
@@ -15,7 +15,13 @@ public:
 		
 	}
 
-	ShotPoint & operator= (const ShotPoint & p) = delete;
+	ShotPoint & operator= (const ShotPoint & p)
+	{
+		height = p.getHeight();
+		width = p.getWidth();
+
+		return *this;
+	}
 
 	ShotPoint(size_t height, size_t width) : height(height), width(width)
 	{
