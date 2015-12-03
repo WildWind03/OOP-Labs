@@ -29,7 +29,6 @@ class Field
 
 	size_t getPosFromPoint(const size_t h, const size_t w) const;
 
-	bool isPointInField(const size_t h, const size_t w) const;
 	bool isCloseCellsFree(const size_t h, const size_t w) const;
 	bool isShipCloseCellsFree(const size_t sizeOfShip, const ShipPoint & p) const;
 	bool isWholeShipOnField(const size_t sizeOfShip, const ShipPoint & p) const;
@@ -43,6 +42,7 @@ public:
 	Field (const size_t height = 10, const size_t width = 10);
 
 	bool isShipOnCell(const size_t h, const size_t w) const;
+	bool isPointInField(const size_t h, const size_t w) const;
 
 	bool destroyShipOnCell(const size_t h, const size_t w);
 

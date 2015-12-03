@@ -2,7 +2,7 @@
 
 ConsoleView::ConsoleView () : View()
 {
-	in.open("map.txt");	
+
 }
 
 void ConsoleView::printShotState(ShotState state)
@@ -34,9 +34,7 @@ void ConsoleView::printPlacingShipError()
 
 void ConsoleView::printGameStartedStr()
 {
-	std::cout << beginGameStr << std::endl;
-	in.close();
-	in.open("map.txt");
+	std::cout << beginGameStr << std::endl; 
 }
 
 void ConsoleView::printGameEndedStr(bool isWon)
@@ -99,7 +97,7 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 	{
 		std::string myStr;
 
-		std::getline(in, myStr);
+		std::getline(std::cin, myStr);
 
 		ShipParser sParser(myStr);
 
@@ -173,5 +171,5 @@ void ConsoleView::paint(const FieldView & f)
 
 ConsoleView::~ConsoleView()
 {
-	in.close();
+	//in.close();
 }

@@ -34,7 +34,7 @@ class ConsoleView : public View
 
 	const size_t maxHeightOfField = 26;
 
-	std::ifstream in;
+	//std::ifstream in;
 
 public:
 

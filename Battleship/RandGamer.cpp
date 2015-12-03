@@ -58,7 +58,7 @@ void RandGamer::onGameEnded(bool isWon)
 	isReady = false;
 }
 
-void RandGamer::onRecieveShotState(ShotState state)
+void RandGamer::onRecieveShotState(ShotState state, ShotPoint p)
 {
 	++shotCounter;
 }
@@ -68,7 +68,7 @@ void RandGamer::onRecieveResultOfPlacingShip(bool isPlaced)
 	++shipCounter;
 }
 
-ShipPoint RandGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const
+ShipPoint RandGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV)
 {
 	if (false == isReadyToStart())
 	{
@@ -78,7 +78,7 @@ ShipPoint RandGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView 
 	return ships[shipCounter];
 }
 
-ShotPoint RandGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const
+ShotPoint RandGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV)
 {
 	if (false == isReadyToStart())
 	{

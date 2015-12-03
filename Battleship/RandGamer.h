@@ -13,14 +13,10 @@
 
 class RandGamer : public Gamer
 {
-	const std::string initError = "Error! The gamer isn't initialized!";
-
 	std::vector <ShotPoint> shots;
-
 	std::vector <ShipPoint> ships;
 
 	size_t shipCounter;
-	
 	size_t shotCounter;
 
 	void fillShotList(size_t h, size_t w);
@@ -35,11 +31,11 @@ public:
 
 	virtual void onGameStarted(size_t hField, size_t wField) override;
 	virtual void onGameEnded(bool isWon) override;
-	virtual void onRecieveShotState(ShotState state) override;
+	virtual void onRecieveShotState(ShotState state, ShotPoint p) override;
 	virtual void onRecieveResultOfPlacingShip(bool isPlaced) override;
 
-	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const;
-	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const;
+	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV);
+	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);
 
 	virtual ~RandGamer();
 };

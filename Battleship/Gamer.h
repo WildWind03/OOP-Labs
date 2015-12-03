@@ -17,6 +17,8 @@ class Gamer
 protected:
 
 	bool isReady;
+
+	const std::string initError = "Error! The gamer isn't initialized!";
 	
     Gamer()
     {
@@ -25,7 +27,7 @@ protected:
 
 public:
 	
-	virtual void onRecieveShotState(ShotState state)
+	virtual void onRecieveShotState(ShotState state, ShotPoint p)
 	{
 
 	}
@@ -55,8 +57,8 @@ public:
 		return isReady;
 	}
 
-	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const = 0;
-	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const = 0;
+	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) = 0;
+	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) = 0;
 
 	virtual ~Gamer()
 	{

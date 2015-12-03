@@ -73,7 +73,16 @@ bool Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFie
 {
 	ShotPoint p = g.getPointForShot(*myFieldV, *enemyFieldV);
 	
-	markShot(*myShots, p);
+	try
+	{
+		markShot(*myShots, p);
+	}
+	catch(std::range_error & er)
+	{
+		g.onRecieveShotState(ShotState::ERROR, p);
+
+		throw;
+	}
 	
 	if (true == enemyField -> isShipOnCell(p.getHeight(), p.getWidth()))
 	{
@@ -81,11 +90,11 @@ bool Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFie
 		
 		if (true == isDestroyed)
 		{
-			g.onRecieveShotState(ShotState::DESTROYED);
+			g.onRecieveShotState(ShotState::DESTROYED, p);
 		}
 		else
 		{
-			g.onRecieveShotState(ShotState::INJURED);
+			g.onRecieveShotState(ShotState::INJURED, p);
 		}
 
 		if (true == isFirstGamerTurn())
@@ -103,7 +112,7 @@ bool Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFie
 	{
 		++countOfTurns;	
 
-		g.onRecieveShotState(ShotState::MISSED);
+		g.onRecieveShotState(ShotState::MISSED, p);
 
 		return false;
 
@@ -140,7 +149,7 @@ void Game::makeTurn (Gamer & g)
 		}
 		catch(std::range_error & er)
 		{
-			g.onRecieveShotState(ShotState::ERROR);
+			continue;
 		}
 	}
 }
@@ -168,8 +177,8 @@ void Game::newGame()
 	g1Shots -> clear();
 	g2Shots -> clear();
 
-	placeShips(g1, *g1Field);
-	placeShips(g2, *g2Field);
+	placeShips(g1, *g1Field, *g1MyFieldView);
+	placeShips(g2, *g2Field, *g2MyFieldView);
 
 	beginGame();
 }
@@ -190,11 +199,11 @@ void Game::beginGame()
 	}
 }
 
-void Game::placeShips (Gamer & g, Field  & f)
+void Game::placeShips (Gamer & g, Field  & f, MyFieldView & myFV)
 {
 	Ship *myShip = nullptr;
 
-	for (size_t i = 1; i <= maxSizeOfShip; ++i)
+	for (size_t i = maxSizeOfShip; i >= 1; --i)
 	{
 		for (size_t k = i; k <= maxSizeOfShip; ++k)
 		{
@@ -204,16 +213,9 @@ void Game::placeShips (Gamer & g, Field  & f)
 			{
 				try
 				{
-					if (true == isFirstGamerTurn())
-					{
-						ShipPoint p = g.getPointForShip(i, *g1MyFieldView);
-						f.attachShip(myShip, p);
-					}
-					else
-					{
-						ShipPoint p = g.getPointForShip(i, *g2MyFieldView);
-						f.attachShip(myShip, p);
-					}
+					ShipPoint p = g.getPointForShip(i, myFV);
+
+					f.attachShip(myShip, p);
 
 					g.onRecieveResultOfPlacingShip(true);
 

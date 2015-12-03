@@ -50,7 +50,7 @@ class Game
 	void markShot (ShotField & f, ShotPoint p);
 	
 	void beginGame();
-	void placeShips(Gamer & g, Field & f);
+	void placeShips(Gamer & g, Field & f, MyFieldView & myFV);
 
 
 public:
