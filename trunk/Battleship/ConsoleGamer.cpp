@@ -1,7 +1,12 @@
 #include "ConsoleGamer.h"
 
-ShipPoint ConsoleGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) const
+ShipPoint ConsoleGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV)
 {
+	if (false == isReadyToStart())
+	{
+		throw std::runtime_error(initError);
+	}
+	
 	view -> paint(myFieldV);
 
 	ShipPoint p = view -> getShipPoint(sizeOfShip);
@@ -9,12 +14,13 @@ ShipPoint ConsoleGamer::getPointForShip(const size_t sizeOfShip, const MyFieldVi
 	return p;	
 }
 
-ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const
+ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV)
 {
 	view -> paint(myFieldV);
 	view -> paint(enemyFieldV);
 
 	ShotPoint p = view -> getShotPoint();
+
 	return p;
 }
 
@@ -38,7 +44,7 @@ void ConsoleGamer::onRecieveResultOfPlacingShip(bool isPlaced)
 	}
 }
 
-void ConsoleGamer::onRecieveShotState(ShotState state)
+void ConsoleGamer::onRecieveShotState(ShotState state, ShotPoint p)
 {
 	view -> printShotState(state);
 }

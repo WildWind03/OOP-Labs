@@ -20,11 +20,11 @@ public:
 
 	ConsoleGamer();
 
-	virtual ShipPoint getPointForShip (const size_t sizeOfShip, const MyFieldView & myFieldV) const;
-	virtual ShotPoint getPointForShot (const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) const;
+	virtual ShipPoint getPointForShip (const size_t sizeOfShip, const MyFieldView & myFieldV);
+	virtual ShotPoint getPointForShot (const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);
 	
     virtual void onRecieveResultOfPlacingShip(bool isPlaced) override;
-	virtual void onRecieveShotState(ShotState state) override;
+	virtual void onRecieveShotState(ShotState state, ShotPoint p) override;
 	virtual void onGetStatistics(const Statistics & stat) override;
 	virtual void onGameEnded(bool isWon) override;
 	virtual void onGameStarted(size_t hField, size_t wField) override;
