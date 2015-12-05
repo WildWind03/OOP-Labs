@@ -16,9 +16,19 @@ void Controller::beginGame()
 {
 	for (size_t i = 0; i < countOfRounds; ++i)
 	{
-		game -> newGame();
+		GamerNum winner;
 
-		if (game -> isG1Won())
+		try
+		{
+			winner = game -> newGame();
+		}
+		catch(const GameExitEvent & exitStr)
+		{
+			return;
+		}
+
+
+		if (GamerNum::Gamer1 == winner)
 		{
 			stat -> addG1Vic();
 		}
@@ -31,7 +41,7 @@ void Controller::beginGame()
 	g1 -> onGetStatistics(*stat);
 	g2 -> onGetStatistics(*stat);
 
-	ConsoleView view;
+	ConsoleView view; //just to see statistics when random and optimal gamers play
 	view.printStatistics(*stat);
 }
 

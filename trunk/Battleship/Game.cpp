@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game (Gamer & g1, Gamer & g2)
-			: g1 (g1), g2(g2), countOfTurns(0), g1Cells(0), g2Cells(0)
+			: g1 (g1), g2(g2), countOfTurns(0)
 {
 	g1Field = new Field(hField, wField);
 	g2Field = new Field(hField, wField);
@@ -16,9 +16,19 @@ Game::Game (Gamer & g1, Gamer & g2)
 	g2MyFieldView = new MyFieldView(*g2Field, *g1Shots);
 }
 
-bool Game::isFirstGamerTurn() const
+GamerNum Game::getCurrentTurnGamerNum() const
 {
 	if (0 == countOfTurns % 2)
+	{
+		return GamerNum::Gamer1;
+	}
+
+	return GamerNum::Gamer2;
+}
+
+bool Game::isGameEnded() const
+{
+	if (g1Field -> isAllShipsDestroyed() || g2Field -> isAllShipsDestroyed())
 	{
 		return true;
 	}
@@ -26,36 +36,9 @@ bool Game::isFirstGamerTurn() const
 	return false;
 }
 
-bool Game::isGameEnded() const
+void Game::onGameEnded(GamerNum winner)
 {
-	if ((0 == g1Cells) || (0 == g2Cells))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-bool Game::isG1Won() const
-{
-	if (0 == g2Cells)
-	{
-		return true;
-	}
-
-	if (0 == g1Cells)
-	{
-		return false;
-	}
-
-	throw std::runtime_error(gameNotEndedStr);
-}
-
-void Game::onGameEnded()
-{
-	if (true == isG1Won())
+	if (GamerNum::Gamer1 == winner)
 	{
 		g1.onGameEnded(true);
 		g2.onGameEnded(false);
@@ -66,47 +49,45 @@ void Game::onGameEnded()
 		g2.onGameEnded(true);
 	}
 
-	throw std::runtime_error(gameEndedStr);
+	throw GameEndedEvent();
 }
 
-bool Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots)
+ShotState Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots)
 {
-	ShotPoint p = g.getPointForShot(*myFieldV, *enemyFieldV);
+	ShotPoint p;
 	
 	try
 	{
+		p = g.getPointForShot(*myFieldV, *enemyFieldV);
+
 		markShot(*myShots, p);
 	}
-	catch(std::range_error & er)
+	catch (const ImpossibleShotError & er)
 	{
 		g.onRecieveShotState(ShotState::ERROR, p);
-
+		throw;
+	}
+	catch (const GameExitEvent & ex)
+	{
 		throw;
 	}
 	
 	if (true == enemyField -> isShipOnCell(p.getHeight(), p.getWidth()))
 	{
 		bool isDestroyed = enemyField -> destroyShipOnCell(p.getHeight(), p.getWidth());
-		
+
 		if (true == isDestroyed)
 		{
 			g.onRecieveShotState(ShotState::DESTROYED, p);
+
+			return ShotState::DESTROYED;
 		}
 		else
 		{
 			g.onRecieveShotState(ShotState::INJURED, p);
-		}
 
-		if (true == isFirstGamerTurn())
-		{
-			--g2Cells;
+			return ShotState::INJURED;
 		}
-		else
-		{
-			--g1Cells;
-		}
-
-		return true;
 	}
 	else
 	{
@@ -114,7 +95,7 @@ bool Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFie
 
 		g.onRecieveShotState(ShotState::MISSED, p);
 
-		return false;
+		return ShotState::MISSED;
 
 	}
 }
@@ -125,65 +106,70 @@ void Game::makeTurn (Gamer & g)
 	{
 		try
 		{
-			bool isInjured;
+			ShotState st;
+			GamerNum g = getCurrentTurnGamerNum();
 
-			if (true == isFirstGamerTurn())
+			if (GamerNum::Gamer1 == g)
 			{
-				isInjured = makeShot(g1, g1MyFieldView, g1EnemyFieldView, g2Field, g1Shots);
+				st = makeShot(g1, g1MyFieldView, g1EnemyFieldView, g2Field, g1Shots);
 			}
 			else
 			{
-				isInjured = makeShot(g2, g2MyFieldView, g2EnemyFieldView, g1Field, g2Shots);
+				st = makeShot(g2, g2MyFieldView, g2EnemyFieldView, g1Field, g2Shots);
 			}
 
-			if (false == isInjured)
+			if (ShotState::MISSED == st)
 			{
 				break;
 			}
 
 			if (true == isGameEnded())
 			{
-				onGameEnded();
+				onGameEnded(getCurrentTurnGamerNum());
 				break;
 			}
 		}
-		catch(std::range_error & er)
+		catch(const ImpossibleShotError & er)
 		{
 			continue;
+		}
+		catch(const GameExitEvent & erExit)
+		{
+			throw erExit;
 		}
 	}
 }
 
-void Game::newGame()
+GamerNum Game::newGame()
 {
 	g1.onGameStarted(hField, wField);
 	g2.onGameStarted(hField, wField);
 
 	countOfTurns = 0;
-	g1Cells = 0;
-	g2Cells = 0;
-
-	for (size_t i = 1; i <= maxSizeOfShip; ++i)
-	{
-		for (size_t k = i; k <= maxSizeOfShip; ++k)
-		{
-			g1Cells+=i;
-			g2Cells+=i;
-		}
-	}
 
 	g1Field -> clear();
 	g2Field -> clear();
 	g1Shots -> clear();
 	g2Shots -> clear();
 
-	placeShips(g1, *g1Field, *g1MyFieldView);
-	placeShips(g2, *g2Field, *g2MyFieldView);
+	GamerNum winner;
 
-	beginGame();
+	try
+	{
+		placeShips(g1, *g1Field, *g1MyFieldView);
+		placeShips(g2, *g2Field, *g2MyFieldView);
+
+		winner = beginGame();
+	}
+	catch(const GameExitEvent & erExit)
+	{
+		throw erExit;
+	}
+
+	return winner;
 }
 
-void Game::beginGame()
+GamerNum Game::beginGame()
 {
 	while (true)
 	{
@@ -192,16 +178,22 @@ void Game::beginGame()
 			makeTurn(g1);
 			makeTurn(g2);
 		}
-		catch(const std::runtime_error & gameEnded)
+		catch(const GameEndedEvent & gameEnded)
 		{
 			break;
 		}
+		catch(const GameExitEvent & erExit)
+		{
+			throw erExit;
+		}
 	}
+
+	return getCurrentTurnGamerNum();
 }
 
 void Game::placeShips (Gamer & g, Field  & f, MyFieldView & myFV)
 {
-	Ship *myShip = nullptr;
+	Ship * myShip = nullptr;
 
 	for (size_t i = maxSizeOfShip; i >= 1; --i)
 	{
@@ -221,9 +213,14 @@ void Game::placeShips (Gamer & g, Field  & f, MyFieldView & myFV)
 
 					break;
 				}
-				catch(std::range_error & er)
+				catch(const ImpossibleShipError & er)
 				{
 					g.onRecieveResultOfPlacingShip(false);
+				}
+				catch(const GameExitEvent & erExit)
+				{
+					delete(myShip);
+					throw erExit;
 				}
 			}
 		}
@@ -236,7 +233,7 @@ void Game::markShot(ShotField & f, ShotPoint p)
 
 	if (true == isBusy)
 	{
-		throw std::range_error(alreadyShot);
+		throw ImpossibleShotError();
 	}
 	else
 	{

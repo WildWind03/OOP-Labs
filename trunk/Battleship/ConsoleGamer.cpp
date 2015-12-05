@@ -9,17 +9,38 @@ ShipPoint ConsoleGamer::getPointForShip(const size_t sizeOfShip, const MyFieldVi
 	
 	view -> paint(myFieldV);
 
-	ShipPoint p = view -> getShipPoint(sizeOfShip);
-
-	return p;	
+	try
+	{
+		ShipPoint p = view -> getShipPoint(sizeOfShip);
+		return p;	
+	}
+	catch (const GameExitEvent & er)
+	{
+		throw;
+	}
 }
 
 ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV)
 {
+	if (false == isReadyToStart())
+	{
+		throw std::runtime_error(initError);
+	}
+	
 	view -> paint(myFieldV);
 	view -> paint(enemyFieldV);
 
-	ShotPoint p = view -> getShotPoint();
+	ShotPoint p;
+
+	try
+	{
+		p = view -> getShotPoint();
+	}
+
+	catch (const GameExitEvent & er)
+	{
+		throw;
+	}
 
 	return p;
 }
@@ -44,7 +65,7 @@ void ConsoleGamer::onRecieveResultOfPlacingShip(bool isPlaced)
 	}
 }
 
-void ConsoleGamer::onRecieveShotState(ShotState state, ShotPoint p)
+void ConsoleGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
 {
 	view -> printShotState(state);
 }

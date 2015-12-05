@@ -31,7 +31,7 @@ public:
 
 	virtual void onGameStarted(size_t hField, size_t wField) override;
 	virtual void onGameEnded(bool isWon) override;
-	virtual void onRecieveShotState(ShotState state, ShotPoint p) override;
+	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p) override;
 	virtual void onRecieveResultOfPlacingShip(bool isPlaced) override;
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV);

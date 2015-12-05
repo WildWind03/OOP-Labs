@@ -2,15 +2,17 @@
 
 #include "BaseParser.h"
 #include "ShipPoint.h"
+#include "Exceptions.h"
 
 #include <string>
 #include <cstdio>
 
 class ShipParser : public BaseParser
 {
-	const std::string orientationErrorStr = "Orientation isn't correct! Try again";
-	
+	const std::string exitStr = "Q";
+
 	const size_t minLengthOfCorrectString = 5;
+
 
 	bool getOrient(char c) const
 	{
@@ -21,7 +23,7 @@ class ShipParser : public BaseParser
 
 		if ('H' != c)
 		{
-			throw std::invalid_argument(orientationErrorStr);
+			throw ImpossibleShipError();
 		}
 
 		return false;
@@ -40,9 +42,14 @@ public:
 
 	ShipPoint parse()
 	{
+		if (str == exitStr)
+		{
+			throw GameExitEvent();
+		}
+		
 		if (str.size() < minLengthOfCorrectString)
 		{
-			throw std::invalid_argument(tooShortStr);
+			throw ImpossibleShipError();
 		}
 
 		char x = str[0];
@@ -54,6 +61,16 @@ public:
 
 		size_t h = getNumFromStr(y);
 		size_t w = getNumByChar(x);
+		
+		try
+		{
+			h = getNumFromStr(y);
+			w = getNumByChar(x);
+		}
+		catch (const std::invalid_argument & er)
+		{
+			throw ImpossibleShipError();
+		}
 
 		return ShipPoint(h, w, isVert);
 	}

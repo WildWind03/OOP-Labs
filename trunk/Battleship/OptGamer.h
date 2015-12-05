@@ -16,8 +16,6 @@ class OptGamer : public Gamer
 {
 	enum class GamerState {EXPLORE, HIT} st;
 
-	size_t shotCounter;
-
 	std::vector <ShotPoint> stShots;
 	std::vector <ShotPoint> injured;
 	std::vector <ShotPoint> nextShots;
@@ -47,7 +45,7 @@ public:
 
 	virtual void onGameStarted (size_t hField, size_t wField) override;
 	virtual void onGameEnded(bool isWon) override;
-	virtual void onRecieveShotState(ShotState state, ShotPoint p) override;
+	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p) override;
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV);
 	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);

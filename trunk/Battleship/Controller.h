@@ -8,6 +8,7 @@
 #include "EnemyFieldView.h"
 #include "Statistics.h"
 #include "ConsoleView.h"
+#include "Exceptions.h"
 
 
 #include <cstdio>

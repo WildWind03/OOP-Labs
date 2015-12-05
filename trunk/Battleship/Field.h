@@ -3,6 +3,7 @@
 #include "Ship.h"
 #include "myRand.h"
 #include "ShipPoint.h"
+#include "Exceptions.h"
 
 #include <iostream>
 #include <string>
@@ -18,11 +19,6 @@ class Field
 {
 	const size_t height;
 	const size_t width;
-
-	const std::string wrongFiledSize = "Incorrect height of field";
-	const std::string sizeErrorStr = "A ship with such size can't be set there. Try again";
-	const std::string outOfFieldStr = "Trying to place the ship out of the field";
-	const std::string placeErrorStr = "There is another ship close. Try again";
 
 	std::vector <Ship*> cells;
 	std::vector <Ship*> ships;
@@ -43,6 +39,7 @@ public:
 
 	bool isShipOnCell(const size_t h, const size_t w) const;
 	bool isPointInField(const size_t h, const size_t w) const;
+	bool isAllShipsDestroyed() const;
 
 	bool destroyShipOnCell(const size_t h, const size_t w);
 
