@@ -10,7 +10,7 @@ protected:
 
 	std::string str;
 
-	const std::string tooShortStr = "Too short. Try again";
+	//const std::string tooShortStr = "Too short. Try again";
 	const std::string yIsNotCorrectStr = "Y is not correct! Try again";
 	const std::string xIsNotCorrectStr = "X is not correct! Try again";
 
@@ -42,7 +42,7 @@ protected:
 	{
 		if (c < posOfAInAscii || c > posOfZInAscii)
 		{
-			throw std::runtime_error(xIsNotCorrectStr);
+			throw std::invalid_argument(xIsNotCorrectStr);
 		}
 
 		size_t w = (size_t) (c - posOfAInAscii);

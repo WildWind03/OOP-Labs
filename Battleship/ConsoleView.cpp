@@ -63,17 +63,23 @@ ShotPoint ConsoleView::getShotPoint()
 		std::getline(std::cin, myStr);
 
 		ShotParser sParser(myStr);
+		ShotPoint p;
 
 		try
 		{
-			ShotPoint p = sParser.parse();
-			return p;
+			p = sParser.parse();
 		}
-		catch (std::exception & a)
+		catch (const ImpossibleShotError & a)
 		{
 			printShotState(ShotState::ERROR);
 			continue;
 		}
+		catch (const GameExitEvent & exitEr)
+		{
+			throw;
+		}
+
+		return p;
 	}
 }
 
@@ -106,9 +112,13 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 			ShipPoint p = sParser.parse();
 			return p;
 		}
-		catch (std::exception & a)
+		catch (const ImpossibleShipError & a)
 		{
 			printPlacingShipError();
+		}
+		catch (const GameExitEvent & exitEr)
+		{
+			throw;
 		}
 	}
 
@@ -171,5 +181,5 @@ void ConsoleView::paint(const FieldView & f)
 
 ConsoleView::~ConsoleView()
 {
-	//in.close();
+	
 }

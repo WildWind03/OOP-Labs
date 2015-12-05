@@ -11,18 +11,12 @@ class View
 {
 protected:
 
-	View() 
-	{
-
-	}
+	View() {}
 
 public:
 
 	virtual ShotPoint getShotPoint() = 0;
 	virtual ShipPoint getShipPoint(const size_t sizeOfShip) = 0;
 
-	virtual ~View() 
-	{
-
-	}
+	virtual ~View() {}
 };

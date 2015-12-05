@@ -41,6 +41,19 @@ bool Field::destroyShipOnCell(const size_t h, const size_t w)
 	}
 }
 
+bool Field::isAllShipsDestroyed() const
+{
+	for (size_t i = 0; i < ships.size(); ++i)
+	{
+		if (!ships[i] -> isDestroyed())
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 bool Field::isPointInField(const size_t h, const size_t w) const
 {
 	if ((h >= getHeight()) || (w >= getWidth()))
@@ -67,17 +80,17 @@ void Field::attachShip(Ship *ship, const ShipPoint & p)
 {
 	if (isPointInField(p.getHeight(), p.getWidth()) == false)
 	{
-		throw std::range_error(outOfFieldStr);
+		throw ImpossibleShipError();
 	}
 
 	if (isWholeShipOnField(ship -> getSize(), p) == false)
 	{
-		throw std::range_error (sizeErrorStr);
+		throw ImpossibleShipError();
 	}
 
 	if (isShipCloseCellsFree(ship -> getSize(), p) == false)
 	{
-		throw std::range_error (placeErrorStr);
+		throw ImpossibleShipError();
 	}
 
 	ships.push_back(ship);

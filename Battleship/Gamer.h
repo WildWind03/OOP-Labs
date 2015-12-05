@@ -9,6 +9,8 @@
 #include "Statistics.h"
 
 #include <cstdio>
+#include <stdexcept>
+
 
 
 class Gamer
@@ -27,7 +29,7 @@ protected:
 
 public:
 	
-	virtual void onRecieveShotState(ShotState state, ShotPoint p)
+	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p)
 	{
 
 	}

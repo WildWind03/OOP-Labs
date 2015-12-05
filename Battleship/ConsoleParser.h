@@ -17,13 +17,14 @@ class ConsoleParser
 								"[-r] - count of rounds \n"
 								"[-f] - type of first gamer \n"
 								"[-s] - type of second gamer \n"
-								"Possible types : ConsoleGamer, RandomGamer, OptimalGamer";
+								"Possible types of gamer : ConsoleGamer, RandomGamer, OptimalGamer";
 
 	const std::string consoleGamer  = "ConsoleGamer";
 	const std::string randomGamer = "RandomGamer";
 	const std::string optimalGamer = "OptimalGamer";
 
 	GamerType g1, g2;
+
 	size_t countOfRounds;
 
 public:
@@ -107,7 +108,7 @@ public:
 					break;
 			}
 
-			c = getopt(argc, argv, "r:f:s:");
+			c = getopt(argc, argv, "r:f:s:h");
 		}
 
 		if (true == isHelp)

@@ -8,12 +8,9 @@ class ShotPoint
 	size_t width;
 	
 public:
-	ShotPoint() = delete;
-
-	ShotPoint(const ShotPoint & p) : height(p.getHeight()), width(p.getWidth())
-	{
-		
-	}
+	ShotPoint() : height(0), width(0) {}
+	ShotPoint(const ShotPoint & p) : height(p.getHeight()), width(p.getWidth()) {}
+	ShotPoint(size_t height, size_t width) : height(height), width(width) {}
 
 	ShotPoint & operator= (const ShotPoint & p)
 	{
@@ -21,11 +18,6 @@ public:
 		width = p.getWidth();
 
 		return *this;
-	}
-
-	ShotPoint(size_t height, size_t width) : height(height), width(width)
-	{
-
 	}
 
 	size_t getHeight() const
@@ -38,8 +30,5 @@ public:
 		return width;
 	}
 
-	virtual ~ShotPoint()
-	{
-		
-	}
+	virtual ~ShotPoint() {}
 };

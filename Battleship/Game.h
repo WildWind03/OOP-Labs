@@ -6,16 +6,15 @@
 #include "Ship.h"
 #include "ShotState.h"
 #include "Statistics.h"
+#include "Exceptions.h"
 
 #include <cstdio>
 #include <string>
 
+enum class GamerNum {Gamer1, Gamer2};
+
 class Game
 {
-	const std::string alreadyShot = "This cell has already destroyed";
-	const std::string gameEndedStr = "Can't do next turn. The game is ended!";
-	const std::string gameNotEndedStr = "Error! The game is not ended!";
-
 	const size_t maxSizeOfShip = 4;
 	const size_t hField = 10;
 	const size_t wField = 10;
@@ -35,22 +34,19 @@ class Game
 	EnemyFieldView * g1EnemyFieldView;
 	EnemyFieldView * g2EnemyFieldView;
 
-	size_t g1Cells;
-	size_t g2Cells;
-
 	size_t countOfTurns;
 
-	void onGameEnded();
-
-	bool isFirstGamerTurn() const;
 	bool isGameEnded() const;
 
-	bool makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots);
 	void makeTurn(Gamer & g);
 	void markShot (ShotField & f, ShotPoint p);
-	
-	void beginGame();
 	void placeShips(Gamer & g, Field & f, MyFieldView & myFV);
+	void onGameEnded(GamerNum winner);
+	
+	GamerNum beginGame();
+	GamerNum getCurrentTurnGamerNum() const;
+
+	ShotState makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots);	
 
 
 public:
@@ -61,9 +57,7 @@ public:
 	Game & operator= (const Game & g) = delete;
 	Game (const Game & g) = delete;
 
-	void newGame();
-	
-	bool isG1Won() const;
+	GamerNum newGame();
 
 	~Game();
 };

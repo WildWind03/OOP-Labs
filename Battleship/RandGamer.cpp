@@ -4,6 +4,7 @@ RandGamer::RandGamer() : Gamer()
 {
 	shotCounter = 0;
 	shipCounter = 0;
+	srand(time(NULL));
 }
 
 void RandGamer::fillShotList(size_t hField, size_t wField)
@@ -58,7 +59,7 @@ void RandGamer::onGameEnded(bool isWon)
 	isReady = false;
 }
 
-void RandGamer::onRecieveShotState(ShotState state, ShotPoint p)
+void RandGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
 {
 	++shotCounter;
 }
@@ -90,5 +91,6 @@ ShotPoint RandGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFi
 
 RandGamer::~RandGamer()
 {
-
+	ships.clear();
+	shots.clear();
 }

@@ -2,8 +2,8 @@
 
 OptGamer::OptGamer() : Gamer () 
 {
+	srand(time(NULL));
 	st = GamerState::EXPLORE;
-	shotCounter = 0;
 }
 
 void OptGamer::fillStShotsList(size_t hField, size_t wField)
@@ -25,7 +25,6 @@ ShotPoint OptGamer::getNextStandartShot()
 {
 	ShotPoint p = stShots.back();
 	stShots.pop_back();
-
 	return p;
 }
 
@@ -41,13 +40,12 @@ void OptGamer::onGameStarted(size_t h, size_t w)
 	nextShots.clear();
 
 	isReady = true;
-	shotCounter = 0;
 	st = GamerState::EXPLORE;
 
 	fillStShotsList(h, w);
 }
 
-void OptGamer::onRecieveShotState(ShotState state, ShotPoint p)
+void OptGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
 {
 	switch (state)
 	{
@@ -321,7 +319,6 @@ ShotPoint OptGamer::getNextHitShot()
 {
 	ShotPoint p = nextShots.back();
 	nextShots.pop_back();
-
 	return p;
 }
 
@@ -389,5 +386,7 @@ ShotPoint OptGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFie
 
 OptGamer::~OptGamer()
 {
-
+	stShots.clear();
+	nextShots.clear();
+	injured.clear();
 }

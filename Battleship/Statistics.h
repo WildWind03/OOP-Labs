@@ -7,10 +7,7 @@ class Statistics
 
 public:
 
-	Statistics() : g1Vic(0), g2Vic(0)
-	{
-
-	}
+	Statistics() : g1Vic(0), g2Vic(0) {}
 
 	void addG1Vic()
 	{
@@ -38,8 +35,5 @@ public:
 	Statistics(const Statistics & statistics) = delete;
 	Statistics & operator=(const Statistics & statistics) = delete;
 
-	~Statistics()
-	{
-
-	}
+	~Statistics() {}
 };
