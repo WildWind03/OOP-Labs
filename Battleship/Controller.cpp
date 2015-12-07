@@ -4,31 +4,31 @@ Controller::Controller (GameConf  & conf)
 {
 	countOfRounds = conf.getCountRound();
 
-	g1 = GamerFactory::CreateGamer(conf.getFPlayer());
-	g2 = GamerFactory::CreateGamer(conf.getSPlayer());
+	gamer1 = GamerFactory::CreateGamer(conf.getFPlayer());
+	gamer2 = GamerFactory::CreateGamer(conf.getSPlayer());
 
 	stat = new Statistics();
 
-	game = new Game(*g1, *g2);
+	game = new Game(*gamer1, *gamer2);
 }
 
 void Controller::beginGame()
 {
 	for (size_t i = 0; i < countOfRounds; ++i)
 	{
-		GamerNum winner;
+		GamerNum winnerGamerNum;
 
 		try
 		{
-			winner = game -> newGame();
+			winnerGamerNum = game -> newGame();
 		}
-		catch(const GameExitEvent & exitStr)
+		catch(const GameExitException & exitException)
 		{
 			return;
 		}
 
 
-		if (GamerNum::Gamer1 == winner)
+		if (GamerNum::Gamer1 == winnerGamerNum)
 		{
 			stat -> addG1Vic();
 		}
@@ -38,8 +38,8 @@ void Controller::beginGame()
 		}
 	}
 
-	g1 -> onGetStatistics(*stat);
-	g2 -> onGetStatistics(*stat);
+	gamer1 -> onGetStatistics(*stat);
+	gamer2 -> onGetStatistics(*stat);
 
 	ConsoleView view; //just to see statistics when random and optimal gamers play
 	view.printStatistics(*stat);
@@ -49,6 +49,6 @@ Controller::~Controller()
 {
 	delete(stat);
 	delete(game);
-	delete(g1);
-	delete(g2);
+	delete(gamer1);
+	delete(gamer2);
 }

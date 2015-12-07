@@ -1,10 +1,11 @@
 #pragma once
 
+#include "BannedActionException.h"
+
 #include <vector>
 #include <iostream>
 #include <cstdio>
 #include <string>
-#include <stdexcept>
 
 class ShotField
 {

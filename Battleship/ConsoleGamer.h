@@ -5,7 +5,8 @@
 #include "Field.h"
 #include "ShipPoint.h"
 #include "ShotPoint.h"
-#include "Exceptions.h"
+#include "BannedActionException.h"
+#include "GameExitException.h"
 
 #include <cstdio>
 
@@ -24,11 +25,11 @@ public:
 	virtual ShipPoint getPointForShip (const size_t sizeOfShip, const MyFieldView & myFieldV);
 	virtual ShotPoint getPointForShot (const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);
 	
-    virtual void onRecieveResultOfPlacingShip(bool isPlaced) override;
-	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p) override;
+	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & prevShot) override;
 	virtual void onGetStatistics(const Statistics & stat) override;
 	virtual void onGameEnded(bool isWon) override;
 	virtual void onGameStarted(size_t hField, size_t wField) override;
+	virtual void onRecieveErrorString(const std::string & errorStr) override;
 
 	virtual ~ConsoleGamer();
 };

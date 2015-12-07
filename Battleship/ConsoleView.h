@@ -9,10 +9,12 @@
 #include "ShotPoint.h"
 #include "ShotState.h"
 #include "Statistics.h"
+#include "InvalidInputException.h"
+#include "GameExitException.h"
+#include "BannedActionException.h"
 
 #include <iostream>
 #include <string>
-#include <stdexcept>
 #include <fstream>
 
 class ConsoleView : public View
@@ -34,13 +36,11 @@ class ConsoleView : public View
 
 	const size_t maxHeightOfField = 26;
 
-	//std::ifstream in;
-
 public:
 
 	ConsoleView();
-	ConsoleView(const ConsoleView & v) = delete;
-	ConsoleView & operator= (const ConsoleView & v) = delete;
+	ConsoleView(const ConsoleView & consoleView) = delete;
+	ConsoleView & operator= (const ConsoleView & consoleView) = delete;
 
 	virtual ShotPoint getShotPoint();
 	virtual ShipPoint getShipPoint(const size_t sizeOfShip);
@@ -50,8 +50,9 @@ public:
 	void printGameStartedStr();
 	void printPlacingShipError();
 	void printShotState(ShotState state);
+	void printMessage(const std::string & message);
 
-	void paint(const FieldView & f);
+	void paint(const FieldView & fieldView);
 
 	virtual ~ConsoleView();
 };

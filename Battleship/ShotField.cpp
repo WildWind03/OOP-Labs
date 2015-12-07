@@ -50,7 +50,7 @@ bool ShotField::isMarked(const size_t h, const size_t w) const
 {
 	if (false == isPointInField(h, w))
 	{
-		throw std::range_error(outFieldStr);
+		throw BannedActionException(outFieldStr);
 	}
 
 	size_t pos = getPosFromPoint(h, w);
@@ -62,7 +62,7 @@ void ShotField::mark(const size_t h, const size_t w)
 {
 	if (false == isPointInField(h, w))
 	{
-		throw std::range_error(outFieldStr);
+		throw BannedActionException(outFieldStr);
 	}
 
 	size_t pos = getPosFromPoint(h, w);
@@ -74,7 +74,7 @@ void ShotField::unMark(const size_t h, const size_t w)
 {
 	if (false == isPointInField(h, w))
 	{
-		throw std::range_error(outFieldStr);
+		throw BannedActionException(outFieldStr);
 	}
 	
 	size_t pos = getPosFromPoint(h, w);

@@ -3,10 +3,10 @@
 OptGamer::OptGamer() : Gamer () 
 {
 	srand(time(NULL));
-	st = GamerState::EXPLORE;
+	gamerState = GamerState::EXPLORE;
 }
 
-void OptGamer::fillStShotsList(size_t hField, size_t wField)
+void OptGamer::fillStandartShotsList(size_t hField, size_t wField)
 {
 	for (size_t i = 0; i < hField; ++i)
 	{
@@ -14,17 +14,17 @@ void OptGamer::fillStShotsList(size_t hField, size_t wField)
 		{
 			ShotPoint p(i, k);
 
-			stShots.push_back(p);
+			standartShots.push_back(p);
 		}
 	}
 
-	std::random_shuffle(stShots.begin(), stShots.end());
+	std::random_shuffle(standartShots.begin(), standartShots.end());
 }
 
 ShotPoint OptGamer::getNextStandartShot()
 {
-	ShotPoint p = stShots.back();
-	stShots.pop_back();
+	ShotPoint p = standartShots.back();
+	standartShots.pop_back();
 	return p;
 }
 
@@ -36,24 +36,24 @@ void OptGamer::onGameEnded(bool isWon)
 void OptGamer::onGameStarted(size_t h, size_t w)
 {
 	injured.clear();
-	stShots.clear();
+	standartShots.clear();
 	nextShots.clear();
 
 	isReady = true;
-	st = GamerState::EXPLORE;
+	gamerState = GamerState::EXPLORE;
 
-	fillStShotsList(h, w);
+	fillStandartShotsList(h, w);
 }
 
-void OptGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
+void OptGamer::onRecieveShotState(const ShotState & state, const ShotPoint & prevShot)
 {
 	switch (state)
 	{
 		case ShotState::INJURED :
 
-			st = GamerState::HIT;
+			gamerState = GamerState::HIT;
 
-			injured.push_back(p);
+			injured.push_back(prevShot);
 
 			nextShots.clear();
 
@@ -65,7 +65,7 @@ void OptGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
 
 			nextShots.clear();
 
-			st = GamerState::EXPLORE;
+			gamerState = GamerState::EXPLORE;
 
 			break;
 	}
@@ -75,7 +75,7 @@ ShipPoint OptGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView &
 {
 	if (false == isReadyToStart())
 	{
-		throw std::runtime_error(initError);
+		throw BannedActionException(initErrorStr);
 	}
 
 	size_t h, w;
@@ -334,11 +334,11 @@ void OptGamer::fillNextShots(size_t hField, size_t wField)
 	}
 }
 
-bool OptGamer::isPossibleToBeShipThere(const ShotPoint & p, const EnemyFieldView & v) const
+bool OptGamer::isPossibleToBeShipThere(const ShotPoint & possibleShot, const EnemyFieldView & enemyFieldView) const
 {
 	for (size_t i = 0; i < injured.size(); ++i)
 	{
-		if (v.isExistLearntDestrCellNear(p, injured[i]))
+		if (enemyFieldView.isExistLearntDestrCellNear(possibleShot, injured[i]))
 		{
 			return false;
 		}
@@ -351,19 +351,19 @@ ShotPoint OptGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFie
 {
 	if (false == isReadyToStart())
 	{
-		throw std::runtime_error(initError);
+		throw BannedActionException(initErrorStr);
 	}
 
-	if (GamerState::EXPLORE == st) 
+	if (GamerState::EXPLORE == gamerState) 
 	{
-		ShotPoint p = getNextStandartShot();
+		ShotPoint nextShotPoint = getNextStandartShot();
 
-		while(enemyFieldV.isExistLearntDestrCellNear(p))
+		while(enemyFieldV.isExistLearntDestrCellNear(nextShotPoint))
 		{
-			p = getNextStandartShot();
+			nextShotPoint = getNextStandartShot();
 		}
 
-		return p;
+		return nextShotPoint;
 	}
 	else
 	{
@@ -373,20 +373,20 @@ ShotPoint OptGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFie
 			fillNextShots(myFieldV.getHeight(), myFieldV.getWidth());
 		}
 
-		ShotPoint p = getNextHitShot();
+		ShotPoint nextShotPoint = getNextHitShot();
 
-		while (!isPossibleToBeShipThere(p, enemyFieldV))
+		while (!isPossibleToBeShipThere(nextShotPoint, enemyFieldV))
 		{
-			p = getNextHitShot();	
+			nextShotPoint = getNextHitShot();	
 		}
 
-		return p;
+		return nextShotPoint;
 	}
 }
 
 OptGamer::~OptGamer()
 {
-	stShots.clear();
+	standartShots.clear();
 	nextShots.clear();
 	injured.clear();
 }

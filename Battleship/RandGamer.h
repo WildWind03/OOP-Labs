@@ -5,6 +5,7 @@
 #include "ShipPoint.h"
 #include "ShotPoint.h"
 #include "myRand.h"
+#include "BannedActionException.h"
 
 #include <cstdio>
 #include <vector>
@@ -31,8 +32,6 @@ public:
 
 	virtual void onGameStarted(size_t hField, size_t wField) override;
 	virtual void onGameEnded(bool isWon) override;
-	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p) override;
-	virtual void onRecieveResultOfPlacingShip(bool isPlaced) override;
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV);
 	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);

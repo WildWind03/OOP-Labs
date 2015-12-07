@@ -1,7 +1,8 @@
 #pragma once
 
+#include "BannedActionException.h"
+
 #include <cstdio>
-#include <stdexcept>
 #include <string>
 
 class Ship

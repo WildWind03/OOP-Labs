@@ -8,15 +8,15 @@
 #include "EnemyFieldView.h"
 #include "Statistics.h"
 #include "ConsoleView.h"
-#include "Exceptions.h"
+#include "GameExitException.h"
 
 
 #include <cstdio>
 
 class Controller
 {
-	Gamer * g1;
-	Gamer * g2;
+	Gamer * gamer1;
+	Gamer * gamer2;
 
 	Game * game;
 

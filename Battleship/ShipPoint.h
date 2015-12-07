@@ -11,27 +11,13 @@ class ShipPoint : public ShotPoint
 public:
 
 	ShipPoint() = delete;
-
-	ShipPoint(size_t height, size_t width, bool isVert) : ShotPoint(height, width)
-	{
-		this -> isVert = isVert;
-	}
-
 	ShipPoint & operator= (const ShipPoint & p) = delete;
+	
+	ShipPoint(size_t height, size_t width, bool isVert);
+	ShipPoint(const ShipPoint & p);
 
-	ShipPoint(const ShipPoint & p) : ShotPoint(p)
-	{
-		this -> isVert = p.isVertical();
-	}
+	bool isVertical() const;
 
-	bool isVertical() const
-	{
-		return isVert;
-	}
-
-	virtual ~ShipPoint()
-	{
-		
-	}
+	virtual ~ShipPoint();
 };
 

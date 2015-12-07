@@ -76,30 +76,30 @@ bool Field::isShipOnCell(const size_t h, const size_t w) const
 	return true;
 }
 
-void Field::attachShip(Ship *ship, const ShipPoint & p)
+void Field::attachShip(Ship *ship, const ShipPoint & point)
 {
-	if (isPointInField(p.getHeight(), p.getWidth()) == false)
+	if (isPointInField(point.getHeight(), point.getWidth()) == false)
 	{
-		throw ImpossibleShipError();
+		throw ImpossibleShipException(notInFieldStr);
 	}
 
-	if (isWholeShipOnField(ship -> getSize(), p) == false)
+	if (isWholeShipOnField(ship -> getSize(), point) == false)
 	{
-		throw ImpossibleShipError();
+		throw ImpossibleShipException(notWholeShipStr);
 	}
 
-	if (isShipCloseCellsFree(ship -> getSize(), p) == false)
+	if (isShipCloseCellsFree(ship -> getSize(), point) == false)
 	{
-		throw ImpossibleShipError();
+		throw ImpossibleShipException(neighboursShipStr);
 	}
 
 	ships.push_back(ship);
 
-	if (true == p.isVertical())
+	if (true == point.isVertical())
 	{
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
-			size_t pos = getPosFromPoint(p.getHeight() + i, p.getWidth());
+			size_t pos = getPosFromPoint(point.getHeight() + i, point.getWidth());
 			cells[pos] = ship;
 		}
 	}
@@ -107,7 +107,7 @@ void Field::attachShip(Ship *ship, const ShipPoint & p)
 	{
 		for (size_t i = 0; i < ship -> getSize(); ++i)
 		{
-			size_t pos = getPosFromPoint(p.getHeight(), p.getWidth() + i);
+			size_t pos = getPosFromPoint(point.getHeight(), point.getWidth() + i);
 			cells[pos] = ship;
 		}
 	}	
@@ -158,18 +158,18 @@ bool Field::isCloseCellsFree(const size_t h, const size_t w) const
 	return true;
 }
 
-bool Field::isWholeShipOnField(const size_t sizeOfShip, const ShipPoint & p) const
+bool Field::isWholeShipOnField(const size_t sizeOfShip, const ShipPoint & point) const
 {
-	if (true == p.isVertical())
+	if (true == point.isVertical())
 	{
-		if (p.getHeight() + sizeOfShip > getHeight())
+		if (point.getHeight() + sizeOfShip > getHeight())
 		{
 			return false;
 		}
 	}
 	else
 	{
-		if (p.getWidth() + sizeOfShip > getWidth())
+		if (point.getWidth() + sizeOfShip > getWidth())
 		{
 			return false;
 		}
@@ -178,13 +178,13 @@ bool Field::isWholeShipOnField(const size_t sizeOfShip, const ShipPoint & p) con
 	return true;
 }
 
-bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const ShipPoint & p) const
+bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const ShipPoint & point) const
 {
-	if (false == p.isVertical())
+	if (false == point.isVertical())
 	{
 		for (size_t i = 0; i < sizeOfShip; ++i)
 		{
-			if (false == isCloseCellsFree(p.getHeight(), p.getWidth() + i))
+			if (false == isCloseCellsFree(point.getHeight(), point.getWidth() + i))
 			{
 				return false;
 			}
@@ -194,7 +194,7 @@ bool Field::isShipCloseCellsFree (const size_t sizeOfShip, const ShipPoint & p) 
 	{
 		for (size_t i = 0; i < sizeOfShip; ++i)
 		{		
-			if (false == isCloseCellsFree(p.getHeight() + i, p.getWidth()))
+			if (false == isCloseCellsFree(point.getHeight() + i, point.getWidth()))
 			{
 				return false;
 			}
