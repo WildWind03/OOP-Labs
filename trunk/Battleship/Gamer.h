@@ -9,7 +9,6 @@
 #include "Statistics.h"
 
 #include <cstdio>
-#include <stdexcept>
 
 
 
@@ -20,50 +19,26 @@ protected:
 
 	bool isReady;
 
-	const std::string initError = "Error! The gamer isn't initialized!";
+	const std::string initErrorStr = "Error! The gamer isn't initialized!";
 	
-    Gamer()
-    {
-    	isReady = false;
-    }
+    Gamer();
+
+    Gamer & operator= (const Gamer & gamer) = delete;
+    Gamer (const Gamer & gamer) = delete;
 
 public:
 	
-	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p)
-	{
+	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & prevShot);
+	virtual void onGetStatistics(const Statistics & stat);
+	virtual void onRecieveResultOfPlacingShip(bool isPlaced);
+	virtual void onGameEnded(bool isWon);
+	virtual void onGameStarted(size_t hField, size_t wField);
+	virtual void onRecieveErrorString(const std::string & errorStr);
 
-	}
-
-	virtual void onGetStatistics(const Statistics & stat)
-	{
-
-	}
-
-	virtual void onRecieveResultOfPlacingShip(bool isPlaced)
-	{
-
-	}
-
-	virtual void onGameEnded(bool isWon)
-	{
-		isReady = false;
-	}
-
-	virtual void onGameStarted(size_t hField, size_t wField)
-	{
-		isReady = true;
-	}
-
-	bool isReadyToStart() const
-	{
-		return isReady;
-	}
+	bool isReadyToStart() const;
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) = 0;
 	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) = 0;
 
-	virtual ~Gamer()
-	{
-
-	}
+	virtual ~Gamer();
 };

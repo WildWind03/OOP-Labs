@@ -6,7 +6,10 @@
 #include "Ship.h"
 #include "ShotState.h"
 #include "Statistics.h"
-#include "Exceptions.h"
+#include "GameEndedException.h"
+#include "GameExitException.h"
+#include "ImpossibleShipException.h"
+#include "ImpossibleShotException.h"
 
 #include <cstdio>
 #include <string>
@@ -15,47 +18,50 @@ enum class GamerNum {Gamer1, Gamer2};
 
 class Game
 {
+	const std::string gameEndedStr = "The game is ended!";
+	const std::string shotPointIsBusyStr = "The point is already shot!";
+
 	const size_t maxSizeOfShip = 4;
 	const size_t hField = 10;
 	const size_t wField = 10;
 
-	Gamer & g1;
-	Gamer & g2;
+	Gamer & gamer1;
+	Gamer & gamer2;
 
-	Field * g1Field;
-	Field * g2Field;
+	Field * gamer1Field;
+	Field * gamer2Field;
 
-	ShotField * g1Shots;
-	ShotField * g2Shots;
+	ShotField * gamer1Shots;
+	ShotField * gamer2Shots;
 
-	MyFieldView * g1MyFieldView;
-	MyFieldView * g2MyFieldView;
+	MyFieldView * gamer1MyFieldView;
+	MyFieldView * gamer2MyFieldView;
 
-	EnemyFieldView * g1EnemyFieldView;
-	EnemyFieldView * g2EnemyFieldView;
+	EnemyFieldView * gamer1EnemyFieldView;
+	EnemyFieldView * gamer2EnemyFieldView;
 
 	size_t countOfTurns;
 
 	bool isGameEnded() const;
 
-	void makeTurn(Gamer & g);
-	void markShot (ShotField & f, ShotPoint p);
-	void placeShips(Gamer & g, Field & f, MyFieldView & myFV);
-	void onGameEnded(GamerNum winner);
+	void makeTurn(Gamer & gamer);
+	void markShot (ShotField & shotField, const ShotPoint & shotPoint);
+	void placeShips(Gamer & gamer, Field & field, MyFieldView & myFV);
+	void onGameEnded();
 	
 	GamerNum beginGame();
 	GamerNum getCurrentTurnGamerNum() const;
 
-	ShotState makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots);	
+	ShotState makeShot(Gamer & gamer, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots);	
 
 
 public:
 
-	Game(Gamer & g1, Gamer & g2);
+	Game(Gamer & gamer1, Gamer & gamer2);
 
 	Game() = delete;
-	Game & operator= (const Game & g) = delete;
-	Game (const Game & g) = delete;
+	Game & operator= (const Game & gamer) = delete;
+	Game (const Game & gamer) = delete;
 
 	GamerNum newGame();
 

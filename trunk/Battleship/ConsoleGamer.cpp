@@ -4,7 +4,7 @@ ShipPoint ConsoleGamer::getPointForShip(const size_t sizeOfShip, const MyFieldVi
 {
 	if (false == isReadyToStart())
 	{
-		throw std::runtime_error(initError);
+		throw BannedActionException(initErrorStr);
 	}
 	
 	view -> paint(myFieldV);
@@ -14,7 +14,7 @@ ShipPoint ConsoleGamer::getPointForShip(const size_t sizeOfShip, const MyFieldVi
 		ShipPoint p = view -> getShipPoint(sizeOfShip);
 		return p;	
 	}
-	catch (const GameExitEvent & er)
+	catch (const GameExitException & exitException)
 	{
 		throw;
 	}
@@ -24,7 +24,7 @@ ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const Enem
 {
 	if (false == isReadyToStart())
 	{
-		throw std::runtime_error(initError);
+		throw BannedActionException(initErrorStr);
 	}
 	
 	view -> paint(myFieldV);
@@ -37,7 +37,7 @@ ShotPoint ConsoleGamer::getPointForShot(const MyFieldView & myFieldV, const Enem
 		p = view -> getShotPoint();
 	}
 
-	catch (const GameExitEvent & er)
+	catch (const GameExitException & exitException)
 	{
 		throw;
 	}
@@ -57,15 +57,12 @@ void ConsoleGamer::onGameStarted(size_t hField, size_t wField)
 	isReady = true;
 }
 
-void ConsoleGamer::onRecieveResultOfPlacingShip(bool isPlaced)
+void ConsoleGamer::onRecieveErrorString(const std::string & errorStr)
 {
-	if (false == isPlaced)
-	{
-		view -> printPlacingShipError();
-	}
+	view -> printMessage(errorStr);
 }
 
-void ConsoleGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
+void ConsoleGamer::onRecieveShotState(const ShotState & state, const ShotPoint & prevShot)
 {
 	view -> printShotState(state);
 }

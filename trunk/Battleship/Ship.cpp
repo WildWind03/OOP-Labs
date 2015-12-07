@@ -23,7 +23,7 @@ void Ship::takeDamage()
 	}
 	else
 	{
-		throw std::runtime_error(alreadyDestr);
+		throw BannedActionException(alreadyDestr);
 	}
 }
 

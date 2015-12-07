@@ -20,11 +20,12 @@ void ConsoleView::printShotState(ShotState state)
 		case ShotState::DESTROYED :
 			std::cout << destrStr << std::endl;
 			break;
-
-		case ShotState::ERROR :
-			std::cout << wrongShotPointStr << std::endl;
-			break;
 	}
+}
+
+void ConsoleView::printMessage(const std::string & message)
+{
+	std::cout << message << std::endl;
 }
 
 void ConsoleView::printPlacingShipError()
@@ -56,6 +57,8 @@ ShotPoint ConsoleView::getShotPoint()
 
 	std::cout << typeShotStr << std::endl;
 
+	ShotPoint p;
+
 	while (true)
 	{
 		std::string myStr;
@@ -63,24 +66,25 @@ ShotPoint ConsoleView::getShotPoint()
 		std::getline(std::cin, myStr);
 
 		ShotParser sParser(myStr);
-		ShotPoint p;
 
 		try
 		{
 			p = sParser.parse();
+			break;
 		}
-		catch (const ImpossibleShotError & a)
+		catch (const InvalidInputException & invalidInputException)
 		{
-			printShotState(ShotState::ERROR);
+			printMessage(invalidInputException.what());
 			continue;
 		}
-		catch (const GameExitEvent & exitEr)
+		catch (const GameExitException & exitEr)
 		{
 			throw;
 		}
 
-		return p;
 	}
+
+	return p;
 }
 
 void ConsoleView::printStatistics(const Statistics & stat)
@@ -112,11 +116,11 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 			ShipPoint p = sParser.parse();
 			return p;
 		}
-		catch (const ImpossibleShipError & a)
+		catch (const InvalidInputException & a)
 		{
-			printPlacingShipError();
+			printMessage(a.what());
 		}
-		catch (const GameExitEvent & exitEr)
+		catch (const GameExitException & exitEr)
 		{
 			throw;
 		}
@@ -124,11 +128,11 @@ ShipPoint ConsoleView::getShipPoint(const size_t sizeOfShip)
 
 }
 
-void ConsoleView::paint(const FieldView & f)
+void ConsoleView::paint(const FieldView & fieldView)
 {
-	if (f.getHeight() > maxHeightOfField)
+	if (fieldView.getHeight() > maxHeightOfField)
 	{
-		throw std::runtime_error(wrongHeightStr);
+		throw BannedActionException(wrongHeightStr);
 	}
 
 	std::cout << "\n  ";
@@ -137,20 +141,20 @@ void ConsoleView::paint(const FieldView & f)
 
 	char curSym = posOfAInAscii;
 
-	for (size_t i = 0; i < f.getWidth(); ++i)
+	for (size_t i = 0; i < fieldView.getWidth(); ++i)
 	{
 		std::cout << curSym++;
 	}
 
-	for (size_t i = 0; i < f.getHeight(); ++i)
+	for (size_t i = 0; i < fieldView.getHeight(); ++i)
 	{
 		std::cout << "\n" << counter << " ";
 
 		++counter;
 
-		for (size_t k = 0; k < f.getWidth(); ++k)
+		for (size_t k = 0; k < fieldView.getWidth(); ++k)
 		{
-			switch(f.getCellState(i, k))
+			switch(fieldView.getCellState(i, k))
 			{
 				case CellState::FREE :
 					std::cout << "-";

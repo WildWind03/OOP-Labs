@@ -59,34 +59,24 @@ void RandGamer::onGameEnded(bool isWon)
 	isReady = false;
 }
 
-void RandGamer::onRecieveShotState(const ShotState & state, const ShotPoint & p)
-{
-	++shotCounter;
-}
-
-void RandGamer::onRecieveResultOfPlacingShip(bool isPlaced)
-{
-	++shipCounter;
-}
-
 ShipPoint RandGamer::getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV)
 {
 	if (false == isReadyToStart())
 	{
-		throw std::runtime_error(initError);
+		throw BannedActionException(initErrorStr);
 	}
 
-	return ships[shipCounter];
+	return ships[shipCounter++];
 }
 
 ShotPoint RandGamer::getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV)
 {
 	if (false == isReadyToStart())
 	{
-		throw std::runtime_error(initError);
+		throw BannedActionException(initErrorStr);
 	}
 
-	return shots[shotCounter];
+	return shots[shotCounter++];
 }
 
 RandGamer::~RandGamer()

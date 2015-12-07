@@ -6,6 +6,7 @@
 #include "ShotPoint.h"
 #include "myRand.h"
 #include "ConsoleView.h"
+#include "BannedActionException.h"
 
 #include <vector>
 #include <cstdio>
@@ -14,9 +15,9 @@
 
 class OptGamer : public Gamer
 {
-	enum class GamerState {EXPLORE, HIT} st;
+	enum class GamerState {EXPLORE, HIT} gamerState;
 
-	std::vector <ShotPoint> stShots;
+	std::vector <ShotPoint> standartShots;
 	std::vector <ShotPoint> injured;
 	std::vector <ShotPoint> nextShots;
 
@@ -24,7 +25,7 @@ class OptGamer : public Gamer
 	ShotPoint getNextHitShot();
 
 	bool isInjVert() const;
-	bool isPossibleToBeShipThere(const ShotPoint & p, const EnemyFieldView & v) const;
+	bool isPossibleToBeShipThere(const ShotPoint & possibleShot, const EnemyFieldView & enemyFieldView) const;
 
 	size_t getMaxWidthInj() const;
 	size_t getMaxHeightInj() const;
@@ -34,7 +35,7 @@ class OptGamer : public Gamer
 	void fillNextShotsListNoOrient(size_t hField, size_t wField);
 	void fillNextShotsListOrient(size_t hField, size_t wField);
 	void fillNextShots(size_t hField, size_t wField);
-	void fillStShotsList(size_t hField, size_t wField);
+	void fillStandartShotsList(size_t hField, size_t wField);
 
 public:
 	
@@ -45,7 +46,7 @@ public:
 
 	virtual void onGameStarted (size_t hField, size_t wField) override;
 	virtual void onGameEnded(bool isWon) override;
-	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & p) override;
+	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & prevShot) override;
 
 	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV);
 	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);

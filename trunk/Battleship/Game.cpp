@@ -1,19 +1,19 @@
 #include "Game.h"
 
-Game::Game (Gamer & g1, Gamer & g2)
-			: g1 (g1), g2(g2), countOfTurns(0)
+Game::Game (Gamer & gamer1, Gamer & gamer2)
+			: gamer1 (gamer1), gamer2(gamer2), countOfTurns(0)
 {
-	g1Field = new Field(hField, wField);
-	g2Field = new Field(hField, wField);
+	gamer1Field = new Field(hField, wField);
+	gamer2Field = new Field(hField, wField);
 
-	g1Shots = new ShotField (hField, wField);
-	g2Shots = new ShotField (hField, wField);
+	gamer1Shots = new ShotField (hField, wField);
+	gamer2Shots = new ShotField (hField, wField);
 
-	g1EnemyFieldView = new EnemyFieldView(*g2Field, *g1Shots);
-	g2EnemyFieldView = new EnemyFieldView(*g1Field, *g2Shots);
+	gamer1EnemyFieldView = new EnemyFieldView(*gamer2Field, *gamer1Shots);
+	gamer2EnemyFieldView = new EnemyFieldView(*gamer1Field, *gamer2Shots);
 
-	g1MyFieldView = new MyFieldView(*g1Field, *g2Shots);
-	g2MyFieldView = new MyFieldView(*g2Field, *g1Shots);
+	gamer1MyFieldView = new MyFieldView(*gamer1Field, *gamer2Shots);
+	gamer2MyFieldView = new MyFieldView(*gamer2Field, *gamer1Shots);
 }
 
 GamerNum Game::getCurrentTurnGamerNum() const
@@ -28,7 +28,7 @@ GamerNum Game::getCurrentTurnGamerNum() const
 
 bool Game::isGameEnded() const
 {
-	if (g1Field -> isAllShipsDestroyed() || g2Field -> isAllShipsDestroyed())
+	if (gamer1Field -> isAllShipsDestroyed() || gamer2Field -> isAllShipsDestroyed())
 	{
 		return true;
 	}
@@ -36,55 +36,56 @@ bool Game::isGameEnded() const
 	return false;
 }
 
-void Game::onGameEnded(GamerNum winner)
+void Game::onGameEnded()
 {
-	if (GamerNum::Gamer1 == winner)
+	if (GamerNum::Gamer1 == getCurrentTurnGamerNum())
 	{
-		g1.onGameEnded(true);
-		g2.onGameEnded(false);
+		gamer1.onGameEnded(true);
+		gamer2.onGameEnded(false);
 	}
 	else
 	{
-		g1.onGameEnded(false);
-		g2.onGameEnded(true);
+		gamer1.onGameEnded(false);
+		gamer2.onGameEnded(true);
 	}
 
-	throw GameEndedEvent();
+	throw GameEndedException(gameEndedStr);
 }
 
-ShotState Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots)
+ShotState Game::makeShot(Gamer & gamer, MyFieldView * myFieldV, EnemyFieldView * enemyFieldV, Field * enemyField, ShotField * myShots)
 {
-	ShotPoint p;
+	ShotPoint shotPoint;
 	
 	try
 	{
-		p = g.getPointForShot(*myFieldV, *enemyFieldV);
+		shotPoint = gamer.getPointForShot(*myFieldV, *enemyFieldV);
 
-		markShot(*myShots, p);
+		markShot(*myShots, shotPoint);
 	}
-	catch (const ImpossibleShotError & er)
+	catch (const ImpossibleShotException & er)
 	{
-		g.onRecieveShotState(ShotState::ERROR, p);
+		gamer.onRecieveShotState(ShotState::ERROR, shotPoint);
+		gamer.onRecieveErrorString(er.what());
 		throw;
 	}
-	catch (const GameExitEvent & ex)
+	catch (const GameExitException & ex)
 	{
 		throw;
 	}
 	
-	if (true == enemyField -> isShipOnCell(p.getHeight(), p.getWidth()))
+	if (true == enemyField -> isShipOnCell(shotPoint.getHeight(), shotPoint.getWidth()))
 	{
-		bool isDestroyed = enemyField -> destroyShipOnCell(p.getHeight(), p.getWidth());
+		bool isDestroyed = enemyField -> destroyShipOnCell(shotPoint.getHeight(), shotPoint.getWidth());
 
 		if (true == isDestroyed)
 		{
-			g.onRecieveShotState(ShotState::DESTROYED, p);
+			gamer.onRecieveShotState(ShotState::DESTROYED, shotPoint);
 
 			return ShotState::DESTROYED;
 		}
 		else
 		{
-			g.onRecieveShotState(ShotState::INJURED, p);
+			gamer.onRecieveShotState(ShotState::INJURED, shotPoint);
 
 			return ShotState::INJURED;
 		}
@@ -93,29 +94,29 @@ ShotState Game::makeShot(Gamer & g, MyFieldView * myFieldV, EnemyFieldView * ene
 	{
 		++countOfTurns;	
 
-		g.onRecieveShotState(ShotState::MISSED, p);
+		gamer.onRecieveShotState(ShotState::MISSED, shotPoint);
 
 		return ShotState::MISSED;
 
 	}
 }
 
-void Game::makeTurn (Gamer & g)
+void Game::makeTurn (Gamer & gamer)
 {
 	while(true)
 	{
 		try
 		{
 			ShotState st;
-			GamerNum g = getCurrentTurnGamerNum();
+			GamerNum gamerNum = getCurrentTurnGamerNum();
 
-			if (GamerNum::Gamer1 == g)
+			if (GamerNum::Gamer1 == gamerNum)
 			{
-				st = makeShot(g1, g1MyFieldView, g1EnemyFieldView, g2Field, g1Shots);
+				st = makeShot(gamer1, gamer1MyFieldView, gamer1EnemyFieldView, gamer2Field, gamer1Shots);
 			}
 			else
 			{
-				st = makeShot(g2, g2MyFieldView, g2EnemyFieldView, g1Field, g2Shots);
+				st = makeShot(gamer2, gamer2MyFieldView, gamer2EnemyFieldView, gamer1Field, gamer2Shots);
 			}
 
 			if (ShotState::MISSED == st)
@@ -123,17 +124,17 @@ void Game::makeTurn (Gamer & g)
 				break;
 			}
 
-			if (true == isGameEnded())
+			if (isGameEnded())
 			{
-				onGameEnded(getCurrentTurnGamerNum());
+				onGameEnded();
 				break;
 			}
 		}
-		catch(const ImpossibleShotError & er)
+		catch(const ImpossibleShotException & error)
 		{
 			continue;
 		}
-		catch(const GameExitEvent & erExit)
+		catch(const GameExitException & erExit)
 		{
 			throw erExit;
 		}
@@ -142,31 +143,31 @@ void Game::makeTurn (Gamer & g)
 
 GamerNum Game::newGame()
 {
-	g1.onGameStarted(hField, wField);
-	g2.onGameStarted(hField, wField);
+	gamer1.onGameStarted(hField, wField);
+	gamer2.onGameStarted(hField, wField);
 
 	countOfTurns = 0;
 
-	g1Field -> clear();
-	g2Field -> clear();
-	g1Shots -> clear();
-	g2Shots -> clear();
+	gamer1Field -> clear();
+	gamer2Field -> clear();
+	gamer1Shots -> clear();
+	gamer2Shots -> clear();
 
-	GamerNum winner;
+	GamerNum winnerGamerNum;
 
 	try
 	{
-		placeShips(g1, *g1Field, *g1MyFieldView);
-		placeShips(g2, *g2Field, *g2MyFieldView);
+		placeShips(gamer1, *gamer1Field, *gamer1MyFieldView);
+		placeShips(gamer2, *gamer2Field, *gamer2MyFieldView);
 
-		winner = beginGame();
+		winnerGamerNum = beginGame();
 	}
-	catch(const GameExitEvent & erExit)
+	catch(const GameExitException & erExit)
 	{
 		throw erExit;
 	}
 
-	return winner;
+	return winnerGamerNum;
 }
 
 GamerNum Game::beginGame()
@@ -175,23 +176,23 @@ GamerNum Game::beginGame()
 	{
 		try
 		{
-			makeTurn(g1);
-			makeTurn(g2);
+			makeTurn(gamer1);
+			makeTurn(gamer2);
 		}
-		catch(const GameEndedEvent & gameEnded)
+		catch(const GameEndedException & gameEnded)
 		{
 			break;
 		}
-		catch(const GameExitEvent & erExit)
+		catch(const GameExitException & erExit)
 		{
-			throw erExit;
+			throw;
 		}
 	}
 
 	return getCurrentTurnGamerNum();
 }
 
-void Game::placeShips (Gamer & g, Field  & f, MyFieldView & myFV)
+void Game::placeShips (Gamer & gamer, Field  & field, MyFieldView & myFV)
 {
 	Ship * myShip = nullptr;
 
@@ -205,19 +206,20 @@ void Game::placeShips (Gamer & g, Field  & f, MyFieldView & myFV)
 			{
 				try
 				{
-					ShipPoint p = g.getPointForShip(i, myFV);
+					ShipPoint shipPoint = gamer.getPointForShip(i, myFV);
 
-					f.attachShip(myShip, p);
+					field.attachShip(myShip, shipPoint);
 
-					g.onRecieveResultOfPlacingShip(true);
+					gamer.onRecieveResultOfPlacingShip(true);
 
 					break;
 				}
-				catch(const ImpossibleShipError & er)
+				catch(const ImpossibleShipException & er)
 				{
-					g.onRecieveResultOfPlacingShip(false);
+					gamer.onRecieveResultOfPlacingShip(false);
+					gamer.onRecieveErrorString(er.what());
 				}
-				catch(const GameExitEvent & erExit)
+				catch(const GameExitException & erExit)
 				{
 					delete(myShip);
 					throw erExit;
@@ -227,32 +229,32 @@ void Game::placeShips (Gamer & g, Field  & f, MyFieldView & myFV)
 	}	
 }
 
-void Game::markShot(ShotField & f, ShotPoint p)
+void Game::markShot(ShotField & field, const ShotPoint & shotPoint)
 {
-	bool isBusy = f.isMarked (p.getHeight(), p.getWidth());
+	bool isBusy = field.isMarked (shotPoint.getHeight(), shotPoint.getWidth());
 
 	if (true == isBusy)
 	{
-		throw ImpossibleShotError();
+		throw ImpossibleShotException(shotPointIsBusyStr);
 	}
 	else
 	{
-		f.mark(p.getHeight(), p.getWidth());
+		field.mark(shotPoint.getHeight(), shotPoint.getWidth());
 	}
 
 }
 
 Game::~Game()
 {
-	delete(g1MyFieldView);
-	delete(g2MyFieldView);
+	delete(gamer1MyFieldView);
+	delete(gamer2MyFieldView);
 
-	delete(g1EnemyFieldView);
-	delete(g2EnemyFieldView);
+	delete(gamer1EnemyFieldView);
+	delete(gamer2EnemyFieldView);
 	
-	delete(g1Field);
-	delete(g2Field);
+	delete(gamer1Field);
+	delete(gamer2Field);
 
-	delete(g1Shots);
-	delete(g2Shots);
+	delete(gamer1Shots);
+	delete(gamer2Shots);
 }
