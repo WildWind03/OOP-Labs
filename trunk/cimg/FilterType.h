@@ -1,0 +1,4 @@
+#pragma once
+
+enum class FilterType 
+			{CROP, GRAYSCALE, NEGATIVE, GAUSSIAN_BLUR, SHARPENING, EDGE_DETECTION, MINE};
