@@ -28,6 +28,21 @@ unsigned char Pixel::getBlue() const
 	return blue;
 }
 
+void Pixel::setRed(unsigned char red)
+{
+	this -> red = red;
+}
+
+void Pixel::setGreen(unsigned char green)
+{
+	this -> green = green;
+}
+
+void Pixel::setBlue(unsigned char blue)
+{
+	this -> blue = blue;
+}
+
 Pixel::~Pixel()
 {
 

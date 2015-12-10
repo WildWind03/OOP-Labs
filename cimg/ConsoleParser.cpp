@@ -38,14 +38,14 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 
         	case 'g':
         	{
-        		FilterDescryption filterDescryption(FilterType::GRAYSCALE, optarg);
+        		FilterDescryption filterDescryption(FilterType::GRAYSCALE);
         		filtersDescList.push_back(filterDescryption);
         		break;
         	}
 
         	case 'n'  :
         	{
-        		FilterDescryption filterDescryption(FilterType::NEGATIVE, optarg);
+        		FilterDescryption filterDescryption(FilterType::NEGATIVE);
         		filtersDescList.push_back(filterDescryption);
         		break;
         	}
@@ -59,7 +59,7 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 
         	case 's' :
         	{
-        		FilterDescryption filterDescryption(FilterType::SHARPENING, optarg);
+        		FilterDescryption filterDescryption(FilterType::SHARPENING);
         		filtersDescList.push_back(filterDescryption);
         		break;
         	}
@@ -87,11 +87,6 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 
         }
 	}	
-}
-
-void ConsoleParser::parse()
-{
-
 }
 
 std::string ConsoleParser::getInputFilePath() const
