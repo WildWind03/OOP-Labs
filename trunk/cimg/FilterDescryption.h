@@ -13,7 +13,7 @@ class FilterDescryption
 public:
 
 	FilterDescryption() = delete;
-	FilterDescryption(FilterType filterType, std::string descryption);
+	FilterDescryption(FilterType filterType, std::string descryption = "NO_ARGUMENT");
 	FilterDescryption(const FilterDescryption & filterDesc);
 	FilterDescryption & operator= (const FilterDescryption & filterDesc) = delete;
 

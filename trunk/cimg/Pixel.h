@@ -15,6 +15,10 @@ public:
 	unsigned char getGreen() const;
 	unsigned char getBlue() const;
 
+	void setRed(unsigned char red);
+	void setGreen(unsigned char green);
+	void setBlue(unsigned char blue);
+
 
 	Pixel & operator= (const Pixel & pixel) = delete;
 

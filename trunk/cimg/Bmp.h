@@ -26,20 +26,26 @@ class Bmp
 	const std::string NO_BMP24_STR = "It is not BMP24 file!";
 	const std::string COMPRESSED_FILE_STR = "It's impossible to open compressed bmp file";
 
+	size_t height;
+	size_t width;
+
 	std::vector<std::vector<Pixel*>> pixels;
 
 	BmpHeader bmpHeader;
 
 	const std::string outputFileName;
 
-	size_t height;
-	size_t width;
+	template <typename Type>
+		void read(std::ifstream & fin, Type & result, size_t size)
+		{
+			fin.read(reinterpret_cast<char*>(&result), size);
+		}
 
 	template <typename Type>
-		void read(std::ifstream & fin, Type & result, size_t size);
-
-	template <typename Type>
-		void write(std::ofstream & fout, Type & data);
+		void write(std::ofstream & fout, Type & data)
+		{
+			fout.write(reinterpret_cast<char*>(&data), sizeof(data));
+		}
 
 	void save();
 
@@ -49,7 +55,7 @@ public:
 	Bmp(const Bmp & bmp) = delete;
 	Bmp & operator= (const Bmp & bmp) = delete;
 
-	Pixel & getPixel(size_t x, size_t y);
+	Pixel * getPixel(size_t x, size_t y);
 
 	size_t getHeight() const;
 	size_t getWidth() const;

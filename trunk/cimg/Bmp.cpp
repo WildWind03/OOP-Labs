@@ -34,6 +34,9 @@ Bmp::Bmp(std::string inputFileName, std::string outputFileName) : outputFileName
 			throw std::invalid_argument(NO_BMP24_STR);
 		}
 
+		height = bmpHeader.biHeight;
+		width = bmpHeader.biWidth;
+
 		pixels.resize(bmpHeader.biHeight);
 
 		for (unsigned int i = 0; i < bmpHeader.biHeight; ++i)
@@ -80,18 +83,6 @@ Bmp::Bmp(std::string inputFileName, std::string outputFileName) : outputFileName
 	}
 }
 
-template <typename Type>
-	void Bmp::read(std::ifstream & fin, Type & result, size_t size) 
-	{
-		fin.read(reinterpret_cast<char*>(&result), size);
-	}
-
-template <typename Type>
-	void Bmp::write(std::ofstream & fout, Type & data) 
-	{
-		fout.write(reinterpret_cast<char*>(&data), sizeof(data));
-	}
-
 size_t Bmp::getHeight() const
 {
 	return height;
@@ -99,7 +90,7 @@ size_t Bmp::getHeight() const
 
 size_t Bmp::getWidth() const
 {
-
+	return width;
 }
 
 void Bmp::save()
@@ -160,9 +151,9 @@ void Bmp::save()
 	}
 }
 
-Pixel & Bmp::getPixel(size_t x, size_t y) 
+Pixel * Bmp::getPixel(size_t x, size_t y) 
 {
-	return *pixels[x][y];
+	return pixels[x][y];
 }
 
 Bmp::~Bmp()
