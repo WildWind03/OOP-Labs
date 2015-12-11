@@ -12,7 +12,7 @@ class ConsoleParser
 {
 	const std::string incorrectCountOfRounds = "Error! There is incorrect count of rounds!";
 	const std::string incorrectGamerType = "Error! Incorrect gamer type!";
-	const std::string incorrectInput = "Error! Incorrect input!";
+	const std::string incorrectInput = "Error! Incorrect input! Use -h to learn how to play";
 	const std::string helpStr = "Examples: \n"
 								"./BattleShip.out -f ConsoleGamer -s RandomGamer -r 10 \n"
 								"./BattleShip.out -f OptimalGamer -s RandomGamer -r 1 \n"
