@@ -24,7 +24,7 @@ public:
 	size_t getHeight() const;
 	size_t getSize() const;
 
-	virtual CellState getCellState(const size_t h, const size_t w) const = 0;
+	virtual CellState getCellState(const size_t y, const size_t x) const = 0;
 
 	virtual ~FieldView();
 

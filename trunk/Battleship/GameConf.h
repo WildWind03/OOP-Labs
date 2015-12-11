@@ -26,6 +26,6 @@ public:
 
 	size_t getCountRound() const;
 
-	~GameConf();
+	virtual ~GameConf();
 
 };

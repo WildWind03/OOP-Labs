@@ -18,7 +18,7 @@ public:
 
 	}
 
-	~BannedActionException()
+	virtual ~BannedActionException()
 	{
 
 	}

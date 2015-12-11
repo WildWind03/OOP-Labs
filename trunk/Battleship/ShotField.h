@@ -38,5 +38,5 @@ public:
 	void mark(const size_t h, const size_t w);
 	void unMark(const size_t h, const size_t w);
 
-	~ShotField();
+	virtual ~ShotField();
 };

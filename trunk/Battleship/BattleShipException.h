@@ -26,7 +26,7 @@ public:
 		return errorStr.c_str();
 	}
 
-	~BattleShipException() 
+	virtual ~BattleShipException() 
 	{
 		
 	}

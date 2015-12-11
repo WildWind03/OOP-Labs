@@ -5,14 +5,14 @@ MyFieldView::MyFieldView(const Field & myField, const ShotField & shots) : Field
 
 }
 
-bool MyFieldView::isShot(const size_t h, const size_t w) const
+bool MyFieldView::isShot(const size_t y, const size_t x) const
 {
-	return shots.isMarked(h, w);
+	return shots.isMarked(y, x);
 }
 
-bool MyFieldView::isShip(const size_t h, const size_t w) const
+bool MyFieldView::isShip(const size_t y, const size_t x) const
 {
-	return myField.isShipOnCell(h, w);
+	return myField.isShipOnCell(y, x);
 }
 
 MyFieldView::~MyFieldView()
@@ -20,11 +20,11 @@ MyFieldView::~MyFieldView()
 	
 }
 
-CellState MyFieldView::getCellState(const size_t h, const size_t w) const
+CellState MyFieldView::getCellState(const size_t y, const size_t x) const
 {
-	bool isShot = shots.isMarked(h, w);
+	bool isShot = shots.isMarked(y, x);
 
-	bool isShip = myField.isShipOnCell(h, w);
+	bool isShip = myField.isShipOnCell(y, x);
 
 	if (true == isShot)
 	{

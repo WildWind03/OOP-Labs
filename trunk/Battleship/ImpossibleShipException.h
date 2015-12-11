@@ -18,7 +18,7 @@ public:
 
 	}
 
-	~ImpossibleShipException()
+	virtual ~ImpossibleShipException()
 	{
 
 	}

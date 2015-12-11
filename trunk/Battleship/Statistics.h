@@ -22,5 +22,5 @@ public:
 
 	size_t getCountOfGames() const;
 
-	~Statistics();
+	virtual ~Statistics();
 };

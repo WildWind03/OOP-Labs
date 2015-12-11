@@ -20,7 +20,7 @@ public:
 
 	}
 
-	~InvalidInputException()
+	virtual ~InvalidInputException()
 	{
 
 	}
