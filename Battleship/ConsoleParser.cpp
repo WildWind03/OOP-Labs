@@ -85,13 +85,13 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 	if (true == isHelp)
 	{
 		std::cout << helpStr << std::endl;
-
 		exit(0);
 	}
 
 	if ((countR != 1) || (countF != 1) || (countS != 1))
 	{
-		throw InvalidInputException(incorrectInput);
+		std::cout << incorrectInput << std::endl;
+		exit(0);
 	}		
 }
 
