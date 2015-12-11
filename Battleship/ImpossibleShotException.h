@@ -20,7 +20,7 @@ public:
 
 	}
 
-	~ImpossibleShotException()
+	virtual ~ImpossibleShotException()
 	{
 
 	}

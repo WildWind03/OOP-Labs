@@ -30,5 +30,5 @@ public:
 
 	void beginGame();
 
-	~Controller();
+	virtual ~Controller();
 };

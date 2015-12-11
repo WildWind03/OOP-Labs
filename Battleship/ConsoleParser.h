@@ -42,6 +42,6 @@ public:
 	ConsoleParser(const ConsoleParser & p) = delete;
 	ConsoleParser & operator=(const ConsoleParser & p) = delete;
 
-	~ConsoleParser();
+	virtual ~ConsoleParser();
 
 };

@@ -48,8 +48,8 @@ public:
 	virtual void onGameEnded(bool isWon) override;
 	virtual void onRecieveShotState(const ShotState & state, const ShotPoint & prevShot) override;
 
-	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV);
-	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV);
+	virtual ShipPoint getPointForShip(const size_t sizeOfShip, const MyFieldView & myFieldV) override;
+	virtual ShotPoint getPointForShot(const MyFieldView & myFieldV, const EnemyFieldView & enemyFieldV) override;
 
 	virtual ~OptGamer();
 };

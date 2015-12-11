@@ -53,5 +53,5 @@ public:
 	size_t getHeight() const;
 	size_t getSize() const;
 
-	~Field();
+	virtual ~Field();
 };

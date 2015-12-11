@@ -28,5 +28,5 @@ public:
 
 	ShipPoint parse();
 
-	~ShipParser();
+	virtual ~ShipParser();
 };

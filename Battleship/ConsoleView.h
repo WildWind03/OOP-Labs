@@ -42,8 +42,8 @@ public:
 	ConsoleView(const ConsoleView & consoleView) = delete;
 	ConsoleView & operator= (const ConsoleView & consoleView) = delete;
 
-	virtual ShotPoint getShotPoint();
-	virtual ShipPoint getShipPoint(const size_t sizeOfShip);
+	virtual ShotPoint getShotPoint() override;
+	virtual ShipPoint getShipPoint(const size_t sizeOfShip) override;
 
 	void printStatistics(const Statistics & stat);
 	void printGameEndedStr(bool isWon);

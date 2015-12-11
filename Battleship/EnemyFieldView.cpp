@@ -5,14 +5,11 @@ EnemyFieldView::EnemyFieldView(const Field & myField, const ShotField & shots) :
 
 }
 
-bool EnemyFieldView::isExistDestrCellNear(size_t h, size_t w) const
+bool EnemyFieldView::isExistDestrCellNear(size_t y, size_t x) const
 {
-	long long int h1 = h;
-	long long int w1 = w;
-	
-	for (long long int i = h1 - 1; i <= h1 + 1; ++i)
+	for (long long int i = y - 1; i <= y + 1; ++i)
 	{
-		for (long long int k = w1 - 1; k <= w1 + 1; ++k)
+		for (long long int k = x - 1; k <= x + 1; ++k)
 		{
 			if (i >= 0 && k >= 0)
 			{
@@ -30,14 +27,11 @@ bool EnemyFieldView::isExistDestrCellNear(size_t h, size_t w) const
 	return false;
 }
 
-bool EnemyFieldView::isExistDestrCellNear(size_t h, size_t w, size_t hExcept, size_t wExcept) const
+bool EnemyFieldView::isExistDestrCellNear(size_t y, size_t x, size_t yExcept, size_t xExcept) const
 {
-	long long int h1 = h;
-	long long int w1 = w;
-	
-	for (long long int i = h1 - 1; i <= h1 + 1; ++i)
+	for (long long int i = y - 1; i <= y + 1; ++i)
 	{
-		for (long long int k = w1 - 1; k <= w1 + 1; ++k)
+		for (long long int k = x - 1; k <= x + 1; ++k)
 		{
 			if (i >= 0 && k >= 0)
 			{
@@ -45,7 +39,7 @@ bool EnemyFieldView::isExistDestrCellNear(size_t h, size_t w, size_t hExcept, si
 				{
 					if (CellState::DESTROYED == getCellState(i, k))
 					{
-						if ((i != hExcept) && (w != wExcept)) 
+						if ((i != yExcept) && (k != xExcept)) 
 						{
 							return true;
 						}
@@ -79,14 +73,14 @@ bool EnemyFieldView::isExistLearntDestrCellNear(const ShotPoint & p, const ShotP
 }
 
 
-bool EnemyFieldView::isShot(const size_t h, const size_t w) const
+bool EnemyFieldView::isShot(const size_t y, const size_t x) const
 {
-	return shots.isMarked(h, w);
+	return shots.isMarked(y, x);
 }
 
-bool EnemyFieldView::isShip(const size_t h, const size_t w) const
+bool EnemyFieldView::isShip(const size_t y, const size_t x) const
 {
-	return myField.isShipOnCell(h, w);
+	return myField.isShipOnCell(y, x);
 }
 
 EnemyFieldView::~EnemyFieldView()
@@ -94,11 +88,11 @@ EnemyFieldView::~EnemyFieldView()
 	
 }
 
-CellState EnemyFieldView::getCellState(const size_t h, const size_t w) const
+CellState EnemyFieldView::getCellState(const size_t y, const size_t x) const
 {
-	bool isShot = shots.isMarked(h, w);
+	bool isShot = shots.isMarked(y, x);
 
-	bool isShip = myField.isShipOnCell(h, w);
+	bool isShip = myField.isShipOnCell(y, x);
 
 	if (true == isShot)
 	{

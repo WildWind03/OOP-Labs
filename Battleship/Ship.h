@@ -26,5 +26,5 @@ public:
 	size_t getDestrSize() const;
 	bool isDestroyed() const;
 
-	~Ship();
+	virtual ~Ship();
 };

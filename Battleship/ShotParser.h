@@ -24,5 +24,5 @@ public:
 
 	ShotPoint parse();
 
-	~ShotParser();
+	virtual ~ShotParser();
 };

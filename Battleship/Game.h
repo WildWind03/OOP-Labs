@@ -65,5 +65,5 @@ public:
 
 	GamerNum newGame();
 
-	~Game();
+	virtual ~Game();
 };

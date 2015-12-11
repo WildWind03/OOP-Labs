@@ -19,7 +19,7 @@ public:
 
 	}
 
-	~GameExitException()
+	virtual ~GameExitException()
 	{
 
 	}
