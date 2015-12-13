@@ -1,42 +1,37 @@
 #include "ConsoleParser.h"
-#include "Bmp.h"
-#include "FilterDescryption.h"
+#include "Image.h"
+#include "FilterDescription.h"
 #include "FilterFactory.h"
 #include "BaseFilter.h"
+#include "BmpLoader.h"
+#include "BmpSaver.h"
+#include "Editor.h"
 
-#include <list>
 #include <vector>
 #include <stdexcept>
+#include <memory>
 
 int main(int argc, char *argv[])
 {
 	ConsoleParser parser(argc, argv);
 
-	Bmp bmp("./nsu.bmp", "./nsu1.bmp");
+	BmpLoader loader;
+	std::unique_ptr <Image> image(loader.load("./nsu.bmp"));
 
-	std::vector<BaseFilter*> filters;
+	std::vector<std::unique_ptr<BaseFilter>> filters;
 
-	while(true)
+	std::vector<FilterDescription> filterDescriptionList = parser.getFilterDescriptionList();
+
+	for (size_t i = 0; i < filterDescriptionList.size(); ++i)
 	{
-		try
-		{
-			FilterDescryption filterDescryption = parser.getNextFilterDescryption();
-			BaseFilter * filter = FilterFactory::createFilter(filterDescryption);
-
-			filters.push_back(filter);
-		}
-		catch(std::exception & error)
-		{
-			break;
-		}
+		filters.push_back(std::unique_ptr<BaseFilter>(FilterFactory::createFilter(filterDescriptionList[i])));
 	}
 
-	//std::cout << filters.size() << std::endl;
+	Editor editor;
+	std::unique_ptr<Image> filteredImage(editor.applyFilters(*image, filters));
 
-	for (size_t i = 0; i < filters.size(); ++i)
-	{
-		filters[i] -> apply(&bmp);
-	}
-	
+	BmpSaver saver;
+	saver.save("./NSU4.bmp", *filteredImage);
+
 	return 0;
 }

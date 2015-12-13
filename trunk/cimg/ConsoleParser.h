@@ -1,10 +1,10 @@
 #pragma once
 
 #include "FilterType.h"
-#include "FilterDescryption.h"
+#include "FilterDescription.h"
 
 #include <string>
-#include <list>
+#include <vector>
 #include <stdexcept>
 #include <getopt.h>
 #include <iostream>
@@ -19,7 +19,7 @@ class ConsoleParser
 	std::string inputFilePath;
 	std::string outputFilePath;
 
-	std::list <FilterDescryption> filtersDescList;
+	std::vector <FilterDescription> filtersDescList;
 
 
 public:
@@ -28,7 +28,7 @@ public:
 	std::string getInputFilePath() const;
 	std::string getOutputFilePath() const;
 
-	FilterDescryption getNextFilterDescryption();
+	std::vector <FilterDescription> getFilterDescriptionList();
 
 	ConsoleParser() = delete;
 	ConsoleParser (const ConsoleParser & pars) = delete;
