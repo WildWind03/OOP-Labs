@@ -13,12 +13,13 @@ template <class Functor>
 		OnePixelFilter(const OnePixelFilter & onePixelFilter) = delete;
 		OnePixelFilter & operator= (const OnePixelFilter & onePixelFilter) = delete;
 
-		OnePixelFilter()
-		{
-			functor = new Functor;
-		}
+		template <typename...TArgs>
+			OnePixelFilter(TArgs...args)
+			{
+				functor = new Functor(args...);
+			}
 
-		virtual Image * apply(const Image & image) const override
+		virtual Image * apply(const Image & image) override
 		{
 			Image * filteredImage = new Image(image);
 

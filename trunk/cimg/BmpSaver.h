@@ -21,6 +21,7 @@ class BmpSaver : public ImageSaver
 	const unsigned char COLOR_SIZE = 8;
 	const unsigned char BMP_LINE = 4;
 	const unsigned char RUBBISH_CHAR = '0';
+	const unsigned int BIT_COUNT = 24;
 
 	template <typename Type>
 		void write(std::ofstream & fout, Type & data)

@@ -1,6 +1,22 @@
 #include "Pixel.h"
 
 
+
+Pixel::Pixel() : red(0), green(0), blue(0)
+{
+
+}
+
+
+Pixel & Pixel::operator= (const Pixel & pixel) 
+{
+	this -> red = pixel.getRed();
+	this -> green = pixel.getGreen();
+	this -> blue = pixel.getBlue();
+	
+	return *this;
+}
+
 Pixel::Pixel (unsigned char red, unsigned char green, unsigned char blue) 
 											: red(red), green(green), blue(blue)
 {

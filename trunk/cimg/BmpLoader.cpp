@@ -5,11 +5,22 @@ BmpLoader::BmpLoader()
 
 }
 
+void BmpLoader::fillNullptrPixels()
+{
+	for (size_t i = 0; i < pixels.size(); ++i)
+	{
+		for (size_t k = 0; k < pixels[i].size(); ++k)
+		{
+			pixels[i][k] = nullptr;
+		}
+	}
+}
+
 void BmpLoader::clearTempPixels()
 {
 	for (size_t i = 0; i < pixels.size(); ++i)
 	{
-		for (size_t k = 0; k < pixels[0].size(); ++k)
+		for (size_t k = 0; k < pixels[i].size(); ++k)
 		{
 			delete pixels[i][k];
 		}
@@ -95,6 +106,8 @@ Image * BmpLoader::load(std::string filePath)
 	unsigned char red;
 	unsigned char green;
 	unsigned char blue;
+
+	fillNullptrPixels();
 
 	for (unsigned int i = 0; i < bmpInfoHeader.biHeight; i++)
 	{

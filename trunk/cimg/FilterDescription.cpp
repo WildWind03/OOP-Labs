@@ -1,17 +1,13 @@
 #include "FilterDescription.h"
 
-FilterDescription::FilterDescription(char filterType, std::string description)
-						    : filterType(filterType)
+void FilterDescription::addParameter(std::string parameter)
 {
-	std::istringstream sout(description);
+	parameters.push_back(parameter);	
+}
 
-	std::string temp;
-
-	while(!sout.eof())
-	{
-		sout >> temp;
-		parameters.push_back(temp);
-	}	
+FilterDescription::FilterDescription(char filterType) : filterType(filterType)
+{
+	
 }
 
 FilterDescription::FilterDescription(const FilterDescription & filterDesc) 

@@ -31,7 +31,7 @@ BmpInfoHeader * BmpSaver::generateBmpInfoHeader(const Image & image)
 	bmpInfoHeader -> biWidth = image.getWidth();
 	bmpInfoHeader -> biHeight = image.getHeight();
 	bmpInfoHeader -> biPlanes = 1;
-	bmpInfoHeader -> biBitCount = 24;
+	bmpInfoHeader -> biBitCount = BIT_COUNT;
 	bmpInfoHeader -> biCompression = 0;
 	bmpInfoHeader -> biSizeImage = 0;
 	bmpInfoHeader -> biXPelsPerMeter = 0;
@@ -50,7 +50,7 @@ void BmpSaver::save(std::string filePath, const Image & image)
 	{
 		throw std::invalid_argument(OUTPUT_ERROR_STR);
 	}
-
+	
 	std::unique_ptr<BmpFileHeader> bmpFileHeader (generateBmpFileHeader(image));
 	std::unique_ptr<BmpInfoHeader> bmpInfoHeader (generateBmpInfoHeader(image));
 
@@ -61,6 +61,7 @@ void BmpSaver::save(std::string filePath, const Image & image)
 	write(fout, bmpFileHeader -> bfOffBits);
 
 	write(fout, bmpInfoHeader -> biSize);
+
 
 	write(fout, bmpInfoHeader -> biWidth);
 	write(fout, bmpInfoHeader -> biHeight);

@@ -1,11 +1,11 @@
 #include "AgregateFilter.h"
 
-AgregateFilter::AgregateFilter(const std::vector<std::unique_ptr<BaseFilter>> & filters) : filters(filters)
+AgregateFilter::AgregateFilter(std::vector<BaseFilter*> filters) : filters(filters)
 {
 
 }
 
-Image * AgregateFilter::apply(const Image & image) const
+Image * AgregateFilter::apply(const Image & image)
 {
 	Image * image1 = nullptr;
 	Image * image2 = nullptr;
@@ -57,5 +57,8 @@ Image * AgregateFilter::apply(const Image & image) const
 
 AgregateFilter::~AgregateFilter()
 {
-
+	for (size_t i = 0; i < filters.size(); ++i)
+	{
+		delete filters[i];
+	}
 }

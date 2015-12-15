@@ -13,25 +13,35 @@
 
 int main(int argc, char *argv[])
 {
-	ConsoleParser parser(argc, argv);
-
-	BmpLoader loader;
-	std::unique_ptr <Image> image(loader.load("./nsu.bmp"));
-
-	std::vector<std::unique_ptr<BaseFilter>> filters;
-
-	std::vector<FilterDescription> filterDescriptionList = parser.getFilterDescriptionList();
-
-	for (size_t i = 0; i < filterDescriptionList.size(); ++i)
+	try
 	{
-		filters.push_back(std::unique_ptr<BaseFilter>(FilterFactory::createFilter(filterDescriptionList[i])));
+
+		ConsoleParser parser(argc, argv);
+
+		BmpLoader loader;
+
+		std::vector<BaseFilter*> filters;
+
+		std::vector<FilterDescription> filterDescriptionList = parser.getFilterDescriptionList();
+		
+		std::unique_ptr <Image> image(loader.load(parser.getInputFilePath()));
+
+		for (size_t i = 0; i < filterDescriptionList.size(); ++i)
+		{
+			filters.push_back(FilterFactory::createFilter(filterDescriptionList[i]));
+		}
+
+		Editor editor;
+
+		std::unique_ptr<Image> filteredImage(editor.applyFilters(*image, filters));
+
+		BmpSaver saver;
+
+		saver.save(parser.getOutputFilePath(), *filteredImage);
 	}
-
-	Editor editor;
-	std::unique_ptr<Image> filteredImage(editor.applyFilters(*image, filters));
-
-	BmpSaver saver;
-	saver.save("./NSU4.bmp", *filteredImage);
-
+	catch (const std::exception & exception)
+	{
+		std::cout << exception.what() << std::endl;
+	}
 	return 0;
 }
