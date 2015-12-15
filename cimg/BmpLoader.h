@@ -35,6 +35,7 @@ class BmpLoader : public ImageLoader
 	std::vector<std::vector<Pixel*>> pixels;
 
 	void clearTempPixels();
+	void fillNullptrPixels();
 
 public:
 	BmpLoader();
@@ -42,7 +43,7 @@ public:
 	BmpLoader (const BmpLoader & bmpLoader) = delete;
 	BmpLoader & operator= (const BmpLoader & bmpLoader) = delete;
 
-	Image * load(std::string filePath) override;
+	virtual Image * load(std::string filePath) override;
 
 	virtual ~BmpLoader();
 };

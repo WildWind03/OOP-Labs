@@ -8,7 +8,7 @@ class Pixel
 
 public:
 
-	Pixel() = delete;
+	Pixel();
 
 	Pixel (unsigned char red, unsigned char green, unsigned char blue);
 	Pixel (const Pixel & pixel);
@@ -22,7 +22,7 @@ public:
 	void setBlue(unsigned char blue);
 
 
-	Pixel & operator= (const Pixel & pixel) = delete;
+	Pixel & operator= (const Pixel & pixel);
 
-	~Pixel();
+	virtual ~Pixel();
 };

@@ -7,12 +7,17 @@ class BaseFunctor
 
 protected:
 
-	BaseFunctor() {}
+	BaseFunctor() 
+	{
+
+	}
 
 public:
 
 	virtual void operator()(Pixel * pixel) const = 0;
-	virtual ~BaseFunctor() {}
+	
+	virtual ~BaseFunctor() 
+	{
 
-
+	}
 };

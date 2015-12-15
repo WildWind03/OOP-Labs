@@ -12,6 +12,7 @@ class Image
 	void copyImageFrom(const Image & image);
 
 	void clear();
+	void fillNullptrPixels();
 
 public:
 	Image() = delete;
@@ -25,8 +26,9 @@ public:
 
 	size_t getHeight() const;
 	size_t getWidth() const;
-
 	size_t getSize() const;
 
-	~Image();
+	bool isPointInImage(size_t x, size_t y) const;
+
+	virtual ~Image();
 };

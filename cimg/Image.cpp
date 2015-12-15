@@ -7,12 +7,39 @@ Image::Image(const std::vector<std::vector<Pixel*>> & pixels)
 	for (size_t i = 0; i < pixels.size(); ++i)
 	{
 		imagePixels[i].resize(pixels[i].size());
+	}
 
+	fillNullptrPixels();
+
+
+	for (size_t i = 0; i < pixels.size(); ++i)
+	{
 		for (size_t k = 0; k < pixels[i].size(); ++k)
 		{
 			imagePixels[i][k] = new Pixel(*(pixels[i][k]));
 		}
 	}
+}
+
+void Image::fillNullptrPixels()
+{
+	for (size_t i = 0; i < imagePixels.size(); ++i)
+	{
+		for (size_t k = 0; k < imagePixels[i].size(); ++k)
+		{
+			imagePixels[i][k] = nullptr;
+		}
+	}
+}
+
+bool Image::isPointInImage(size_t x, size_t y) const
+{
+	if (x < getWidth() && y < getHeight())
+	{
+		return true;
+	}
+
+	return false;
 }
 
 size_t Image::getSize() const
@@ -53,7 +80,12 @@ void Image::copyImageFrom(const Image & image)
 	for (size_t i = 0; i < image.getWidth(); ++i)
 	{
 		imagePixels[i].resize(image.getHeight());
+	}
 
+	fillNullptrPixels();
+
+	for (size_t i = 0; i < image.getWidth(); ++i)
+	{
 		for (size_t k = 0; k < image.getHeight(); ++k)
 		{
 			imagePixels[i][k] = new Pixel(image.getPixel(i, k));
@@ -68,7 +100,14 @@ size_t Image::getWidth() const
 
 size_t Image::getHeight() const
 {
-	return imagePixels[0].size();
+	if (0 == getWidth())
+	{
+		return 0;
+	}
+	else
+	{
+		return imagePixels[0].size();
+	}
 }
 
 void Image::clear()

@@ -4,6 +4,17 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 {
 	int c;
 
+        if (argc < 3)
+        {
+                throw std::invalid_argument(TOO_SHORT_ARGS_STR);
+        }
+
+        inputFilePath = argv[1];
+        outputFilePath = argv[2];
+
+        ++optind;
+        ++optind;
+
 	while(true)
 	{
 	        static struct option long_options[] =
@@ -14,34 +25,63 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
         	        {"blur",  required_argument, 0, 'b'},
         	        {"sharp", no_argument,       0, 's'},
         	        {"edge",  required_argument, 0, 'e'},
-        	        {"my",    required_argument, 0, 'm'},
+        	        {"motion",no_argument      , 0, 'm'},
         	        {"help",  no_argument,       0, 'h'},
+                    {NULL,    0,                 0,   0},
                 }; 
 
                 int option_index = 0;
 
                 c = getopt_long (argc, argv, "gnshc:b:e:m:", long_options, &option_index);
 
-                if (c == -1)
+                if (-1 == c)
                 {
                         break;
                 }
 
-                if ('h' == c)
+                switch(c)
                 {
-                        std::cout << helpStr << std::endl;
-                        exit(0);      
+                    case 'h' :
+                    {
+                            std::cout << helpStr << std::endl;
+                            exit(0); 
+                    }
+                    case ':' :
+                    {
+                            throw std::invalid_argument(MISSING_ARGUMENT_STR);
+                            exit(0);
+                    }
+                    case '?' :
+                    {
+                            throw std::invalid_argument(UNKNOWN_OPTION_STR);
+                            exit(0);
+                    }
                 }
 
                 if (nullptr == optarg)
                 {
-                        FilterDescription filterDescription(c);
-                        filtersDescList.push_back(filterDescription);
+                    FilterDescription filterDescription(c);
+                    filtersDescList.push_back(filterDescription);
                 }
                 else
                 {
-                        FilterDescription filterDescription(c, optarg);
-                        filtersDescList.push_back(filterDescription);
+
+                    FilterDescription filterDescription(c);
+                    filterDescription.addParameter(optarg);
+
+                    for (size_t i = optind; i < argc; ++i)
+                    {
+                        if (argv[i][0] != '-')
+                        {
+                                filterDescription.addParameter(argv[i]);
+                        }
+                        else
+                        {
+                                break;
+                        }
+                    }
+                    
+                    filtersDescList.push_back(filterDescription);   
                 }
 	}	
 }
