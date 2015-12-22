@@ -6,6 +6,13 @@ CutFilter::CutFilter(size_t newWidth, size_t newHeight) : newWidth(newWidth), ne
 	{
 		throw std::invalid_argument(CANT_APPLY_FILTER_STR);
 	}
+}
+
+Image CutFilter::apply(const Image & image) const
+{
+
+	std::vector<std::vector<Pixel>> pixels;
+	
 	pixels.resize(newWidth);
 
 	for (size_t i = 0; i < newWidth; ++i)
@@ -13,11 +20,6 @@ CutFilter::CutFilter(size_t newWidth, size_t newHeight) : newWidth(newWidth), ne
 		pixels[i].resize(newHeight);
 	}
 
-	fillTempPixelsNull();
-}
-
-Image * CutFilter::apply(const Image & image)
-{
 	if (image.getWidth() < newWidth || image.getHeight() < newHeight)
 	{
 		throw std::invalid_argument(CANT_APPLY_FILTER_STR);
@@ -25,47 +27,18 @@ Image * CutFilter::apply(const Image & image)
 
 	for (size_t i = 0; i < newWidth; ++i)
 	{
-		size_t newK = 0;
-
-		for (size_t k = image.getHeight() - 1; k >= image.getHeight() - newHeight; --k)
+		for (size_t k = 0; k < newHeight; ++k)
 		{
-			Pixel * pixel = new Pixel(image.getPixel(i, k));
-			pixels[i][newHeight - newK - 1] = pixel;
-			++newK;
+			pixels[i][k] = image.getPixel(i, k);
 		}
 	}
 
-	Image * filteredImage = new Image(pixels);
-
-	deleteTempPixels();
-	fillTempPixelsNull();	
+	Image filteredImage = Image(pixels);	
 
 	return filteredImage;
 }
 
-void CutFilter::fillTempPixelsNull()
-{
-	for (size_t k = 0; k < newWidth; ++k)
-	{
-		for (size_t i = 0; i < newHeight; ++i)
-		{
-			pixels[k][i] = nullptr;
-		}
-	}
-}
-
-void CutFilter::deleteTempPixels()
-{
-	for (size_t i = 0; i < pixels.size(); ++i)
-	{
-		for (size_t k = 0; k < pixels[i].size(); ++k)
-		{
-			delete pixels[i][k];
-		}
-	}
-}
-
 CutFilter::~CutFilter()
 {
-	deleteTempPixels();
+
 }

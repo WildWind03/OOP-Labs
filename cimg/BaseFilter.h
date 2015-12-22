@@ -14,7 +14,7 @@ protected:
 
 public:
 
-	virtual Image * apply(const Image & image) = 0;
+	virtual Image apply(const Image & image) const = 0;
 
 	virtual ~BaseFilter() 
 	{

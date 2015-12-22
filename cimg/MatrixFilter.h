@@ -7,45 +7,22 @@
 
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 template <typename Matrix>
 	class MatrixFilter : public BaseFilter
 	{
 		Matrix * matrix;
 
-		const float div;
-
 		const std::string WRONG_FILTER_STR = "Unworking filter!";
 
-		std::vector<std::vector<Pixel*>> pixels;
+		const unsigned char MAX_COLOR = 255;
+		const unsigned char MIN_COLOR = 0;
 
-		void fillNullptrPixels()
+		Pixel getNearPixel(const Image & image, int x, int y) const
 		{
-			for (size_t k = 0; k < pixels.size(); ++k)
-			{
-				for (size_t i = 0; i < pixels[k].size(); ++i)
-				{
-					pixels[k][i] = nullptr;
-				}
-			}
-		}
-
-		void deleteTempPixels()
-		{
-			for (size_t i = 0; i < pixels.size(); ++i)
-			{
-				for (size_t k = 0; k < pixels[i].size(); ++k)
-				{
-					delete pixels[i][k];
-				}
-			}
-
-			pixels.clear();
-		}	
-
-		const Pixel & getNearPixel(const Image & image, long long x, long long y)
-		{
-			size_t pixelX, pixelY;
+			size_t pixelX;
+			size_t pixelY;
 
 			if (x < 0)
 			{
@@ -83,7 +60,7 @@ template <typename Matrix>
 			return image.getPixel(pixelX, pixelY);
 		}
 
-		Pixel * getFilteredPixel(const Image & image, int x, int y)
+		Pixel getFilteredPixel(const Image & image, int x, int y) const
 		{
 			size_t hMatrix = matrix -> getHeight();
 			size_t wMatrix = matrix -> getWidth();
@@ -97,8 +74,8 @@ template <typename Matrix>
 			float newGreen = 0;
 			float newBlue = 0;
 
-			int widthShift = wMatrix / 2;
-			int heightShift = hMatrix / 2;
+			int widthShift = static_cast <int>(wMatrix / 2);
+			int heightShift = static_cast <int>(hMatrix / 2);
 
 			for (int i = x - widthShift; i <= x + widthShift; ++i)
 			{
@@ -108,7 +85,7 @@ template <typename Matrix>
 
 					Pixel imagePixel;
 
-					if (i >= 0 && k >= 0 && image.isPointInImage(i, k))
+					if (image.isPointInImage(i, k))
 					{
 						imagePixel = image.getPixel(i, k);
 					}
@@ -117,61 +94,62 @@ template <typename Matrix>
 						imagePixel = getNearPixel(image, i, k);
 					}
 
-					long long red = imagePixel.getRed() / div;
-					long long green = imagePixel.getGreen() / div;
-					long long blue = imagePixel.getBlue() / div;
+					float red = static_cast <float> (imagePixel.getRed());
+					float green = static_cast <float> (imagePixel.getGreen());
+					float blue = static_cast <float> (imagePixel.getBlue());
 
-					newRed+= (red * matrixPixel);
-					newGreen+= (green * matrixPixel);
-					newBlue+= (blue * matrixPixel);
+					newRed += red * matrixPixel;
+					newGreen += green * matrixPixel;
+					newBlue += blue * matrixPixel;
 				}
 			}
 
-			if (newRed > 255)
+			if (newRed > MAX_COLOR)
 			{
-				newRed = 255;
+				newRed = MAX_COLOR;
 			}
 
-			if (newRed < 0)
+			if (newRed < MIN_COLOR)
 			{
-				newRed = 0;
+				newRed = MIN_COLOR;
 			}
 
-			if (newBlue > 255)
+			if (newBlue > MAX_COLOR)
 			{
-				newBlue = 255;
+				newBlue = MAX_COLOR;
 			}
 
-			if (newBlue < 0)
+			if (newBlue < MIN_COLOR)
 			{
-				newBlue = 0;
+				newBlue = MIN_COLOR;
 			}
 
-			if (newGreen > 255)
+			if (newGreen > MAX_COLOR)
 			{
-				newGreen = 255;
+				newGreen = MAX_COLOR;
 			}
 
-			if (newGreen < 0)
+			if (newGreen < MIN_COLOR)
 			{
-				newGreen = 0;
+				newGreen = MIN_COLOR;
 			}
 
-			Pixel * pixel = new Pixel(newRed, newGreen, newBlue);
-
-			return pixel;
+			return Pixel(static_cast<unsigned char> (newRed), static_cast<unsigned char> (newGreen), static_cast<unsigned char> (newBlue));
 		}
 
 	public:
 
 		template <typename...TArgs>
-		MatrixFilter(float div, TArgs...args) : div(div)
-		{
-			matrix = new Matrix(args...);
-		}
+			MatrixFilter(TArgs...args)
+			{
+				matrix = new Matrix(args...);
+			}
 
-		virtual Image * apply(const Image & image) override
+		virtual Image apply(const Image & image) const override
 		{
+
+			std::vector<std::vector<Pixel>> pixels;
+
 			pixels.resize(image.getWidth());
 
 			for (size_t i = 0; i < image.getWidth(); ++i)
@@ -179,20 +157,15 @@ template <typename Matrix>
 				pixels[i].resize(image.getHeight());
 			}
 
-			fillNullptrPixels();
-
 			for (size_t i = 0; i < image.getWidth(); ++i)
 			{
 				for (size_t k = 0; k < image.getHeight(); ++k)
 				{
-					Pixel * pixel = getFilteredPixel(image, i, k);
-					pixels[i][k] = pixel;
+					pixels[i][k] = getFilteredPixel(image, i, k);
 				}
 			}
 
-			Image * filteredImage = new Image(pixels);
-			
-			deleteTempPixels();
+			Image filteredImage(pixels);
 
 			return filteredImage;
 		}
@@ -202,7 +175,6 @@ template <typename Matrix>
 
 		virtual ~MatrixFilter()
 		{
-			deleteTempPixels();
 			delete(matrix);
 		}
 

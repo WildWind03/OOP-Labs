@@ -23,14 +23,18 @@ class BmpSaver : public ImageSaver
 	const unsigned char RUBBISH_CHAR = '0';
 	const unsigned int BIT_COUNT = 24;
 
+	const unsigned int BYTES_FOR_PIXELS = 3;
+
+	const size_t bitOff = 54;
+
 	template <typename Type>
 		void write(std::ofstream & fout, Type & data)
 		{
 			fout.write(reinterpret_cast<char*>(&data), sizeof(data));
 		}
 
-	BmpFileHeader * generateBmpFileHeader(const Image & image);
-	BmpInfoHeader * generateBmpInfoHeader(const Image & image);
+	BmpFileHeader generateBmpFileHeader(const Image & image);
+	BmpInfoHeader generateBmpInfoHeader(const Image & image);
 
 public:
 	BmpSaver();

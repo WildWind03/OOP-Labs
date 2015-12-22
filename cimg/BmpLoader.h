@@ -32,18 +32,13 @@ class BmpLoader : public ImageLoader
 			fin.read(reinterpret_cast<char*>(&result), size);
 		}
 
-	std::vector<std::vector<Pixel*>> pixels;
-
-	void clearTempPixels();
-	void fillNullptrPixels();
-
 public:
 	BmpLoader();
 
 	BmpLoader (const BmpLoader & bmpLoader) = delete;
 	BmpLoader & operator= (const BmpLoader & bmpLoader) = delete;
 
-	virtual Image * load(std::string filePath) override;
+	virtual Image load(std::string filePath) override;
 
 	virtual ~BmpLoader();
 };

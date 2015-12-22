@@ -16,7 +16,7 @@ public:
 	GrayscaleFunctor(const GrayscaleFunctor & grayscaleFunctor) = delete;
 	GrayscaleFunctor & operator= (const GrayscaleFunctor & grayscaleFunctor) = delete;
 
-	virtual void operator()(Pixel * pixel) const override;
+	virtual Pixel operator()(const Pixel & pixel) const override;
 
 	virtual ~GrayscaleFunctor();
 };

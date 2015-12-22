@@ -13,18 +13,19 @@
 #include "BlurMatrix.h"
 #include "AgregateFilter.h"
 #include "EdgeFunctor.h"
-#include "MotionBlurMatrix.h"
+#include "MotionBlurFilter.h"
 
 
 #include <string>
 #include <sstream>
 #include <iostream>
 #include <stdexcept>
+#include <memory>
 
 class FilterFactory
 {
 public:
 
-	static BaseFilter * createFilter(const FilterDescription & filterDescription);
+	static std::shared_ptr<BaseFilter> createFilter(const FilterDescription & filterDescription);
 	
 };

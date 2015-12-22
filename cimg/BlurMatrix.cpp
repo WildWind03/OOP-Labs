@@ -2,6 +2,11 @@
 
 BlurMatrix::BlurMatrix(float sigma)
 {
+	if (0 == sigma)
+	{
+		throw std::invalid_argument(OUT_OF_MATRIX_STR);
+	}
+
 	matrix.resize(width);
 	
 	for (size_t i = 0; i < width; ++i)
@@ -9,10 +14,11 @@ BlurMatrix::BlurMatrix(float sigma)
 		matrix[i].resize(height);
 	}
 
-	int uc, vc;
-	float g, sum;
+	int uc = 0;
+	int vc = 0;
 
-	sum = 0;
+	float g = 0;
+	float sum = 0;
 
 	for(int u = 0; u < width; ++u) 
 	{
@@ -28,9 +34,9 @@ BlurMatrix::BlurMatrix(float sigma)
 		}
 	}
 
-  	for(int u = 0; u < width; ++u) 
+  	for(size_t u = 0; u < width; ++u) 
   	{
-	    for(int v = 0; v < height; ++v) 
+	    for(size_t v = 0; v < height; ++v) 
 	    {
 	      	matrix[u][v] /= sum;
 	    }
@@ -46,16 +52,6 @@ float BlurMatrix::getPixel(size_t x, size_t y) const
 	}
 
 	return matrix[x][y];
-}
-
-size_t BlurMatrix::getWidth() const
-{
-	return width;
-}
-
-size_t BlurMatrix::getHeight() const
-{
-	return height;
 }
 
 BlurMatrix::~BlurMatrix()

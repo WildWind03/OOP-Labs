@@ -30,16 +30,6 @@ float EdgeMatrix::getPixel(size_t x, size_t y) const
 	return matrix[x][y];
 }
 
-size_t EdgeMatrix::getWidth() const
-{
-	return width;
-}
-
-size_t EdgeMatrix::getHeight() const
-{
-	return height;
-}
-
 EdgeMatrix::~EdgeMatrix()
 {
 

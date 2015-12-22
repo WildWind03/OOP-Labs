@@ -19,20 +19,27 @@ template <class Functor>
 				functor = new Functor(args...);
 			}
 
-		virtual Image * apply(const Image & image) override
+		virtual Image apply(const Image & image) const override
 		{
-			Image * filteredImage = new Image(image);
+			std::vector <std::vector<Pixel>> filteredImage;
+
+			filteredImage.resize(image.getWidth());
+
+			for (size_t i = 0; i < image.getWidth(); ++i)
+			{
+				filteredImage[i].resize(image.getHeight());
+			}
 
 			for (size_t i = 0; i < image.getWidth(); ++i)
 			{
 				for (size_t k = 0; k < image.getHeight(); ++k)
 				{
-					Pixel * pixel = filteredImage -> getPixel(i, k);
-					(*functor)(pixel);
+					Pixel pixel = image.getPixel(i, k);
+					filteredImage[i][k] = (*functor)(pixel);
 				}
 			}
 
-			return filteredImage;
+			return Image(filteredImage);
 		}
 
 		virtual ~OnePixelFilter()

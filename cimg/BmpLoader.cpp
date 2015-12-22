@@ -5,34 +5,12 @@ BmpLoader::BmpLoader()
 
 }
 
-void BmpLoader::fillNullptrPixels()
-{
-	for (size_t i = 0; i < pixels.size(); ++i)
-	{
-		for (size_t k = 0; k < pixels[i].size(); ++k)
-		{
-			pixels[i][k] = nullptr;
-		}
-	}
-}
-
-void BmpLoader::clearTempPixels()
-{
-	for (size_t i = 0; i < pixels.size(); ++i)
-	{
-		for (size_t k = 0; k < pixels[i].size(); ++k)
-		{
-			delete pixels[i][k];
-		}
-	}
-
-	pixels.clear();
-}
-
-Image * BmpLoader::load(std::string filePath)
+Image BmpLoader::load(std::string filePath)
 {
 	BmpFileHeader bmpFileHeader;
 	BmpInfoHeader bmpInfoHeader;
+
+	std::vector<std::vector<Pixel>> pixels;
 
 	std::ifstream fin(filePath, std::ifstream::binary);
 
@@ -107,8 +85,6 @@ Image * BmpLoader::load(std::string filePath)
 	unsigned char green;
 	unsigned char blue;
 
-	fillNullptrPixels();
-
 	for (unsigned int i = 0; i < bmpInfoHeader.biHeight; i++)
 	{
 		for (unsigned int j = 0; j < bmpInfoHeader.biWidth; j++)
@@ -117,22 +93,18 @@ Image * BmpLoader::load(std::string filePath)
 			read(fin, green, sizeof(green));
 			read(fin, blue, sizeof(blue));
 
-			Pixel * pixel = new Pixel(red, green, blue);
-
-			pixels[j][i] = pixel;
+			pixels[j][bmpInfoHeader.biHeight - i - 1] = Pixel(red, green, blue);
 		}
 
 		fin.seekg(linePadding, std::ios_base::cur);
 	}
 
-	Image * image = new Image(pixels);
-
-	clearTempPixels();
+	Image image(pixels);
 
 	return image;
 }
 
 BmpLoader::~BmpLoader()
 {
-	clearTempPixels();
+
 }

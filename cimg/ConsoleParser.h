@@ -22,7 +22,7 @@ class ConsoleParser
 								"[--blur(-b) sigma] - gaussian-blur filter\n"
 								"[--sharp(-s)] - sharp filter\n"
 								"[--edge(-e) threshold] - edge detection filter\n"
-								"[--motion(-m)] - motion blur filter\n\n"
+								"[--motion(-m) angle speed] - motion blur filter (angle - positive integer from 0 to 360, speed - positive integer from 0 to 30\n\n"
 								"Example: ./in.bmp ./out.bmp --crop 300 400\n"
 								"Example: ./in.bmp ./out.bmp --neg\n"
 								"Example: ./in.bmp ./out.bmp --neg --gs --blur 0.5\n";

@@ -14,7 +14,7 @@ protected:
 
 public:
 
-	virtual void operator()(Pixel * pixel) const = 0;
+	virtual Pixel operator()(const Pixel & pixel) const = 0;
 	
 	virtual ~BaseFunctor() 
 	{
