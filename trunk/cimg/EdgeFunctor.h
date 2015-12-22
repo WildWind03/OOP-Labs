@@ -18,7 +18,7 @@ public:
 	EdgeFunctor(const EdgeFunctor & edgeFunctor) = delete;
 	EdgeFunctor & operator= (const EdgeFunctor & edgeFunctor) = delete;
 
-	virtual void operator()(Pixel * pixel) const override;
+	virtual Pixel operator()(const Pixel & pixel) const override;
 
 	virtual ~EdgeFunctor();
 };

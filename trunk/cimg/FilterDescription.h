@@ -10,8 +10,6 @@ class FilterDescription
 	char filterType;
 	std::vector <std::string> parameters;
 
-	const std::string NO_ARGUMENT_STR = "NO_ARGUMENT";
-
 public:
 
 	FilterDescription() = delete;

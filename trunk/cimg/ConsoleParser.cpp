@@ -25,7 +25,7 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
         	        {"blur",  required_argument, 0, 'b'},
         	        {"sharp", no_argument,       0, 's'},
         	        {"edge",  required_argument, 0, 'e'},
-        	        {"motion",no_argument      , 0, 'm'},
+        	        {"motion",required_argument, 0, 'm'},
         	        {"help",  no_argument,       0, 'h'},
                     {NULL,    0,                 0,   0},
                 }; 
@@ -49,12 +49,10 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
                     case ':' :
                     {
                             throw std::invalid_argument(MISSING_ARGUMENT_STR);
-                            exit(0);
                     }
                     case '?' :
                     {
                             throw std::invalid_argument(UNKNOWN_OPTION_STR);
-                            exit(0);
                     }
                 }
 

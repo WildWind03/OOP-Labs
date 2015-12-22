@@ -1,6 +1,6 @@
 #include "FilterFactory.h"
 
-BaseFilter * FilterFactory::createFilter(const FilterDescription & filterDescription)
+std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription & filterDescription)
 {
 	char filterType = filterDescription.getFilterType();
 
@@ -27,27 +27,25 @@ BaseFilter * FilterFactory::createFilter(const FilterDescription & filterDescrip
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			CutFilter * cutFilter = new CutFilter(newWidth, newHeight);
+			std::shared_ptr<BaseFilter> cutFilter (new CutFilter(newWidth, newHeight));
 
 			return cutFilter;
 		}
 		case 'n' :
 		{
-			OnePixelFilter<NegativeFunctor> * negativeFilter = new OnePixelFilter<NegativeFunctor>;
+			std::shared_ptr<BaseFilter> negativeFilter (new OnePixelFilter<NegativeFunctor>);
 
 			return negativeFilter;
 		}
 		case 'g' :
 		{
-			OnePixelFilter<GrayscaleFunctor> * grayscaleFilter = new OnePixelFilter<GrayscaleFunctor>;
+			std::shared_ptr<BaseFilter> grayscaleFilter (new OnePixelFilter<GrayscaleFunctor>);
 
 			return grayscaleFilter;
 		}
 		case 's' :
 		{
-			float div = 1;
-
-			MatrixFilter<SharpMatrix> * sharpFilter = new MatrixFilter<SharpMatrix>(div);
+			std::shared_ptr<BaseFilter> sharpFilter (new MatrixFilter<SharpMatrix>);
 
 			return sharpFilter;
 		}
@@ -71,19 +69,17 @@ BaseFilter * FilterFactory::createFilter(const FilterDescription & filterDescrip
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			float div = 1;
+			std::shared_ptr<BaseFilter> negativeFilter (new OnePixelFilter<NegativeFunctor>);
+			std::shared_ptr<BaseFilter> edgeMatrixFilter (new MatrixFilter<EdgeMatrix>);
+			std::shared_ptr<BaseFilter> edgeFuctorFilter (new OnePixelFilter<EdgeFunctor>(parameter));
 
-			OnePixelFilter<NegativeFunctor> * negativeFilter = new OnePixelFilter<NegativeFunctor>;
-			MatrixFilter<EdgeMatrix> * edgeMatrixFilter = new MatrixFilter<EdgeMatrix>(div);
-			OnePixelFilter<EdgeFunctor> * edgeFuctorFilter = new OnePixelFilter<EdgeFunctor>(parameter);
-
-			std::vector <BaseFilter*> filters;
+			std::vector <std::shared_ptr<BaseFilter>> filters;
 
 			filters.push_back(negativeFilter);
 			filters.push_back(edgeMatrixFilter);
 			filters.push_back(edgeFuctorFilter);
 
-			AgregateFilter * edgeFilter = new AgregateFilter(filters);
+			std::shared_ptr<BaseFilter> edgeFilter (new AgregateFilter(filters));
 
 			return edgeFilter;
 		}
@@ -107,21 +103,37 @@ BaseFilter * FilterFactory::createFilter(const FilterDescription & filterDescrip
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			float div = 1;
-
-			MatrixFilter<BlurMatrix> * blurFilter = new MatrixFilter<BlurMatrix>(div, sigma);
+			std::shared_ptr<BaseFilter> blurFilter (new MatrixFilter<BlurMatrix>(sigma));
 
 			return blurFilter;
 		}
 		case 'm' :
 		{
-			float div = 9;
+			std::vector <std::string> param = filterDescription.getParameterList();
+			
+			if (2 != param.size())
+			{
+				throw std::invalid_argument("Can't apply filter. Wrong parameters");
+			}
 
-			MatrixFilter<MotionBlurMatrix> * motionFilter = new MatrixFilter<MotionBlurMatrix>(div);
+			size_t speed;
+			size_t angle;
+
+			try
+			{
+				angle = std::stoi(param[0]);
+				speed = std::stoi(param[1]);
+			}
+			catch (const std::exception & er)
+			{
+				throw std::invalid_argument("Can't apply filter. Wrong parameters");
+			}
+
+			std::shared_ptr<BaseFilter> motionFilter (new MotionBlurFilter(angle, speed));
 
 			return motionFilter;
 		}
 	}
 
-	return nullptr;
+	throw std::invalid_argument("Can't apply filter. Wrong parameters");
 }

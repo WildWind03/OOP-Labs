@@ -14,7 +14,7 @@ public:
 	NegativeFunctor(const NegativeFunctor & negativeFunctor) = delete;
 	NegativeFunctor & operator= (const NegativeFunctor & negativeFunctor) = delete;
 
-	virtual void operator()(Pixel * pixel) const override;
+	virtual Pixel operator()(const Pixel & pixel) const override;
 
 	virtual ~NegativeFunctor();
 };

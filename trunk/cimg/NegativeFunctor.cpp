@@ -5,15 +5,15 @@ NegativeFunctor::NegativeFunctor()
 
 }
 
-void NegativeFunctor::operator()(Pixel * pixel) const
+Pixel NegativeFunctor::operator()(const Pixel & pixel) const
 {
-	unsigned char newRed = maxColor - pixel -> getRed();
-	unsigned char newGreen = maxColor - pixel -> getGreen();
-	unsigned char newBlue = maxColor - pixel -> getBlue();
 
-	pixel -> setRed(newRed);
-	pixel -> setGreen(newGreen);
-	pixel -> setBlue(newBlue);
+	unsigned char newRed = maxColor - pixel.getRed();
+	unsigned char newGreen = maxColor - pixel.getGreen();
+	unsigned char newBlue = maxColor - pixel.getBlue();
+
+	Pixel newPixel(newRed, newGreen, newBlue);
+	return newPixel;
 }
 
 NegativeFunctor::~NegativeFunctor()

@@ -7,7 +7,6 @@ Pixel::Pixel() : red(0), green(0), blue(0)
 
 }
 
-
 Pixel & Pixel::operator= (const Pixel & pixel) 
 {
 	this -> red = pixel.getRed();

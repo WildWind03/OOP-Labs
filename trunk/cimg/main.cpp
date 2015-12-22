@@ -15,16 +15,15 @@ int main(int argc, char *argv[])
 {
 	try
 	{
-
 		ConsoleParser parser(argc, argv);
 
 		BmpLoader loader;
 
-		std::vector<BaseFilter*> filters;
+		std::vector<std::shared_ptr<BaseFilter>> filters;
 
 		std::vector<FilterDescription> filterDescriptionList = parser.getFilterDescriptionList();
-		
-		std::unique_ptr <Image> image(loader.load(parser.getInputFilePath()));
+
+		Image image(loader.load(parser.getInputFilePath()));
 
 		for (size_t i = 0; i < filterDescriptionList.size(); ++i)
 		{
@@ -33,15 +32,16 @@ int main(int argc, char *argv[])
 
 		Editor editor;
 
-		std::unique_ptr<Image> filteredImage(editor.applyFilters(*image, filters));
+		Image filteredImage = editor.applyFilters(image, filters);
 
 		BmpSaver saver;
 
-		saver.save(parser.getOutputFilePath(), *filteredImage);
+		saver.save(parser.getOutputFilePath(), filteredImage);
 	}
 	catch (const std::exception & exception)
 	{
 		std::cout << exception.what() << std::endl;
 	}
+	
 	return 0;
 }

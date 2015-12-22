@@ -1,64 +1,29 @@
 #include "AgregateFilter.h"
 
-AgregateFilter::AgregateFilter(std::vector<BaseFilter*> filters) : filters(filters)
+AgregateFilter::AgregateFilter(std::vector<std::shared_ptr<BaseFilter>> filters) : filters(filters)
 {
-
-}
-
-Image * AgregateFilter::apply(const Image & image)
-{
-	Image * image1 = nullptr;
-	Image * image2 = nullptr;
-
-	if (0 == filters.size())
+	for (size_t i = 0; i < filters.size(); ++i)
 	{
-		Image * filteredImage = new Image(image);
-		return filteredImage;
-	}
-
-	if (filters.size() > 0)
-	{
-		image1 = filters[0] -> apply(image);
-	}
-
-	if (filters.size() > 1)
-	{
-		image2 = filters[1] -> apply(*image1);
-	}
-
-	for (size_t i = 2; i < filters.size(); ++i)
-	{
-		switch(i%2)
+		if (nullptr == filters[i])
 		{
-			case 0 :
-			{
-				delete(image1);
-				image1 = filters[i] -> apply(*image2);
-			}
-			case 1:
-			{
-				delete(image2);
-				image2 = filters[i] -> apply(*image1);
-			}
+			throw std::runtime_error(WRONG_FILTER_IN_LIST);
 		}
 	}
+}
 
-	if (1 == filters.size() % 2)
+Image AgregateFilter::apply(const Image & image) const
+{
+    Image newImage(image);
+
+	for (size_t i = 0; i < filters.size(); ++i)
 	{
-		delete(image2);
-		return image1;
+		newImage = filters[i] -> apply(newImage);
 	}
-	else
-	{
-		delete(image1);
-		return image2;
-	}
+
+	return newImage;
 }
 
 AgregateFilter::~AgregateFilter()
 {
-	for (size_t i = 0; i < filters.size(); ++i)
-	{
-		delete filters[i];
-	}
+
 }

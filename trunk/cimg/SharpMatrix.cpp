@@ -30,16 +30,6 @@ float SharpMatrix::getPixel(size_t x, size_t y) const
 	return matrix[x][y];
 }
 
-size_t SharpMatrix::getWidth() const
-{
-	return width;
-}
-
-size_t SharpMatrix::getHeight() const
-{
-	return height;
-}
-
 SharpMatrix::~SharpMatrix()
 {
 

@@ -10,6 +10,6 @@ protected:
 	ImageLoader() {}
 
 public:
-	virtual Image * load(std::string filePath) = 0;
+	virtual Image load(std::string filePath) = 0;
 	virtual ~ImageLoader() {}
 };

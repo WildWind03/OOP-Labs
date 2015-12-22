@@ -5,13 +5,11 @@ GrayscaleFunctor::GrayscaleFunctor()
 
 }
 
-void GrayscaleFunctor::operator()(Pixel * pixel) const
+Pixel GrayscaleFunctor::operator()(const Pixel & pixel) const
 {
-	unsigned char newColor = redK * pixel -> getRed() + greenK * pixel -> getGreen() + blueK * pixel -> getBlue();
+	unsigned char newColor = redK * pixel.getRed() + greenK * pixel.getGreen() + blueK * pixel.getBlue();
 
-	pixel -> setRed(newColor);
-	pixel -> setGreen(newColor);
-	pixel -> setBlue(newColor);
+	return Pixel(newColor, newColor, newColor);
 }
 
 GrayscaleFunctor::~GrayscaleFunctor()
