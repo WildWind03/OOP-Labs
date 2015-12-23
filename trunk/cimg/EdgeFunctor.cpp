@@ -7,36 +7,22 @@ EdgeFunctor::EdgeFunctor(unsigned char threshold) : threshold(threshold)
 
 Pixel EdgeFunctor::operator()(const Pixel & pixel) const
 {
-	Pixel newPixel;
-
 	if (pixel.getRed() > threshold)
 	{
-		newPixel.setRed(maxColor);
-	}
-	else
-	{
-		newPixel.setRed(minColor);
+		return Pixel(MAX_COLOR, MAX_COLOR, MAX_COLOR);
 	}
 
 	if (pixel.getGreen() > threshold)
 	{
-		newPixel.setGreen(maxColor);
-	}
-	else
-	{
-		newPixel.setGreen(minColor);
+		return Pixel(MAX_COLOR, MAX_COLOR, MAX_COLOR);
 	}
 
 	if (pixel.getBlue() > threshold)
 	{
-		newPixel.setBlue(maxColor);
-	}
-	else
-	{
-		newPixel.setBlue(minColor);
+		return Pixel(MAX_COLOR, MAX_COLOR, MAX_COLOR);
 	}
 
-	return newPixel;
+	return Pixel(MIN_COLOR, MIN_COLOR, MIN_COLOR);
 }
 
 EdgeFunctor::~EdgeFunctor()

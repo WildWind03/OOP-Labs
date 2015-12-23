@@ -2,19 +2,6 @@
 
 ConsoleParser::ConsoleParser(int argc, char *argv[])
 {
-	int c;
-
-        if (argc < 3)
-        {
-                throw std::invalid_argument(TOO_SHORT_ARGS_STR);
-        }
-
-        inputFilePath = argv[1];
-        outputFilePath = argv[2];
-
-        ++optind;
-        ++optind;
-
 	while(true)
 	{
 	        static struct option long_options[] =
@@ -32,11 +19,21 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 
                 int option_index = 0;
 
-                c = getopt_long (argc, argv, "gnshc:b:e:m:", long_options, &option_index);
+                int c = getopt_long (argc, argv, "", long_options, &option_index);
 
                 if (-1 == c)
                 {
-                        break;
+                    if (argc < 2)
+                    {
+                        throw std::invalid_argument(TOO_SHORT_ARGS_STR);
+                    }
+                    else
+                    {
+                        inputFilePath = argv[1];
+                        outputFilePath = argv[2];
+                    }
+
+                    break;
                 }
 
                 switch(c)
