@@ -2,6 +2,7 @@
 
 #include "FilterType.h"
 #include "FilterDescription.h"
+#include "FiltersEnum.h"
 
 #include <string>
 #include <vector>

@@ -8,8 +8,8 @@ class EdgeFunctor : public BaseFunctor
 {
 	const unsigned char threshold;
 
-	const unsigned char maxColor = 255;
-	const unsigned char minColor = 0;
+	const unsigned char MAX_COLOR = 255;
+	const unsigned char MIN_COLOR = 0;
 	
 public:
 	EdgeFunctor(unsigned char threshold);
