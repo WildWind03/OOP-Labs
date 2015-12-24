@@ -2,6 +2,12 @@
 
 ConsoleParser::ConsoleParser(int argc, char *argv[])
 {
+    if (argc >= 3)
+    {
+        inputFilePath = argv[1];
+        outputFilePath = argv[2];
+    }   
+     
 	while(true)
 	{
 	        static struct option long_options[] =
@@ -26,11 +32,6 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
                     if (argc < 3)
                     {
                         throw std::invalid_argument(TOO_SHORT_ARGS_STR);
-                    }
-                    else
-                    {
-                        inputFilePath = argv[1];
-                        outputFilePath = argv[2];
                     }
 
                     break;
@@ -91,7 +92,7 @@ std::string ConsoleParser::getOutputFilePath() const
 	return outputFilePath;
 }
 
-std::vector <FilterDescription> ConsoleParser::getFilterDescriptionList()
+std::vector <FilterDescription> ConsoleParser::getFilterDescriptionList() const
 {
 	return filtersDescList;
 }

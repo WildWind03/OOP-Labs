@@ -11,6 +11,7 @@
 
 class ConsoleParser
 {
+	const std::string NO_FILE = "NO_FILE";
 	const std::string TOO_SHORT_ARGS_STR = "Incorrect input. Print --help to learn how to use program";
 	const std::string emptyFilterListStr = "Error! There isn't any filter!";
 	const std::string helpStr = "CIMG THE BEST EDITOR OF BMP24 HELP \n\n"
@@ -41,7 +42,7 @@ public:
 	std::string getInputFilePath() const;
 	std::string getOutputFilePath() const;
 
-	std::vector <FilterDescription> getFilterDescriptionList();
+	std::vector <FilterDescription> getFilterDescriptionList() const;
 
 	ConsoleParser() = delete;
 	ConsoleParser (const ConsoleParser & pars) = delete;
