@@ -8,7 +8,7 @@ MotionBlurFilter::MotionBlurFilter(size_t angle, size_t speed) : angle(angle), s
 	}
 }
 
-Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, size_t pixelSpeed) const
+Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, int pixelSpeed) const
 {
 	if (image.getHeight() <= speed || image.getWidth() <= speed)
 	{
@@ -25,9 +25,15 @@ Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, size_t 
 	int x1 = x2 - deltaX;
 	int y1 = y2 + deltaY;
 
-	if ((x1 < 0 || y1 < 0 || !image.isPointInImage(x1, y1)) && pixelSpeed > 0)
+	while ((x1 < 0 || y1 < 0 || !image.isPointInImage(x1, y1)) && pixelSpeed > 0)
 	{
-		return getNewPixel(image, x2, y2, --pixelSpeed);
+		--pixelSpeed;
+
+		deltaX = std::cos(angle * M_PI / 180) * pixelSpeed;
+		deltaY = std::sin(angle * M_PI / 180) * pixelSpeed;
+
+		x1 = x2 - deltaX;
+		y1 = y2 + deltaY;
 	}
 
 	deltaX = std::abs(deltaX);
@@ -91,9 +97,9 @@ Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, size_t 
     {
 		curPixel = image.getPixel(x1, y1);
 
-	    redSum += curPixel.getRed() / iter;
-	    greenSum += curPixel.getGreen() / iter;
-	    blueSum += curPixel.getBlue() / iter;
+	    redSum += static_cast <float> (curPixel.getRed()) / iter;
+	    greenSum += static_cast <float> (curPixel.getGreen()) / iter;
+	    blueSum += static_cast <float> (curPixel.getBlue()) / iter;
 
         const int error2 = error * 2;
 
@@ -192,11 +198,11 @@ Image MotionBlurFilter::apply(const Image & image) const
 		pixels[i].resize(image.getHeight());
 	}
 
-	for (size_t i = 0; i < image.getWidth(); ++i)
+	for (int i = 0; i < image.getWidth(); ++i)
 	{
-		for (size_t k = 0; k < image.getHeight(); ++k)
+		for (int k = 0; k < image.getHeight(); ++k)
 		{
-			pixels[i][k] = getNewPixel(image, i, k, speed);
+			pixels[i][k] = getNewPixel(image, i, k, static_cast<int>(speed));
 		}
 	}
 
