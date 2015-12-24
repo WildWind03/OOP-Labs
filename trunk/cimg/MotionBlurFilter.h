@@ -12,6 +12,8 @@
 #include <stdexcept>
 #include <cmath>
 #include <memory>
+#include <iostream>
+
 
 class MotionBlurFilter : public BaseFilter
 {
@@ -26,7 +28,7 @@ class MotionBlurFilter : public BaseFilter
 
 	const std::string CANT_APPLY_FILTER_STR = "It's impossible to apply filter. Wrong angle or speed. Use --help to learn how to use the program";
 
-	Pixel getNewPixel(const Image & image, int x, int y, size_t pixelSpeed) const;
+	Pixel getNewPixel(const Image & image, int x, int y, int pixelSpeed) const;
 	Pixel getNearPixel(const Image & image, int x, int y) const;
 
 public:
