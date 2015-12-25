@@ -16,7 +16,7 @@ class ConsoleParser
 								"[--crop width height] - crop filter\n"
 								"[--gs] - grayscale filter\n"
 								"[--neg] - neagtive filter\n"
-								"[--blur sigma] - gaussian-blur filter (sigma - positive integer from 0 to 10)\n"
+								"[--blur sigma] - gaussian-blur filter (sigma - positive integer from 1 to 10)\n"
 								"[--sharp] - sharp filter\n"
 								"[--edge threshold] - edge detection filter (threshold - positive integer from 0 to 255)\n"
 								"[--motion angle speed] - motion blur filter (angle - positive integer from 0 to 360, speed - positive integer from 0 to 30\n\n"
