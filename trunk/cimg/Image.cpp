@@ -1,17 +1,44 @@
 #include "Image.h"
 
+#include <stdexcept>
+
 Image::Image(const std::vector<std::vector<Pixel>> & pixels)
 {
-	imagePixels.resize(pixels.size());
-
-	for (size_t i = 0; i < pixels.size(); ++i)
+	if (0 == pixels.size())
 	{
-		imagePixels[i].resize(pixels[i].size());
+		throw std::invalid_argument("Error! Image can't have null width!");
+	}
+	else
+	{
+		size_t correctHeight = pixels[0].size();
+
+		for (size_t k = 0; k < pixels.size(); ++k)
+		{
+			if (0 == pixels[k].size())
+			{
+				throw std::invalid_argument("Error! Image can't have null height!");
+			}
+
+			if (pixels[k].size() != correctHeight)
+			{
+				throw std::invalid_argument("Error! Can't create image by not square array!");
+			}
+		}
 	}
 
-	for (size_t i = 0; i < pixels.size(); ++i)
+	width = pixels.size();
+	height = pixels[0].size();
+
+	imagePixels.resize(width);
+
+	for (size_t i = 0; i < width; ++i)
 	{
-		for (size_t k = 0; k < pixels[i].size(); ++k)
+		imagePixels[i].resize(height);
+	}
+
+	for (size_t i = 0; i < width; ++i)
+	{
+		for (size_t k = 0; k < height; ++k)
 		{
 			imagePixels[i][k] = pixels[i][k];
 		}
@@ -68,23 +95,19 @@ void Image::copyImageFrom(const Image & image)
 			imagePixels[i][k] = image.getPixel(i, k);
 		}
 	}
+
+	width = image.getWidth();
+	height = image.getHeight();
 }
 
 size_t Image::getWidth() const
 {
-	return imagePixels.size();
+	return width;
 }
 
 size_t Image::getHeight() const
 {
-	if (0 == getWidth())
-	{
-		return 0;
-	}
-	else
-	{
-		return imagePixels[0].size();
-	}
+	return height;
 }
 
 Image::~Image()

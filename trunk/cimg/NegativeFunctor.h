@@ -1,8 +1,7 @@
 #pragma once
 
 #include "BaseFunctor.h"
-
-#include <cstdio>
+#include "Pixel.h"
 
 class NegativeFunctor : public BaseFunctor
 {

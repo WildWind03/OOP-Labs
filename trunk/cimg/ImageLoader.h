@@ -7,9 +7,15 @@
 class ImageLoader
 {
 protected:
-	ImageLoader() {}
+	ImageLoader() 
+	{
+
+	}
 
 public:
 	virtual Image load(std::string filePath) = 0;
-	virtual ~ImageLoader() {}
+	virtual ~ImageLoader() 
+	{
+		
+	}
 };

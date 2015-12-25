@@ -3,7 +3,6 @@
 #include "BaseFilter.h"
 
 #include <vector>
-#include <stdexcept>
 #include <memory>
 
 class AgregateFilter : public BaseFilter
@@ -13,7 +12,7 @@ class AgregateFilter : public BaseFilter
 	const std::string WRONG_FILTER_IN_LIST = "Invalid filter!";
 
 public:
-	AgregateFilter(std::vector<std::shared_ptr<BaseFilter>> filters);
+	AgregateFilter(const std::vector<std::shared_ptr<BaseFilter>> & filters);
 
 	AgregateFilter() = delete;
 	AgregateFilter(const AgregateFilter & filter) = delete;

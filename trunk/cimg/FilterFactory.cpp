@@ -1,5 +1,19 @@
 #include "FilterFactory.h"
 
+#include "NegativeFunctor.h"
+#include "GrayscaleFunctor.h"
+#include "CutFilter.h"
+#include "MatrixFilter.h"
+#include "SharpMatrix.h"
+#include "EdgeMatrix.h"
+#include "BlurMatrix.h"
+#include "AgregateFilter.h"
+#include "EdgeFunctor.h"
+#include "MotionBlurFilter.h"
+#include "OnePixelFilter.h"
+
+#include <string>
+
 std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription & filterDescription)
 {
 	char filterType = filterDescription.getFilterType();
@@ -45,7 +59,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 		}
 		case 's' :
 		{
-			std::shared_ptr<BaseFilter> sharpFilter (new MatrixFilter<SharpMatrix>);
+			std::shared_ptr<BaseFilter> sharpFilter (new MatrixFilter<SharpMatrix>(3,3));
 
 			return sharpFilter;
 		}
@@ -70,7 +84,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 			}
 
 			std::shared_ptr<BaseFilter> negativeFilter (new OnePixelFilter<NegativeFunctor>);
-			std::shared_ptr<BaseFilter> edgeMatrixFilter (new MatrixFilter<EdgeMatrix>);
+			std::shared_ptr<BaseFilter> edgeMatrixFilter (new MatrixFilter<EdgeMatrix>(3,3));
 			std::shared_ptr<BaseFilter> edgeFuctorFilter (new OnePixelFilter<EdgeFunctor>(parameter));
 
 			std::vector <std::shared_ptr<BaseFilter>> filters;
@@ -103,7 +117,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			std::shared_ptr<BaseFilter> blurFilter (new MatrixFilter<BlurMatrix>(sigma));
+			std::shared_ptr<BaseFilter> blurFilter (new MatrixFilter<BlurMatrix>(sigma, 5, 5));
 
 			return blurFilter;
 		}

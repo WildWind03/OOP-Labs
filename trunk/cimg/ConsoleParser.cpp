@@ -1,5 +1,9 @@
 #include "ConsoleParser.h"
 
+#include <stdexcept>
+#include <getopt.h>
+#include <iostream>
+
 ConsoleParser::ConsoleParser(int argc, char *argv[])
 {
     if (argc >= 3)

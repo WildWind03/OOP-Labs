@@ -1,12 +1,8 @@
 #pragma once
 
 #include "BaseFilter.h"
-#include "Image.h"
-#include "Pixel.h"
 
 #include <string> 
-#include <vector>
-#include <stdexcept>
 
 class CutFilter : public BaseFilter
 {

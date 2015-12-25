@@ -2,12 +2,9 @@
 
 #include "ImageLoader.h"
 #include "Image.h"
-#include "BmpFileHeader.h"
-#include "BmpInfoHeader.h"
 
 #include <fstream>
-#include <stdexcept>
-#include <iostream>
+#include <string>
 
 class BmpLoader : public ImageLoader
 {

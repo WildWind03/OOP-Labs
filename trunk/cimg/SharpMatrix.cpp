@@ -1,23 +1,42 @@
 #include "SharpMatrix.h"
 
-SharpMatrix::SharpMatrix()
+#include <stdexcept>
+#include <vector>
+
+SharpMatrix::SharpMatrix(size_t width, size_t height) : SquareMatrix(width, height)
 {
-	matrix.resize(width);
-	
-	for (size_t i = 0; i < width; ++i)
+	size_t centrW = width / 2;
+	size_t centrH = height / 2;
+
+	if (0 == width % 2 || 0 == height % 2)
 	{
-		matrix[i].resize(height);
+		throw std::invalid_argument("Error! Can't create sharp matrix!");
 	}
 
-	matrix[0][0] = 0;
-	matrix[0][1] = roundPixel;
-	matrix[0][2] = 0;
-	matrix[1][0] = roundPixel;
-	matrix[1][1] = centrPixel;
-	matrix[1][2] = roundPixel;
-	matrix[2][0] = 0;
-	matrix[2][1] = roundPixel;
-	matrix[2][2] = 0;;
+	for (size_t i = 0; i < width; ++i)
+	{
+		for (size_t k = 0; k < height; ++k)
+		{
+			if (k == centrH)
+			{
+				matrix[i][k] = -1;
+			}
+			else
+			{
+				if (i == centrW)
+				{
+					matrix[i][k] = -1;
+				}
+				else
+				{
+					matrix[i][k] = 0;
+				}
+			}
+
+		}
+	}
+
+	matrix[centrW][centrH] = width + height - 1;
 }
 
 float SharpMatrix::getPixel(size_t x, size_t y) const

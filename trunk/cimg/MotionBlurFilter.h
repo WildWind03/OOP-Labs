@@ -2,18 +2,8 @@
 
 #include "BaseFilter.h"
 #include "Image.h"
-#include "Pixel.h"
-#include "MatrixFilter.h"
-#include "BlurMatrix.h"
-#include "FilterFactory.h"
 
 #include <string> 
-#include <vector>
-#include <stdexcept>
-#include <cmath>
-#include <memory>
-#include <iostream>
-
 
 class MotionBlurFilter : public BaseFilter
 {

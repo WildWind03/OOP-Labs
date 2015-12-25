@@ -1,17 +1,13 @@
 #include "BlurMatrix.h"
 
-BlurMatrix::BlurMatrix(float sigma)
+#include <stdexcept>
+#include <cmath>
+
+BlurMatrix::BlurMatrix(float sigma, size_t width, size_t height) : SquareMatrix(width, height)
 {
-	if (0 == sigma)
+	if (0 == sigma || sigma > maxSigma)
 	{
 		throw std::invalid_argument(OUT_OF_MATRIX_STR);
-	}
-
-	matrix.resize(width);
-	
-	for (size_t i = 0; i < width; ++i)
-	{
-		matrix[i].resize(height);
 	}
 
 	int uc = 0;

@@ -1,5 +1,9 @@
 #include "MotionBlurFilter.h"
 
+#include <vector>
+#include <stdexcept>
+#include <cmath>
+
 MotionBlurFilter::MotionBlurFilter(size_t angle, size_t speed) : angle(angle), speed(speed)
 {
 	if (speed > maxSpeed || angle > maxAngle)
@@ -188,7 +192,6 @@ Pixel MotionBlurFilter::getNearPixel(const Image & image, int x, int y) const
 
 Image MotionBlurFilter::apply(const Image & image) const
 {
-
 	std::vector<std::vector<Pixel>> pixels;
 
 	pixels.resize(image.getWidth());
