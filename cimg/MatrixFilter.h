@@ -2,17 +2,15 @@
 
 #include "BaseFilter.h"
 #include "Image.h"
-#include "Pixel.h"
-#include "SharpMatrix.h"
 
 #include <vector>
 #include <stdexcept>
-#include <iostream>
+#include <string>
 
 template <typename Matrix>
 	class MatrixFilter : public BaseFilter
 	{
-		Matrix * matrix;
+		Matrix matrix;
 
 		const std::string WRONG_FILTER_STR = "Unworking filter!";
 
@@ -62,8 +60,8 @@ template <typename Matrix>
 
 		Pixel getFilteredPixel(const Image & image, int x, int y) const
 		{
-			size_t hMatrix = matrix -> getHeight();
-			size_t wMatrix = matrix -> getWidth();
+			size_t hMatrix = matrix.getHeight();
+			size_t wMatrix = matrix.getWidth();
 
 			if (0 == hMatrix % 2 || 0 == wMatrix % 2)
 			{
@@ -81,7 +79,7 @@ template <typename Matrix>
 			{
 				for (int k = y - heightShift; k <= y + heightShift; ++k)
 				{
-					float matrixPixel = matrix -> getPixel(i - x + widthShift, k - y + heightShift);
+					float matrixPixel = matrix.getPixel(i - x + widthShift, k - y + heightShift);
 
 					Pixel imagePixel;
 
@@ -140,14 +138,13 @@ template <typename Matrix>
 	public:
 
 		template <typename...TArgs>
-			MatrixFilter(TArgs...args)
+			MatrixFilter(TArgs...args) : matrix (Matrix(args...))
 			{
-				matrix = new Matrix(args...);
+
 			}
 
 		virtual Image apply(const Image & image) const override
 		{
-
 			std::vector<std::vector<Pixel>> pixels;
 
 			pixels.resize(image.getWidth());
@@ -175,7 +172,7 @@ template <typename Matrix>
 
 		virtual ~MatrixFilter()
 		{
-			delete(matrix);
+
 		}
 
 	};

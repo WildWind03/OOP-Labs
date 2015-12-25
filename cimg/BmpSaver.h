@@ -4,10 +4,7 @@
 #include "BmpFileHeader.h"
 #include "BmpInfoHeader.h"
 
-#include <vector>
 #include <fstream>
-#include <stdexcept>
-#include <memory>
 
 class BmpSaver : public ImageSaver
 {

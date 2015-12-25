@@ -1,9 +1,7 @@
 #pragma once
 
 #include <string>
-#include <sstream>
 #include <vector>
-#include <iostream>
 
 class FilterDescription
 {
@@ -19,7 +17,7 @@ public:
 
 	std::vector<std::string> getParameterList() const;
 
-	void addParameter(std::string parameter);
+	void addParameter(const std::string & parameter);
 
 	char getFilterType() const;
 

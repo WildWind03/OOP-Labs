@@ -1,5 +1,8 @@
 #include "CutFilter.h"
 
+#include <vector>
+#include <stdexcept>
+
 CutFilter::CutFilter(size_t newWidth, size_t newHeight) : newWidth(newWidth), newHeight(newHeight)
 {
 	if (0 == newWidth || 0 == newHeight)
@@ -10,7 +13,6 @@ CutFilter::CutFilter(size_t newWidth, size_t newHeight) : newWidth(newWidth), ne
 
 Image CutFilter::apply(const Image & image) const
 {
-
 	std::vector<std::vector<Pixel>> pixels;
 	
 	pixels.resize(newWidth);

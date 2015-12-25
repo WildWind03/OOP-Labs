@@ -1,5 +1,7 @@
 #include "EdgeFunctor.h"
 
+#include <stdexcept>
+
 EdgeFunctor::EdgeFunctor(int threshold)
 {
 	if (threshold > 255 || threshold < 0)

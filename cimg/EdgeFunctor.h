@@ -2,8 +2,6 @@
 
 #include "BaseFunctor.h"
 
-#include <cstdio>
-#include <stdexcept>
 #include <string>
 
 class EdgeFunctor : public BaseFunctor

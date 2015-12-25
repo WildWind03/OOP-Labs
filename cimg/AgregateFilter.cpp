@@ -1,6 +1,8 @@
 #include "AgregateFilter.h"
 
-AgregateFilter::AgregateFilter(std::vector<std::shared_ptr<BaseFilter>> filters) : filters(filters)
+#include <stdexcept>
+
+AgregateFilter::AgregateFilter(const std::vector<std::shared_ptr<BaseFilter>> & filters) : filters(filters)
 {
 	for (size_t i = 0; i < filters.size(); ++i)
 	{

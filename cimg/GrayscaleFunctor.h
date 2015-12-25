@@ -2,8 +2,6 @@
 
 #include "BaseFunctor.h"
 
-#include <cstdio>
-
 class GrayscaleFunctor : public BaseFunctor
 {
 	const float redK = 0.299;

@@ -1,23 +1,16 @@
 #pragma once
 
-#include "BaseMatrix.h"
+#include "SquareMatrix.h"
 
-#include <stdexcept>
 #include <string>
-#include <vector>
 
-class SharpMatrix : public BaseMatrix
+class SharpMatrix : public SquareMatrix
 {
-	int roundPixel = -1;
-	int centrPixel = 5;
-
-	size_t height = 3;
-	size_t width = 3;
-
 	const std::string OUT_OF_MATRIX_STR = "Error! Can't apply sharp filter because of wrong input!";
 
 public:
-	SharpMatrix();
+	SharpMatrix(size_t width, size_t height);
+	SharpMatrix() = delete;
 	SharpMatrix (SharpMatrix && sharpMatrix) = default;
 
 	SharpMatrix(const SharpMatrix & sharpMatrix) = delete;

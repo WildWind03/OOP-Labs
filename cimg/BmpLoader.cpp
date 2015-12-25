@@ -1,4 +1,8 @@
 #include "BmpLoader.h"
+#include "BmpFileHeader.h"
+#include "BmpInfoHeader.h"
+
+#include <stdexcept>
 
 BmpLoader::BmpLoader()
 {

@@ -1,6 +1,6 @@
 #include "FilterDescription.h"
 
-void FilterDescription::addParameter(std::string parameter)
+void FilterDescription::addParameter(const std::string & parameter)
 {
 	parameters.push_back(parameter);	
 }

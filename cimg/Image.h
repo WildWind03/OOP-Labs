@@ -11,6 +11,9 @@ class Image
 
 	void copyImageFrom(const Image & image);
 
+	size_t height;
+	size_t width;
+
 public:
 	Image() = delete;
 

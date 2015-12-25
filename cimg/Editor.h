@@ -2,7 +2,6 @@
 
 #include "Image.h"
 #include "BaseFilter.h"
-#include "AgregateFilter.h"
 
 #include <vector>
 #include <memory>

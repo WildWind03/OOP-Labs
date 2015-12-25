@@ -1,5 +1,7 @@
 #include "BmpSaver.h"
 
+#include <stdexcept>
+
 BmpSaver::BmpSaver()
 {
 

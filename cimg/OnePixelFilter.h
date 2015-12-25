@@ -1,6 +1,5 @@
 #pragma once
 
-#include "BaseFunctor.h"
 #include "BaseFilter.h"
 
 template <class Functor>
