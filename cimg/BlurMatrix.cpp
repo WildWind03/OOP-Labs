@@ -20,9 +20,9 @@ BlurMatrix::BlurMatrix(float sigma)
 	float g = 0;
 	float sum = 0;
 
-	for(int u = 0; u < width; ++u) 
+	for(int u = 0; u < static_cast<int> (width); ++u) 
 	{
-	    for (int v = 0; v < height; ++v) 
+	    for (int v = 0; v < static_cast<int> (height); ++v) 
 	    {
 		    uc = u - (width - 1) / 2;
 		    vc = v - (height - 1) / 2;

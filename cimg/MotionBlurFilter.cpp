@@ -52,17 +52,17 @@ Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, int pix
 		return getNewPixel(image, x2 + 1, y2 + 1, pixelSpeed);
     }
 
-    if (x1 <= 0 && y1 >= image.getHeight() - 1)
+    if (x1 <= 0 && y1 >= static_cast<int> (image.getHeight()) - 1)
     {
     	return getNewPixel(image, x2 + 1, y2 - 1, pixelSpeed);
     }
 
-    if (x1 >= image.getWidth() - 1 && y1 <= 0)
+    if (x1 >= static_cast<int> (image.getWidth()) - 1 && y1 <= 0)
     {
 		return getNewPixel(image, x2 - 1, y2 + 1, pixelSpeed);
     }
 
-    if (x1 >= image.getWidth() - 1 && y1 >= image.getHeight() - 1)
+    if (x1 >= static_cast<int> (image.getWidth()) - 1 && y1 >= static_cast<int> (image.getHeight()) - 1)
     {
 		return getNewPixel(image, x2 - 1, y2 - 1, pixelSpeed);
     }
@@ -72,7 +72,7 @@ Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, int pix
     	return getNewPixel(image, x2 + 1, y2, pixelSpeed);
     }
 
-    if (x1 >= image.getWidth() - 1)
+    if (x1 >= static_cast<int> (image.getWidth()) - 1)
     {
     	return getNewPixel(image, x2 - 1, y2, pixelSpeed);
     }
@@ -82,7 +82,7 @@ Pixel MotionBlurFilter::getNewPixel(const Image & image, int x2, int y2, int pix
     	return getNewPixel(image, x2, y2 + 1, pixelSpeed);
     }
 
-    if (y1 >= image.getHeight() - 1)
+    if (y1 >= static_cast<int> (image.getHeight()) - 1)
     {
     	return getNewPixel(image, x2, y2 - 1, pixelSpeed);
     }
@@ -156,9 +156,9 @@ Pixel MotionBlurFilter::getNearPixel(const Image & image, int x, int y) const
 	}
 	else
 	{
-		if (x >= image.getWidth())
+		if (x >= static_cast<int> (image.getWidth()))
 		{
-			pixelX = image.getWidth() - 1;
+			pixelX = static_cast<int> (image.getWidth()) - 1;
 		}
 		else
 		{
@@ -173,9 +173,9 @@ Pixel MotionBlurFilter::getNearPixel(const Image & image, int x, int y) const
 	}
 	else
 	{
-		if (y >= image.getHeight())
+		if (y >= static_cast<int> (image.getHeight()))
 		{
-			pixelY = image.getHeight() - 1;
+			pixelY = static_cast<int> (image.getHeight()) - 1;
 		}
 		else
 		{
@@ -198,11 +198,11 @@ Image MotionBlurFilter::apply(const Image & image) const
 		pixels[i].resize(image.getHeight());
 	}
 
-	for (int i = 0; i < image.getWidth(); ++i)
+	for (size_t i = 0; i < image.getWidth(); ++i)
 	{
-		for (int k = 0; k < image.getHeight(); ++k)
+		for (size_t k = 0; k < image.getHeight(); ++k)
 		{
-			pixels[i][k] = getNewPixel(image, i, k, static_cast<int>(speed));
+			pixels[i][k] = getNewPixel(image, static_cast<int> (i), static_cast<int> (k), static_cast<int>(speed));
 		}
 	}
 

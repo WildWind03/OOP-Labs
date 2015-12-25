@@ -33,7 +33,7 @@ public:
 
 	size_t getWidth() const
 	{
-		matrix.size();
+		return matrix.size();
 	}
 
 	virtual ~BaseMatrix()

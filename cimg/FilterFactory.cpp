@@ -58,7 +58,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			size_t parameter;
+			int parameter;
 
 			try
 			{
