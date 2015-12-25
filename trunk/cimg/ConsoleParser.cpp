@@ -73,11 +73,11 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
                     {
                         if (argv[i][0] != '-')
                         {
-                                filterDescription.addParameter(argv[i]);
+                            filterDescription.addParameter(argv[i]);
                         }
                         else
                         {
-                                break;
+                            break;
                         }
                     }
                     

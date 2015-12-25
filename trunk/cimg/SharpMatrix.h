@@ -10,6 +10,7 @@ class SharpMatrix : public SquareMatrix
 
 public:
 	SharpMatrix(size_t width, size_t height);
+	
 	SharpMatrix() = delete;
 	SharpMatrix (SharpMatrix && sharpMatrix) = default;
 

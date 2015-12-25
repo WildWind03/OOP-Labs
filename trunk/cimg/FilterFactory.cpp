@@ -29,19 +29,24 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			size_t newWidth, newHeight;
+			int newWidth, newHeight;
 			
 			try
 			{
 				newWidth = std::stoi(param[0]);
 				newHeight = std::stoi(param[1]);
+
+				if (newWidth < 0 || newHeight < 0)
+				{
+					throw std::invalid_argument("");
+				}
 			}
 			catch (const std::exception & er)
 			{
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			std::shared_ptr<BaseFilter> cutFilter (new CutFilter(newWidth, newHeight));
+			std::shared_ptr<BaseFilter> cutFilter (new CutFilter(static_cast<size_t> (newWidth), static_cast<size_t> (newHeight)));
 
 			return cutFilter;
 		}
@@ -77,6 +82,11 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 			try
 			{
 				parameter = std::stoi(param[0]);
+
+				if (parameter < 0)
+				{
+					throw std::invalid_argument("");
+				}
 			}
 			catch (const std::exception & er)
 			{
@@ -111,6 +121,11 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 			try
 			{
 				sigma = std::stof(param[0]);
+
+				if (sigma < 0)
+				{
+					throw std::invalid_argument("");
+				}
 			}
 			catch (const std::exception & er)
 			{
@@ -130,20 +145,25 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			size_t speed;
-			size_t angle;
+			int speed;
+			int angle;
 
 			try
 			{
 				angle = std::stoi(param[0]);
 				speed = std::stoi(param[1]);
+
+				if (angle < 0 || speed < 0)
+				{
+					throw std::invalid_argument("");
+				}
 			}
 			catch (const std::exception & er)
 			{
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			std::shared_ptr<BaseFilter> motionFilter (new MotionBlurFilter(angle, speed));
+			std::shared_ptr<BaseFilter> motionFilter (new MotionBlurFilter(static_cast<size_t>(angle), static_cast<size_t>(speed)));
 
 			return motionFilter;
 		}
