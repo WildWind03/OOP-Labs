@@ -42,6 +42,10 @@ int main(int argc, char *argv[])
 	{
 		std::cout << exception.what() << std::endl;
 	}
+	catch(...)
+	{
+		std::cout << "Unknown exception!" << std::endl;
+	}
 	
 	return 0;
 }

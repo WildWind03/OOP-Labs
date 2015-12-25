@@ -20,7 +20,7 @@ Image::Image(const std::vector<std::vector<Pixel>> & pixels)
 
 bool Image::isPointInImage(int x, int y) const
 {
-	if (x < getWidth() && y < getHeight() && x >= 0 && y >= 0)
+	if (x < static_cast<int> (getWidth()) && y < static_cast<int> (getHeight()) && x >= 0 && y >= 0)
 	{
 		return true;
 	}

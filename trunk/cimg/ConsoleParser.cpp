@@ -65,7 +65,7 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
                     FilterDescription filterDescription(c);
                     filterDescription.addParameter(optarg);
 
-                    for (size_t i = optind; i < argc; ++i)
+                    for (int i = optind; i < argc; ++i)
                     {
                         if (argv[i][0] != '-')
                         {

@@ -1,8 +1,13 @@
 #include "EdgeFunctor.h"
 
-EdgeFunctor::EdgeFunctor(unsigned char threshold) : threshold(threshold)
+EdgeFunctor::EdgeFunctor(int threshold)
 {
+	if (threshold > 255 || threshold < 0)
+	{
+		throw std::invalid_argument(INCORRECT_INPUT_STR);
+	}
 
+	this -> threshold = static_cast<unsigned char> (threshold);
 }
 
 Pixel EdgeFunctor::operator()(const Pixel & pixel) const
