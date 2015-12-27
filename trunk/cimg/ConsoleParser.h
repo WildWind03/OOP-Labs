@@ -7,6 +7,9 @@
 
 class ConsoleParser
 {
+
+	const int MIN_LENGTH_STR = 3;
+	
 	const std::string NO_FILE = "NO_FILE";
 	const std::string TOO_SHORT_ARGS_STR = "Incorrect input. Print --help to learn how to use program";
 	const std::string emptyFilterListStr = "Error! There isn't any filter!";

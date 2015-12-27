@@ -6,7 +6,7 @@
 
 ConsoleParser::ConsoleParser(int argc, char *argv[])
 {
-    if (argc >= 3)
+    if (argc >= MIN_LENGTH_STR)
     {
         inputFilePath = argv[1];
         outputFilePath = argv[2];
@@ -33,7 +33,7 @@ ConsoleParser::ConsoleParser(int argc, char *argv[])
 
                 if (-1 == c)
                 {
-                    if (argc < 3)
+                    if (argc < MIN_LENGTH_STR)
                     {
                         throw std::invalid_argument(TOO_SHORT_ARGS_STR);
                     }

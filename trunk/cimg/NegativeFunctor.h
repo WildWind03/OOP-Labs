@@ -10,8 +10,8 @@ class NegativeFunctor : public BaseFunctor
 public:
 	NegativeFunctor();
 
-	NegativeFunctor(const NegativeFunctor & negativeFunctor) = delete;
-	NegativeFunctor & operator= (const NegativeFunctor & negativeFunctor) = delete;
+	NegativeFunctor(const NegativeFunctor & negativeFunctor) = default;
+	NegativeFunctor & operator= (const NegativeFunctor & negativeFunctor) = default;
 
 	virtual Pixel operator()(const Pixel & pixel) const override;
 

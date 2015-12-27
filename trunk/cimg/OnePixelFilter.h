@@ -5,7 +5,7 @@
 template <class Functor>
 	class OnePixelFilter : public BaseFilter
 	{
-		Functor * functor;
+		Functor functor;
 
 	public:
 
@@ -13,9 +13,9 @@ template <class Functor>
 		OnePixelFilter & operator= (const OnePixelFilter & onePixelFilter) = delete;
 
 		template <typename...TArgs>
-			OnePixelFilter(TArgs...args)
+			OnePixelFilter(TArgs...args) : functor (Functor(args...))
 			{
-				functor = new Functor(args...);
+
 			}
 
 		virtual Image apply(const Image & image) const override
@@ -34,7 +34,7 @@ template <class Functor>
 				for (size_t k = 0; k < image.getHeight(); ++k)
 				{
 					Pixel pixel = image.getPixel(i, k);
-					filteredImage[i][k] = (*functor)(pixel);
+					filteredImage[i][k] = functor(pixel);
 				}
 			}
 
@@ -43,7 +43,7 @@ template <class Functor>
 
 		virtual ~OnePixelFilter()
 		{
-			delete(functor);
+			
 		}
 
 	};

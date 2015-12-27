@@ -7,9 +7,9 @@ GrayscaleFunctor::GrayscaleFunctor()
 
 Pixel GrayscaleFunctor::operator()(const Pixel & pixel) const
 {
-	unsigned char newColor = redK * pixel.getRed() + greenK * pixel.getGreen() + blueK * pixel.getBlue();
+	float newColor = redK * static_cast<float> (pixel.getRed()) + greenK * static_cast<float>(pixel.getGreen()) + blueK * static_cast<float>(pixel.getBlue());
 
-	return Pixel(newColor, newColor, newColor);
+	return Pixel(static_cast<unsigned char> (newColor), static_cast<unsigned char>(newColor), static_cast<unsigned char>(newColor));
 }
 
 GrayscaleFunctor::~GrayscaleFunctor()

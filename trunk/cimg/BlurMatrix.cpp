@@ -7,7 +7,7 @@ BlurMatrix::BlurMatrix(float sigma, size_t width, size_t height) : SquareMatrix(
 {
 	if (0 >= sigma || sigma > maxSigma)
 	{
-		throw std::invalid_argument(OUT_OF_MATRIX_STR);
+		throw std::invalid_argument("Error! Invalid sigma! Use --help to learn how to use the program!");
 	}
 
 	int uc = 0;

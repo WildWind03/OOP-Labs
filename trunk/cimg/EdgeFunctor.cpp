@@ -2,14 +2,12 @@
 
 #include <stdexcept>
 
-EdgeFunctor::EdgeFunctor(int threshold)
+EdgeFunctor::EdgeFunctor(unsigned char threshold) : threshold(threshold)
 {
-	if (threshold > 255 || threshold < 0)
+	if (threshold > MAX_COLOR || threshold < MIN_COLOR)
 	{
 		throw std::invalid_argument(INCORRECT_INPUT_STR);
 	}
-
-	this -> threshold = static_cast<unsigned char> (threshold);
 }
 
 Pixel EdgeFunctor::operator()(const Pixel & pixel) const

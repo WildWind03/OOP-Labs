@@ -9,7 +9,6 @@
 class BaseMatrix
 {
 protected:
-
 	const size_t width;
 	const size_t height;
 
