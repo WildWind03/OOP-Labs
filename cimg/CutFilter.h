@@ -6,8 +6,8 @@
 
 class CutFilter : public BaseFilter
 {
-	size_t newWidth;
-	size_t newHeight;
+	const size_t newWidth;
+	const size_t newHeight;
 
 	const std::string CANT_APPLY_FILTER_STR = "It's impossible to apply filter. Wrong width and height";
 

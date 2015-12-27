@@ -13,6 +13,7 @@ Pixel NegativeFunctor::operator()(const Pixel & pixel) const
 	unsigned char newBlue = maxColor - pixel.getBlue();
 
 	Pixel newPixel(newRed, newGreen, newBlue);
+	
 	return newPixel;
 }
 

@@ -77,13 +77,13 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			int parameter;
+			int threshold;
 
 			try
 			{
-				parameter = std::stoi(param[0]);
+				threshold = std::stoi(param[0]);
 
-				if (parameter < 0)
+				if (threshold < 0 || threshold > 255)
 				{
 					throw std::invalid_argument("");
 				}
@@ -95,7 +95,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 
 			std::shared_ptr<BaseFilter> negativeFilter (new OnePixelFilter<NegativeFunctor>);
 			std::shared_ptr<BaseFilter> edgeMatrixFilter (new MatrixFilter<EdgeMatrix>(3,3));
-			std::shared_ptr<BaseFilter> edgeFuctorFilter (new OnePixelFilter<EdgeFunctor>(parameter));
+			std::shared_ptr<BaseFilter> edgeFuctorFilter (new OnePixelFilter<EdgeFunctor>(static_cast <unsigned char> (threshold)));
 
 			std::vector <std::shared_ptr<BaseFilter>> filters;
 
@@ -169,5 +169,5 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 		}
 	}
 
-	throw std::invalid_argument("Can't apply filter. Wrong parameters");
+	throw std::invalid_argument("Can't create filter. Wrong parameters");
 }

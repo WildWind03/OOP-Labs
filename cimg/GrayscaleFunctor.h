@@ -11,8 +11,8 @@ class GrayscaleFunctor : public BaseFunctor
 public:
 	GrayscaleFunctor();
 
-	GrayscaleFunctor(const GrayscaleFunctor & grayscaleFunctor) = delete;
-	GrayscaleFunctor & operator= (const GrayscaleFunctor & grayscaleFunctor) = delete;
+	GrayscaleFunctor(const GrayscaleFunctor & grayscaleFunctor) = default;
+	GrayscaleFunctor & operator= (const GrayscaleFunctor & grayscaleFunctor) = default;
 
 	virtual Pixel operator()(const Pixel & pixel) const override;
 
