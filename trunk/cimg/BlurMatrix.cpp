@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <cmath>
 
-BlurMatrix::BlurMatrix(float sigma, size_t width, size_t height) : SquareMatrix(width, height)
+BlurMatrix::BlurMatrix(float sigma, size_t size) : SquareMatrix(size)
 {
 	if (0 >= sigma || sigma > maxSigma)
 	{

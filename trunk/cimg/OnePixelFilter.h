@@ -33,7 +33,7 @@ template <class Functor>
 			{
 				for (size_t k = 0; k < image.getHeight(); ++k)
 				{
-					Pixel pixel = image.getPixel(i, k);
+					const Pixel & pixel = image.getPixel(i, k);
 					filteredImage[i][k] = functor(pixel);
 				}
 			}

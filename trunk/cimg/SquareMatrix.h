@@ -8,12 +8,8 @@
 class SquareMatrix : public BaseMatrix
 {
 protected:
-	SquareMatrix(size_t width, size_t height) : BaseMatrix(width, height)
+	SquareMatrix(size_t size) : BaseMatrix(size, size)
 	{
-		if (width != height)
-		{
-			throw std::invalid_argument("Error! Matrix is not square!");
-		}
 	}
 
 public:

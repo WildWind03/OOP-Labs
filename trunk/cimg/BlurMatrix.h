@@ -11,7 +11,7 @@ class BlurMatrix : public SquareMatrix
 	const float maxSigma = 10;
 
 public:
-	BlurMatrix(float sigma, size_t width, size_t height);
+	BlurMatrix(float sigma, size_t size);
 
 	BlurMatrix() = delete;
 	BlurMatrix (BlurMatrix && blurMatrix) = default;

@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <vector>
 
-EdgeMatrix::EdgeMatrix(size_t width, size_t height) : SquareMatrix(width, height)
+EdgeMatrix::EdgeMatrix(size_t size) : SquareMatrix(size)
 {
 	size_t centrW = width / 2;
 	size_t centrH = height / 2;
