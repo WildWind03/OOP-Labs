@@ -64,7 +64,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 		}
 		case 's' :
 		{
-			std::shared_ptr<BaseFilter> sharpFilter (new MatrixFilter<SharpMatrix>(3,3));
+			std::shared_ptr<BaseFilter> sharpFilter (new MatrixFilter<SharpMatrix>(3));
 
 			return sharpFilter;
 		}
@@ -94,7 +94,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 			}
 
 			std::shared_ptr<BaseFilter> negativeFilter (new OnePixelFilter<NegativeFunctor>);
-			std::shared_ptr<BaseFilter> edgeMatrixFilter (new MatrixFilter<EdgeMatrix>(3,3));
+			std::shared_ptr<BaseFilter> edgeMatrixFilter (new MatrixFilter<EdgeMatrix>(3));
 			std::shared_ptr<BaseFilter> edgeFuctorFilter (new OnePixelFilter<EdgeFunctor>(static_cast <unsigned char> (threshold)));
 
 			std::vector <std::shared_ptr<BaseFilter>> filters;
@@ -132,7 +132,7 @@ std::shared_ptr<BaseFilter> FilterFactory::createFilter(const FilterDescription 
 				throw std::invalid_argument("Can't apply filter. Wrong parameters");
 			}
 
-			std::shared_ptr<BaseFilter> blurFilter (new MatrixFilter<BlurMatrix>(sigma, 5, 5));
+			std::shared_ptr<BaseFilter> blurFilter (new MatrixFilter<BlurMatrix>(sigma, 5));
 
 			return blurFilter;
 		}

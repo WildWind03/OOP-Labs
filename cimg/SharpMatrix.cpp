@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <vector>
 
-SharpMatrix::SharpMatrix(size_t width, size_t height) : SquareMatrix(width, height)
+SharpMatrix::SharpMatrix(size_t size) : SquareMatrix(size)
 {
 	size_t centrW = width / 2;
 	size_t centrH = height / 2;

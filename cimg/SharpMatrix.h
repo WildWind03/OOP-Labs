@@ -9,7 +9,7 @@ class SharpMatrix : public SquareMatrix
 	const std::string OUT_OF_MATRIX_STR = "Error! Can't apply sharp filter because of wrong input!";
 
 public:
-	SharpMatrix(size_t width, size_t height);
+	SharpMatrix(size_t size);
 	
 	SharpMatrix() = delete;
 	SharpMatrix (SharpMatrix && sharpMatrix) = default;
