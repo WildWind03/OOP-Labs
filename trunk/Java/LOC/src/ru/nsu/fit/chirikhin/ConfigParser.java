@@ -12,23 +12,23 @@ import java.io.File;
  */
 public class ConfigParser implements Parser {
 
-    HashMap<FilterIdentificator, String[]> filtersProperties;
+    HashMap<FilterIdentifier, String[]> filtersProperties;
 
-    private static final String extensionFilterIdentificator = "Ext";
+    private static final String extensionFilterIdentifier = "Ext";
 
     ConfigParser(String filePath) throws IOException {
 
         File myFile = new File(filePath);
         Scanner myScanner = new Scanner(myFile);
 
-        LinkedList<String> extensionFilterIdentificatorParams = new LinkedList<>();
+        //LinkedList<String> extensionFilterIdentifierParams = new LinkedList<>();
 
         while(myScanner.hasNext()) {
-            String filterIdentificator = myScanner.next();
+            String filterIdentifier = myScanner.next();
 
-            switch(filterIdentificator) {
+            switch(filterIdentifier) {
 
-                case extensionFilterIdentificator :
+                case extensionFilterIdentifier :
 
                     String filterParam;
 
@@ -42,19 +42,23 @@ public class ConfigParser implements Parser {
                         throw new IllegalStateException("Can't read next token. The scanner is closed!");
                     }
 
-                    extensionFilterIdentificatorParams.add(filterParam);
+                    if (!(filtersProperties.containsKey(FilterIdentifier.fileExtensionFilter) && filtersProperties.containsValue(filterParam))) {
+                        filtersProperties.put(FilterIdentifier.fileExtensionFilter, new String[] {filterParam});
+                    }
+                    else {
+                        throw new IllegalArgumentException("One filter was met twice!");
+                    }
+
                     break;
 
                 default :
 
-                    throw new IllegalArgumentException("Filter with such identificator doesn't exist!");
+                    throw new IllegalArgumentException("Filter with such identifier doesn't exist!");
             }
         }
-
-        filtersProperties.put(FilterIdentificator.fileExtensionFilter, extensionFilterIdentificatorParams.toArray(new String[extensionFilterIdentificatorParams.size()]));
     }
 
-    public HashMap<FilterIdentificator, String[]> getFiltersMap() {
+    public HashMap<FilterIdentifier, String[]> getFiltersMap() {
         return filtersProperties;
     }
 }
