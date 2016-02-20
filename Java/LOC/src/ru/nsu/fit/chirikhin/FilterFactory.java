@@ -8,14 +8,20 @@ import java.lang.IllegalArgumentException;
 
 public class FilterFactory {
 
-    static public BaseFilter createFilters(FilterIdentificator filterName, String[] filterParams) throws IllegalArgumentException {
+    static public BaseFilter createFilters(FilterIdentifier filterName, String[] filterParams) throws IllegalArgumentException {
 
         BaseFilter filter;
 
         switch(filterName) {
             case fileExtensionFilter :
 
-                filter = new FileExtensionFilter(filterParams);
+                if (1 == filterParams.length) {
+                    filter = new FileExtensionFilter(filterParams[0]);
+                }
+                else {
+                    throw new IllegalArgumentException("Invalid parameters for File Extension Filter!");
+                }
+
                 break;
 
             default :
