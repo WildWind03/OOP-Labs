@@ -6,15 +6,9 @@ import java.util.LinkedList;
 /**
  * Created by cas on 20.02.16.
  */
-public class FileManager {
+class FileManager {
 
-    private final String path;
-
-    FileManager(String path) {
-        this.path = path;
-    }
-
-    public String[] getFullListOfFilesInDirectory(String directoryPath) {
+    public static LinkedList <File> getFullListOfFilesInDirectory(String directoryPath) throws NullPointerException{
         LinkedList<File> fileList = new LinkedList<>();
         File file = new File(directoryPath);
 
@@ -24,11 +18,15 @@ public class FileManager {
                     fileList.add(entryFile);
                 }
 
+                if (entryFile.isDirectory()) {
+                    LinkedList <File> filesInSubDir = getFullListOfFilesInDirectory(entryFile.getPath());
+                    fileList.addAll(filesInSubDir);
+                }
             }
         }
-        else{
-            throw new
+        else {
+            throw new IllegalArgumentException("The path is not a directory!");
         }
-        return new String[1];
+        return fileList;
     }
 }

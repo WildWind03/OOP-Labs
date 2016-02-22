@@ -6,7 +6,7 @@ package ru.nsu.fit.chirikhin;
 
 import java.lang.IllegalArgumentException;
 
-public class FilterFactory {
+class FilterFactory {
 
     static public BaseFilter createFilters(FilterIdentifier filterName, String[] filterParams) throws IllegalArgumentException {
 
