@@ -1,29 +1,39 @@
 package ru.nsu.fit.chirikhin;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
+import java.io.StringBufferInputStream;
+import java.util.*;
 import java.io.File;
+import java.util.logging.Filter;
 
 /**
  * Created by cas on 15.02.16.
  */
 public class ConfigParser implements Parser {
 
-    private final HashMap<FilterIdentifier, String[]> filtersProperties;
+    private final Vector<FilterProperties> filters;
 
     private static final String extensionFilterIdentifier = "Ext";
 
-    ConfigParser(String filePath) throws IOException {
+    ConfigParser(String filePath) throws IOException, IllegalFormatException {
 
-        filtersProperties = new HashMap<>();
+        filters = new Vector<>();
 
         File myFile = new File(filePath);
         Scanner myScanner = new Scanner(myFile);
 
-        while(myScanner.hasNext()) {
-            String filterIdentifier = myScanner.next();
+        while(myScanner.hasNextLine()) {
+            String line = myScanner.nextLine();
+            Scanner strScanner = new Scanner(line);
+
+            String filterIdentifier;
+
+            if (strScanner.hasNext()) {
+                filterIdentifier = strScanner.next();
+            }
+            else {
+                throw new IllegalArgumentException("Wrong format of input!");
+            }
 
             switch(filterIdentifier) {
                 case extensionFilterIdentifier :
@@ -31,20 +41,24 @@ public class ConfigParser implements Parser {
                     String filterParam;
 
                     try {
-                        filterParam = myScanner.next();
+                        filterParam = strScanner.next();
                     }
                     catch(NoSuchElementException e) {
-                        throw new NoSuchElementException("Invalid extension filter parameters!");
+                        throw new IllegalArgumentException("Invalid extension filter parameters!");
                     }
                     catch(IllegalStateException e) {
-                        throw new IllegalStateException("Can't read next token. The scanner is closed!");
+                        throw new IllegalStateException("System Error!!! Can't read next token. The scanner is closed!");
                     }
 
-                    if (!(filtersProperties.containsKey(FilterIdentifier.fileExtensionFilter) && filtersProperties.containsValue(new String[] {filterParam}))) {
-                        filtersProperties.put(FilterIdentifier.fileExtensionFilter, new String[] {filterParam});
+                    if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[] {filterParam}))) {
+                        filters.addElement(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[] {filterParam}));
                     }
                     else {
                         throw new IllegalArgumentException("One filter was met twice!");
+                    }
+
+                    if (strScanner.hasNext()) {
+                        throw new IllegalArgumentException("Too many arguments for Extension File Filter!");
                     }
 
                     break;
@@ -52,10 +66,12 @@ public class ConfigParser implements Parser {
                 default :
                     throw new IllegalArgumentException("Filter with such identifier doesn't exist!");
             }
+
         }
     }
+
     @Override
-   public HashMap<FilterIdentifier, String[]> getFiltersMap() {
-        return filtersProperties;
+   public Vector<FilterProperties> getFiltersProperties() {
+        return filters;
     }
 }
