@@ -14,12 +14,12 @@ class Application {
 
     public static void main(String[] arg) throws IOException {
 
-        ConsoleParser consoleParser = new ConsoleParser(arg);
+        /*ConsoleParser consoleParser = new ConsoleParser(arg);
         String pathToConfig = consoleParser.getPathToConfig();
         String pathToDirectory = consoleParser.getPathToDirectory();
 
         ConfigParser configParser = new ConfigParser(pathToConfig);
-        HashMap<FilterIdentifier, String[]> filterIdentifierHashMap = configParser.getFiltersMap();
+        Vector<> filterIdentifierHashMap = configParser.getFiltersProperties();
 
         System.out.println(filterIdentifierHashMap.size());
         System.out.flush();
@@ -37,5 +37,6 @@ class Application {
         for (Statistics aStat : stat) {
             System.out.println(aStat.description + "Count Of Lines: " + aStat.numOfLines + " Count of Files: " + aStat.numOfFiles + "\n");
         }
+        */
     }
 }
