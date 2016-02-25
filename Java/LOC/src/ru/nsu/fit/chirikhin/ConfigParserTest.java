@@ -18,6 +18,7 @@ public class ConfigParserTest {
     @Test(expected = FileNotFoundException.class)
     public void fileNotExistTest() throws IOException {
         ConfigParser parser = new ConfigParser("wrong path");
+        parser.getFiltersProperties();
     }
 
     @Test(expected = IllegalArgumentException.class)

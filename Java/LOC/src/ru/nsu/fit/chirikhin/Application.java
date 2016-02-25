@@ -2,9 +2,7 @@ package ru.nsu.fit.chirikhin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -23,8 +21,8 @@ class Application {
 
         Vector<BaseFilter> filters = new Vector<>();
 
-        for (int i = 0; i < filterIdentifier.size(); i++) {
-            filters.add(FilterFactory.createFilters(filterIdentifier.get(i).getFilterIdentifier(), filterIdentifier.get(i).getParams()));
+        for (FilterProperties aFilterIdentifier : filterIdentifier) {
+            filters.add(FilterFactory.createFilters(aFilterIdentifier.getFilterIdentifier(), aFilterIdentifier.getParams()));
         }
 
         LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
