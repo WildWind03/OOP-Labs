@@ -11,24 +11,22 @@ class Counter {
 
         Statistics stat[] = new Statistics[filterList.length + 1];
 
-        System.out.println(filterList.length);
-        System.out.flush();
-
         for (int i = 0; i < filterList.length; ++i) {
-            stat[i].description = filterList[i].getDescriptionForOutput();
+            stat[i] = new Statistics();
+            stat[i].setDescription(filterList[i].getDescriptionForOutput());
         }
-
-        stat[filterList.length].description = "NO FILTER: ";
-        stat[filterList.length].numOfFiles = files.length;
+        stat[filterList.length] = new Statistics();
+        stat[filterList.length].setDescription("Total");
+        stat[filterList.length].setNumOfFiles(files.length);
 
         for (File file : files) {
             int countOfLines = LinesCounter.getNumberOfLines(file);
-            stat[filterList.length].numOfLines += countOfLines;
+            stat[filterList.length].addNumOfLines (countOfLines);
 
             for (int k = 0; k < filterList.length; ++k) {
                 if (filterList[k].isAppropriate(file)) {
-                    stat[k].numOfLines += countOfLines;
-                    stat[k].numOfFiles++;
+                    stat[k].addNumOfLines (countOfLines);
+                    stat[k].addNumOfFiles(1);
                 }
             }
         }

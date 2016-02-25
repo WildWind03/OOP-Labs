@@ -42,5 +42,10 @@ public class FileManagerTest {
         assertTrue(files.contains(another));
         assertFalse(files.contains(dir2));
 
+        another.delete();
+        txt.delete();
+        jpeg.delete();
+        dir2.delete();
+        dir.delete();
     }
 }
