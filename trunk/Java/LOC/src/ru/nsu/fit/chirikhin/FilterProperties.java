@@ -40,9 +40,6 @@ public class FilterProperties {
 
         FilterProperties filterProperties = (FilterProperties) obj;
 
-        if ((filterIdentifier == filterProperties.getFilterIdentifier()) && Arrays.equals(params, filterProperties.getParams())) {
-            return true;
-        }
-        return false;
+        return (filterIdentifier == filterProperties.getFilterIdentifier()) && Arrays.equals(params, filterProperties.getParams());
     }
 }

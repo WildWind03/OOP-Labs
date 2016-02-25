@@ -1,6 +1,5 @@
 package ru.nsu.fit.chirikhin;
 
-import java.util.HashMap;
 import java.util.Vector;
 
 /**
