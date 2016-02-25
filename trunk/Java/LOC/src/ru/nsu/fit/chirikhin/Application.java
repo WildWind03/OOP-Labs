@@ -14,29 +14,23 @@ class Application {
 
     public static void main(String[] arg) throws IOException {
 
-        /*ConsoleParser consoleParser = new ConsoleParser(arg);
+        ConsoleParser consoleParser = new ConsoleParser(arg);
         String pathToConfig = consoleParser.getPathToConfig();
         String pathToDirectory = consoleParser.getPathToDirectory();
 
         ConfigParser configParser = new ConfigParser(pathToConfig);
-        Vector<> filterIdentifierHashMap = configParser.getFiltersProperties();
-
-        System.out.println(filterIdentifierHashMap.size());
-        System.out.flush();
+        Vector<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
 
         Vector<BaseFilter> filters = new Vector<>();
 
-        for (Map.Entry<FilterIdentifier, String[]> entry: filterIdentifierHashMap.entrySet()) {
-            filters.add(FilterFactory.createFilters(entry.getKey(), entry.getValue()));
+        for (int i = 0; i < filterIdentifier.size(); i++) {
+            filters.add(FilterFactory.createFilters(filterIdentifier.get(i).getFilterIdentifier(), filterIdentifier.get(i).getParams()));
         }
 
         LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
 
         Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
-
-        for (Statistics aStat : stat) {
-            System.out.println(aStat.description + "Count Of Lines: " + aStat.numOfLines + " Count of Files: " + aStat.numOfFiles + "\n");
-        }
-        */
+        PrimaryStatPrinter printer = new PrimaryStatPrinter();
+        printer.printStatistics(stat);
     }
 }
