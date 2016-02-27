@@ -2,13 +2,11 @@ package ru.nsu.fit.chirikhin;
 
 import java.io.File;
 
-/**
- * Created by cas on 16.02.16.
- */
 public class FileExtensionFilter implements BaseFilter {
 
     private String extension = "";
     final private static String filterId = "Ext";
+
     FileExtensionFilter(String extension) {
         this.extension = extension;
     }
@@ -21,7 +19,12 @@ public class FileExtensionFilter implements BaseFilter {
         int p = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf("\\"));
 
         if (i > p) {
-            extension = filePath.substring(i + 1);
+            try {
+                extension = filePath.substring(i + 1);
+            }
+            catch (IndexOutOfBoundsException e) {
+                throw new RuntimeException ("System Error! Can't get extension of file!");
+            }
         }
 
         return this.extension.equals(extension);

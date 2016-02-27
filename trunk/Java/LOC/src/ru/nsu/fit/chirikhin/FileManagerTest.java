@@ -9,9 +9,6 @@ import java.util.LinkedList;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by cas on 25.02.16.
- */
 public class FileManagerTest {
     public FileManagerTest() {
 

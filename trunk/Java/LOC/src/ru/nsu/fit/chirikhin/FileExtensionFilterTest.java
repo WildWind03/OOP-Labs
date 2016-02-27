@@ -7,9 +7,6 @@ import java.io.File;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
 
-/**
- * Created by cas on 25.02.16.
- */
 public class FileExtensionFilterTest {
     public FileExtensionFilterTest() {
 

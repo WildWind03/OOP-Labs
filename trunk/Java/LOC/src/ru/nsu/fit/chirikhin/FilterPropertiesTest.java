@@ -2,12 +2,10 @@ package ru.nsu.fit.chirikhin;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
-/**
- * Created by cas on 23.02.16.
- */
+
 public class FilterPropertiesTest {
     public FilterPropertiesTest() {
 

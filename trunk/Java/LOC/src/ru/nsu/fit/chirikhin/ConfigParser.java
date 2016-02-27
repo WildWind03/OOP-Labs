@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
-/**
- * Created by cas on 15.02.16.
- */
 public class ConfigParser implements Parser {
 
     private final Vector<FilterProperties> filters;

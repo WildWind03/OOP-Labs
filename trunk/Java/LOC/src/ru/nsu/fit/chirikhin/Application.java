@@ -5,30 +5,33 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Vector;
 
-/**
- * Created by cas on 15.02.16.
- */
 class Application {
 
     public static void main(String[] arg) throws IOException {
 
-        ConsoleParser consoleParser = new ConsoleParser(arg);
-        String pathToConfig = consoleParser.getPathToConfig();
-        String pathToDirectory = consoleParser.getPathToDirectory();
+        try {
 
-        ConfigParser configParser = new ConfigParser(pathToConfig);
-        Vector<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
+            ConsoleParser consoleParser = new ConsoleParser(arg);
+            String pathToConfig = consoleParser.getPathToConfig();
+            String pathToDirectory = consoleParser.getPathToDirectory();
 
-        Vector<BaseFilter> filters = new Vector<>();
+            ConfigParser configParser = new ConfigParser(pathToConfig);
+            Vector<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
 
-        for (FilterProperties aFilterIdentifier : filterIdentifier) {
-            filters.add(FilterFactory.createFilters(aFilterIdentifier.getFilterIdentifier(), aFilterIdentifier.getParams()));
+            Vector<BaseFilter> filters = new Vector<>();
+
+            for (FilterProperties aFilterIdentifier : filterIdentifier) {
+                filters.add(FilterFactory.createFilters(aFilterIdentifier.getFilterIdentifier(), aFilterIdentifier.getParams()));
+            }
+
+            LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
+
+            Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
+            PrimaryStatPrinter printer = new PrimaryStatPrinter();
+            printer.printStatistics(stat);
         }
-
-        LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
-
-        Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
-        PrimaryStatPrinter printer = new PrimaryStatPrinter();
-        printer.printStatistics(stat);
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
