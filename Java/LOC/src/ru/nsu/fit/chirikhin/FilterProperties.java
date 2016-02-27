@@ -2,9 +2,6 @@ package ru.nsu.fit.chirikhin;
 
 import java.util.Arrays;
 
-/**
- * Created by cas on 23.02.16.
- */
 public class FilterProperties {
 
     final private FilterIdentifier filterIdentifier;

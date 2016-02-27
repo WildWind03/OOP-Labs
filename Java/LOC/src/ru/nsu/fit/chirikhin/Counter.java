@@ -3,9 +3,6 @@ package ru.nsu.fit.chirikhin;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-/**
- * Created by cas on 21.02.16.
- */
 class Counter {
     public static Statistics[] getStatistics(BaseFilter filterList[], File files[]) throws FileNotFoundException {
 

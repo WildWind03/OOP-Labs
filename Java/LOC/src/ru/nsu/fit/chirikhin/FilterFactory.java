@@ -1,9 +1,5 @@
 package ru.nsu.fit.chirikhin;
 
-/**
- * Created by cas on 15.02.16.
- */
-
 import java.lang.IllegalArgumentException;
 
 class FilterFactory {

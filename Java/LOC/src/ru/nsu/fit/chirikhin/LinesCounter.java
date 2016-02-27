@@ -3,18 +3,29 @@ package ru.nsu.fit.chirikhin;
 import java.io.*;
 import java.util.Scanner;
 
-/**
- * Created by cas on 21.02.16.
- */
 class LinesCounter {
 
     public static int getNumberOfLines(File file) throws FileNotFoundException {
-        Scanner myScanner = new Scanner(file);
+
+        Scanner myScanner;
+
+        try {
+            myScanner = new Scanner(file);
+        }
+        catch (FileNotFoundException e) {
+            throw new FileNotFoundException("System error! Can't find a file " + file.getPath());
+        }
+
         int counter = 0;
 
-        while(myScanner.hasNextLine()) {
-            myScanner.nextLine();
-            counter++;
+        try {
+            while(myScanner.hasNextLine()) {
+                myScanner.nextLine();
+                counter++;
+            }
+        }
+        catch(Exception e) {
+            throw new RuntimeException("System error! Scanner doesn't work!");
         }
 
         return counter;

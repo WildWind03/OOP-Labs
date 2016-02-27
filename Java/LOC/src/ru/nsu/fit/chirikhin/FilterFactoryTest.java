@@ -2,9 +2,6 @@ package ru.nsu.fit.chirikhin;
 
 import org.junit.Test;
 
-/**
- * Created by cas on 25.02.16.
- */
 public class FilterFactoryTest {
     public FilterFactoryTest() {
 

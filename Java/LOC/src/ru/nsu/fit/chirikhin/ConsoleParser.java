@@ -1,8 +1,5 @@
 package ru.nsu.fit.chirikhin;
 
-/**
- * Created by cas on 21.02.16.
- */
 class ConsoleParser {
 
     private String pathToConfig;
@@ -10,10 +7,12 @@ class ConsoleParser {
 
     static final private String helpStr = "Welcome to LoC by Chirikhin Alexander \n" +
             "Example of using the program: LoC.out ./config.txt ./testDir";
+    static final private String configExampleStr = "Example of config.txt: \nExt txt \n Ext jpeg";
 
     ConsoleParser(String params[]) {
         if (0 == params.length) {
             System.out.println(helpStr);
+            System.out.println(configExampleStr);
             System.exit(0);
         }
 

@@ -6,9 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Created by cas on 22.02.16.
- */
 public class ConfigParserTest {
 
     public ConfigParserTest() {

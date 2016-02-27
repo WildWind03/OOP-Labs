@@ -1,14 +1,11 @@
 package ru.nsu.fit.chirikhin;
 
-/**
- * Created by cas on 21.02.16.
- */
-public class Statistics implements Comparable{
+public class Statistics implements Comparable {
     private String description;
     private int numOfLines;
     private int numOfFiles;
 
-    Statistics() {
+    public Statistics() {
         numOfFiles = 0;
         numOfLines = 0;
     }
@@ -46,8 +43,10 @@ public class Statistics implements Comparable{
     }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(Object o) throws ClassCastException, IllegalArgumentException {
+
         Statistics stat = (Statistics) o;
+
         if (stat.getNumOfLines() == this.getNumOfLines()) {
             return 0;
         }

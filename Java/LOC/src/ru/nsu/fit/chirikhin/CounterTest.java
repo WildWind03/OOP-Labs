@@ -11,9 +11,6 @@ import java.util.List;
 import static java.nio.charset.Charset.*;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by cas on 25.02.16.
- */
 public class CounterTest {
     public CounterTest() {
 
@@ -23,13 +20,26 @@ public class CounterTest {
     public void count() throws IOException {
         File dir = new File("./NewDir");
         dir.mkdir();
-        File txt = new File(dir, "me.txt");
+
+        File txt = new File(dir, "./me.txt");
+        if (txt.exists()) {
+            txt.delete();
+        }
         txt.createNewFile();
-        File jpeg = new File(dir, "jpeg");
+
+        File jpeg = new File(dir, "./jpeg");
+        if (jpeg.exists()) {
+            jpeg.delete();
+        }
         jpeg.createNewFile();
-        File dir2 = new File(dir, "dir2");
+
+        File dir2 = new File(dir, "./dir2");
         dir2.mkdir();
-        File another = new File(dir2, "another.png");
+
+        File another = new File(dir2, "./another.png");
+        if (another.exists()) {
+            another.delete();
+        }
         another.createNewFile();
 
         Statistics[] stat = Counter.getStatistics(new BaseFilter[]{new FileExtensionFilter("txt")}, new File[]{txt, jpeg, another});

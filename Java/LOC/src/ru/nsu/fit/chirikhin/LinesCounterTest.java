@@ -9,9 +9,6 @@ import java.io.UnsupportedEncodingException;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by cas on 25.02.16.
- */
 public class LinesCounterTest {
     public LinesCounterTest() {
 
