@@ -23,7 +23,7 @@ public class FileExtensionFilter implements BaseFilter {
                 extension = filePath.substring(i + 1);
             }
             catch (IndexOutOfBoundsException e) {
-                throw new RuntimeException ("System Error! Can't get extension of file!");
+                throw new RuntimeException ("System Error! Can't get extension of file!", e);
             }
         }
 
@@ -31,6 +31,6 @@ public class FileExtensionFilter implements BaseFilter {
     }
 
     public String getDescriptionForOutput() {
-        return filterId + " " + extension;
+        return extension;
     }
 }

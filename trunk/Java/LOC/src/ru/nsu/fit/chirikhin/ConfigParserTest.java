@@ -20,52 +20,57 @@ public class ConfigParserTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void invalidCountOfParametersOfExtensionFilter() throws IOException {
-        PrintWriter writer = new PrintWriter("./config.txt", "UTF-8");
-        writer.println("Ext txt");
-        writer.println("Ext my l l");
-        writer.close();
+        try(PrintWriter writer = new PrintWriter("./config.txt", "UTF-8")) {
+            writer.println("Ext txt");
+            writer.println("Ext my l l");
+        }
+
         ConfigParser parser = new ConfigParser(System.getProperty("user.dir") + "/config.txt");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void emptyString() throws IOException {
-        PrintWriter writer = new PrintWriter("./config.txt", "UTF-8");
-        writer.println("");
-        writer.println("");
-        writer.close();
+        try(PrintWriter writer = new PrintWriter("./config.txt", "UTF-8")) {
+            writer.println("");
+            writer.println("");
+        }
+
         ConfigParser parser = new ConfigParser(System.getProperty("user.dir") + "/config.txt");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void extFilterWithoutParam() throws IOException {
-        PrintWriter writer = new PrintWriter("./config.txt", "UTF-8");
-        writer.println("Ext");
-        writer.close();
+        try (PrintWriter writer = new PrintWriter("./config.txt", "UTF-8")) {
+            writer.println("Ext");
+        }
+
         ConfigParser parser = new ConfigParser(System.getProperty("user.dir") + "/config.txt");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void oneFilterTwice() throws IOException {
-        PrintWriter writer = new PrintWriter("./config.txt", "UTF-8");
-        writer.println("Ext txt");
-        writer.println("Ext txt");
-        writer.close();
+        try (PrintWriter writer = new PrintWriter("./config.txt", "UTF-8")) {
+            writer.println("Ext txt");
+            writer.println("Ext txt");
+        }
+
         ConfigParser parser = new ConfigParser(System.getProperty("user.dir") + "/config.txt");
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void usingNotExistedFilter() throws IOException {
-        PrintWriter writer = new PrintWriter("./config.txt", "UTF-8");
-        writer.println("Ext txt");
-        writer.println("Ex txt");
-        writer.close();
+        try (PrintWriter writer = new PrintWriter("./config.txt", "UTF-8")) {
+            writer.println("Ext txt");
+            writer.println("Ex txt");
+        }
+
         ConfigParser parser = new ConfigParser(System.getProperty("user.dir") + "/config.txt");
     }
 
     @Test
     public void emptyFile() throws IOException {
-        PrintWriter writer = new PrintWriter("./config.txt", "UTF-8");
-        writer.close();
+        try (PrintWriter writer = new PrintWriter("./config.txt", "UTF-8")) {}
+
         ConfigParser parser = new ConfigParser(System.getProperty("user.dir") + "/config.txt");
     }
 }
