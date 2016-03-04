@@ -15,53 +15,52 @@ public class ConfigParser implements Parser {
         filters = new Vector<>();
 
         File myFile = new File(filePath);
-        Scanner myScanner = new Scanner(myFile);
+        try (Scanner myScanner = new Scanner(myFile)) {
 
-        while(myScanner.hasNextLine()) {
-            String line = myScanner.nextLine();
-            Scanner strScanner = new Scanner(line);
+            while (myScanner.hasNextLine()) {
 
-            String filterIdentifier;
+                String line = myScanner.nextLine();
+                try(Scanner strScanner = new Scanner(line)) {
 
-            if (strScanner.hasNext()) {
-                filterIdentifier = strScanner.next();
-            }
-            else {
-                throw new IllegalArgumentException("Wrong format of input!");
-            }
-
-            switch(filterIdentifier) {
-                case extensionFilterIdentifier :
-
-                    String filterParam;
-
-                    try {
-                        filterParam = strScanner.next();
-                    }
-                    catch(NoSuchElementException e) {
-                        throw new IllegalArgumentException("Invalid extension filter parameters!");
-                    }
-                    catch(IllegalStateException e) {
-                        throw new IllegalStateException("System Error!!! Can't read next token. The scanner is closed!");
-                    }
-
-                    if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[] {filterParam}))) {
-                        filters.addElement(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[] {filterParam}));
-                    }
-                    else {
-                        throw new IllegalArgumentException("One filter was met twice!");
-                    }
+                    String filterIdentifier;
 
                     if (strScanner.hasNext()) {
-                        throw new IllegalArgumentException("Too many arguments for Extension File Filter!");
+                        filterIdentifier = strScanner.next();
+                    } else {
+                        throw new IllegalArgumentException("Wrong format of input!");
                     }
 
-                    break;
+                    switch (filterIdentifier) {
+                        case extensionFilterIdentifier:
 
-                default :
-                    throw new IllegalArgumentException("Filter with such identifier doesn't exist!");
+                            String filterParam;
+
+                            try {
+                                filterParam = strScanner.next();
+                            } catch (NoSuchElementException e) {
+                                throw new IllegalArgumentException("Invalid extension filter parameters!", e);
+                            } catch (IllegalStateException e) {
+                                throw new IllegalStateException("System Error!!! Can't read next token. The scanner is closed!", e);
+                            }
+
+                            if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{filterParam}))) {
+                                filters.addElement(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{filterParam}));
+                            } else {
+                                throw new IllegalArgumentException("One filter was met twice!");
+                            }
+
+                            if (strScanner.hasNext()) {
+                                throw new IllegalArgumentException("Too many arguments for Extension File Filter!");
+                            }
+
+                            break;
+
+                        default:
+                            throw new IllegalArgumentException("Filter with such identifier doesn't exist!");
+                    }
+                }
+
             }
-
         }
     }
 

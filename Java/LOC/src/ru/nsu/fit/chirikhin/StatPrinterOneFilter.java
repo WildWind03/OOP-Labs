@@ -1,10 +1,11 @@
 package ru.nsu.fit.chirikhin;
 
+import java.io.PrintStream;
 import java.util.Arrays;
 
-public class PrimaryStatPrinter implements StatPrinter {
+public class StatPrinterOneFilter implements StatPrinter {
 
-    public PrimaryStatPrinter() {
+    public StatPrinterOneFilter() {
 
     }
 
@@ -19,10 +20,17 @@ public class PrimaryStatPrinter implements StatPrinter {
             if (0 != stat[i].getNumOfLines()) {
                 printStatistics(stat[i]);
             }
+            if (i == stat.length - 1) {
+                System.out.println("------------");
+            }
         }
     }
 
     public void printStatistics(Statistics stat) {
+        //try (PrintStream printStream = new PrintStream(System.out)) {
+         //   printStream.format()
+        //}
+        System.out.printf("")
         System.out.println(stat.getDescription() + " - " + stat.getNumOfLines() + " lines in " + stat.getNumOfFiles() + " files");
     }
 }

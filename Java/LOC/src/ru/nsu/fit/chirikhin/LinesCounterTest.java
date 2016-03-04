@@ -16,11 +16,10 @@ public class LinesCounterTest {
 
     @Test
     public void countLinesTest() throws FileNotFoundException, UnsupportedEncodingException {
-        PrintWriter writer = new PrintWriter("test.txt", "UTF-8");
-        writer.println("The first line");
-        writer.println("The second line");
-        writer.close();
-
+        try (PrintWriter writer = new PrintWriter("test.txt", "UTF-8")) {
+            writer.println("The first line");
+            writer.println("The second line");
+        }
         File file = new File("test.txt");
 
         assertTrue(2 == LinesCounter.getNumberOfLines(file));
