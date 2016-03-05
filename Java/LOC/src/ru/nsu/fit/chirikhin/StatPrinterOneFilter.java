@@ -62,10 +62,10 @@ public class StatPrinterOneFilter implements StatPrinter {
             throw new IllegalArgumentException("Error! Trying to get max of length extension from empty array of Statistics!");
         }
 
-        int max = stat[0].getDescription().length();
+        int max = 0;
 
         for (Statistics cur : stat) {
-            if (cur.getDescription().length() > max) {
+            if (cur.getDescription().length() > max && cur.getNumOfLines() != 0) {
                 max = cur.getDescription().length();
             }
         }
