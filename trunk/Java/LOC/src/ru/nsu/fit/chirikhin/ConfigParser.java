@@ -1,16 +1,28 @@
 package ru.nsu.fit.chirikhin;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
+/**
+ * This class is used to parse config file and create vector of filters
+ * @author Chirikhin Alexander
+ */
 public class ConfigParser implements Parser {
 
     private final Vector<FilterProperties> filters;
 
     private static final String extensionFilterIdentifier = "Ext";
 
-    ConfigParser(String filePath) throws IOException, IllegalFormatException {
+
+    /**
+     * @param filePath A path to the file where filters which the class should create are described
+     * @throws FileNotFoundException if the file is not found
+     * @throws IllegalArgumentException if there are invalid count of arguments for some filters
+     * @throws RuntimeException if the problem in class realization, not in input
+     */
+    public ConfigParser(String filePath) throws FileNotFoundException{
 
         filters = new Vector<>();
 
@@ -40,7 +52,7 @@ public class ConfigParser implements Parser {
                             } catch (NoSuchElementException e) {
                                 throw new IllegalArgumentException("Invalid extension filter parameters!", e);
                             } catch (IllegalStateException e) {
-                                throw new IllegalStateException("System Error!!! Can't read next token. The scanner is closed!", e);
+                                throw new RuntimeException("System Error!!! Can't read next token. The scanner is closed!", e);
                             }
 
                             if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{filterParam}))) {
@@ -63,6 +75,11 @@ public class ConfigParser implements Parser {
             }
         }
     }
+
+    /**
+     * Returns the vector of created filters
+     * @return the vector of created filters
+     */
 
     @Override
    public Vector<FilterProperties> getFiltersProperties() {

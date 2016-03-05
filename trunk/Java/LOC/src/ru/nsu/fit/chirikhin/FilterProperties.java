@@ -2,6 +2,10 @@ package ru.nsu.fit.chirikhin;
 
 import java.util.Arrays;
 
+/**
+ * to contain filter identifier and arguments for the filter
+ */
+
 public class FilterProperties {
 
     final private FilterIdentifier filterIdentifier;

@@ -1,14 +1,24 @@
 package ru.nsu.fit.chirikhin;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
+/**
+ * This class is used to parse config file and create only FileExtensionFilters
+ */
 public class ConfigParserOneFilter implements Parser {
 
     private final Vector<FilterProperties> filters;
 
-    ConfigParserOneFilter(String filePath) throws IOException, IllegalFormatException {
+    /**
+     * @param filePath A path to the file where filters which the class should create are described
+     * @throws FileNotFoundException if the file is not found
+     * @throws IllegalArgumentException if there are invalid count of arguments for some filters
+     * @throws RuntimeException if the problem in class realization, not in input
+     */
+    public ConfigParserOneFilter(String filePath) throws FileNotFoundException {
 
         filters = new Vector<>();
 

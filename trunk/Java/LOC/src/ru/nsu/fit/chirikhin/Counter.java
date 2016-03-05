@@ -3,7 +3,17 @@ package ru.nsu.fit.chirikhin;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-class Counter {
+/**
+ *This class is used to get Statistics about how much files and how much lines files[] exists
+ */
+public class Counter {
+    /**
+     *
+     * @param filterList Array of filters you want to apply
+     * @param files Array of files which you want to filter
+     * @return Array of Statistics (one statistics for one filter)
+     * @throws FileNotFoundException if file is not found
+     */
     public static Statistics[] getStatistics(BaseFilter filterList[], File files[]) throws FileNotFoundException {
 
         Statistics stat[] = new Statistics[filterList.length + 1];

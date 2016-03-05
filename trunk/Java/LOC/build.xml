@@ -1,4 +1,4 @@
-<project>
+<project name = "LoC" default = "jar">
 
 	<target name="clean">
 		<delete dir="bin"/>

@@ -1,5 +1,9 @@
 package ru.nsu.fit.chirikhin;
 
+/**
+ * to contain information about how much files and how much lines in these files were found by certain filter
+ */
+
 public class Statistics implements Comparable {
     private String description;
     private int numOfLines;

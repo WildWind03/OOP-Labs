@@ -2,15 +2,28 @@ package ru.nsu.fit.chirikhin;
 
 import java.io.File;
 
+/**
+ * This class is used to filter files by their extensions
+ */
+
 public class FileExtensionFilter implements BaseFilter {
 
     private String extension = "";
     final private static String filterId = "Ext";
 
-    FileExtensionFilter(String extension) {
+    /**
+     * Creates FileExtensionFilter with specified extension
+     * @param extension Extension which filter will filter
+     */
+    public FileExtensionFilter(String extension) {
         this.extension = extension;
     }
 
+    /**
+     *
+     * @param file A file you want to check if it has a filter extension
+     * @return true if it is, otherwise false
+     */
     public boolean isAppropriate(File file) {
         String filePath = file.getPath();
         String extension = "";
@@ -29,6 +42,10 @@ public class FileExtensionFilter implements BaseFilter {
 
         return this.extension.equals(extension);
     }
+
+    /**
+     * @return Returns a description of filter which is often used for some output
+     */
 
     public String getDescriptionForOutput() {
         return extension;
