@@ -3,6 +3,7 @@
 	<target name="clean">
 		<delete dir="bin"/>
 		<delete dir="testReports/"/>
+		<delete dir="JavadocAnt/"/>
 	</target>
 
 	<target name="compile" depends="clean">
@@ -52,5 +53,10 @@
 		</junit>
 
 	</target>
+
+	<target name="doc" depends="compile">
+		<javadoc sourcepath = "./src" destdir = "./JavadocAnt"/>
+	</target>
+	
 
 </project>
