@@ -10,12 +10,11 @@ class Application {
     public static void main(String[] arg) throws IOException {
 
         try {
-
             ConsoleParser consoleParser = new ConsoleParser(arg);
             String pathToConfig = consoleParser.getPathToConfig();
             String pathToDirectory = consoleParser.getPathToDirectory();
 
-            ConfigParser configParser = new ConfigParser(pathToConfig);
+            ConfigParserOneFilter configParser = new ConfigParserOneFilter(pathToConfig);
             Vector<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
 
             Vector<BaseFilter> filters = new Vector<>();
@@ -27,7 +26,7 @@ class Application {
             LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
 
             Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
-            PrimaryStatPrinter printer = new PrimaryStatPrinter();
+            StatPrinterOneFilter printer = new StatPrinterOneFilter();
             printer.printStatistics(stat);
         }
         catch (Exception e) {

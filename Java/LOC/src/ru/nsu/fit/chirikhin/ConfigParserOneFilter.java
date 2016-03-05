@@ -38,8 +38,6 @@ public class ConfigParserOneFilter implements Parser {
                     if (strScanner.hasNext()) {
                         throw new IllegalArgumentException("Too many arguments for Extension File Filter!");
                     }
-
-                    break;
                 }
 
             }
