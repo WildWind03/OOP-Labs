@@ -8,6 +8,7 @@ public class PrimaryStatPrinter implements StatPrinter {
 
     }
 
+    @Override
     public void printStatistics(Statistics[] stat) throws RuntimeException {
         try {
             Arrays.sort(stat);
