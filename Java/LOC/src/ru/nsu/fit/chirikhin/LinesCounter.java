@@ -3,8 +3,17 @@ package ru.nsu.fit.chirikhin;
 import java.io.*;
 import java.util.Scanner;
 
-class LinesCounter {
+/**
+ * It's used to count lines in files
+ */
+public class LinesCounter {
 
+    /**
+     * @param file A file which you want to count lines in
+     * @return A count of lines in the file
+     * @throws FileNotFoundException if it is impossible to get access to the file
+     * @throws RuntimeException if it is system error (the error doesn't depend on input)
+     */
     public static int getNumberOfLines(File file) throws FileNotFoundException {
         int counter = 0;
 

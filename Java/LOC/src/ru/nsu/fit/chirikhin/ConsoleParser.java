@@ -1,6 +1,10 @@
 package ru.nsu.fit.chirikhin;
 
-class ConsoleParser {
+/**
+ * It's used to parse program args
+ */
+
+public class ConsoleParser {
 
     private String pathToConfig;
     private String pathToDirectory;
@@ -9,7 +13,7 @@ class ConsoleParser {
             "Example of using the program: LoC.out ./config.txt ./testDir";
     static final private String configExampleStr = "Example of config.txt: \nExt txt \n Ext jpeg";
 
-    ConsoleParser(String params[]) {
+    public ConsoleParser(String params[]) {
         if (0 == params.length) {
             System.out.println(helpStr);
             System.out.println(configExampleStr);

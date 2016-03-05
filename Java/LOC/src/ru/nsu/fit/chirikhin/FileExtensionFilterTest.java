@@ -36,7 +36,7 @@ public class FileExtensionFilterTest {
     @Test
     public void getDescriptorForOutputTest() {
         FileExtensionFilter filter = new FileExtensionFilter("txt");
-        assertTrue(filter.getDescriptionForOutput().equals("Ext txt"));
+        assertTrue(filter.getDescriptionForOutput().equals("txt"));
     }
 
 

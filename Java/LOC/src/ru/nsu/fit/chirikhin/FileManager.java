@@ -4,9 +4,19 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.LinkedList;
 
-class FileManager {
+/**
+ * It's used to get full list of files in certain directory
+ */
 
-    public static LinkedList <File> getFullListOfFilesInDirectory(String directoryPath) throws NullPointerException {
+public class FileManager {
+
+    /**
+     * @param directoryPath A Path where you want to find files
+     * @return List of found files
+     * @throws SecurityException if it is impossible to get access to the directory
+     * @throws RuntimeException if it is System Error
+     */
+    public static LinkedList <File> getFullListOfFilesInDirectory(String directoryPath) {
         LinkedList<File> fileList = new LinkedList<>();
         File file;
 
