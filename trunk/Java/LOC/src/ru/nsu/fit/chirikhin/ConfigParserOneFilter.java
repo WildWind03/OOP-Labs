@@ -1,7 +1,6 @@
 package ru.nsu.fit.chirikhin;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
