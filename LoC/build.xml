@@ -1,7 +1,6 @@
 <project name = "LoC" default = "jar">
 
 	<target name="clean">
-		<delete dir="bin"/>
 		<delete dir="testReports/"/>
 		<delete dir="JavadocAnt/"/>
 	</target>
@@ -16,8 +15,7 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<mkdir dir="bin/jar"/>
-		<jar destfile="bin/jar/LoC.jar" basedir="bin/classes">
+		<jar destfile="LoC.jar" basedir="bin/classes">
 			<manifest>
 				<attribute name="Main-Class" value="ru/nsu/fit/chirikhin/Application"/>
 			</manifest>
@@ -25,7 +23,7 @@
 	</target>
 
 	<target name="run" depends="jar">
-		<java jar="./bin/jar/LoC.jar" fork = "true">
+		<java jar="LoC.jar" fork = "true">
 		<arg value="./config.txt"/>
 		<arg value="./"/>
 		</java>
