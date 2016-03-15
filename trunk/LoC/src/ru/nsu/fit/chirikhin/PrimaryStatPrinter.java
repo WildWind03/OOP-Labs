@@ -17,7 +17,7 @@ public class PrimaryStatPrinter implements StatPrinter {
      * @throws RuntimeException A system error which doesn't depend on the input
      */
     @Override
-    public void printStatistics(Statistics[] stat) throws RuntimeException {
+    public void printStatistics(Statistics stat) throws RuntimeException {
         try {
             Arrays.sort(stat);
         }
