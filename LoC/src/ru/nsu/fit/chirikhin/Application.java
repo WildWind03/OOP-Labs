@@ -23,9 +23,14 @@ class Application {
                 filters.add(FilterFactory.createFilters(aFilterIdentifier.getFilterIdentifier(), aFilterIdentifier.getParams()));
             }
 
-            LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
+            FilterFileHandler filterFileHandler = new FilterFileHandler((BaseFilter[]) filters.toArray());
 
-            Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
+            //LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
+            FileManager.handleFilesInDirectory(pathToDirectory, filterFileHandler);
+
+            Statistics stat = filterFileHandler.getStatistics();
+
+            //Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
             StatPrinterOneFilter printer = new StatPrinterOneFilter();
             printer.printStatistics(stat);
         }
