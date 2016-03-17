@@ -1,7 +1,7 @@
 package ru.nsu.fit.chirikhin;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 interface Parser {
-    Vector<FilterProperties> getFiltersProperties();
+    ArrayList<FilterProperties> getFiltersProperties();
 }

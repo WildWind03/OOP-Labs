@@ -1,6 +1,7 @@
 package ru.nsu.fit.chirikhin;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * to print Statistics as teacher wants
@@ -12,61 +13,37 @@ public class StatPrinterOneFilter implements StatPrinter {
 
     }
 
-    /**
-     * @param stat An array of Statistics you want to print
-     * @throws RuntimeException A system error which doesn't depend on the input
-     */
-    @Override
-    public void printStatistics(Statistics[] stat) throws RuntimeException {
-        try {
-            Arrays.sort(stat);
-        }
-        catch(Exception e) {
-            throw new RuntimeException("System Error! Can't sort statistics!", e);
-        }
+    public void printStatistics(Statistics stat) {
+        List<Map.Entry<BaseFilter, Statistics.StatisticsInfo>> sortedStatistics = stat.getSortedStatisticsList();
 
-        int maxExtensionStrLength = getMaxLengthOfExtensionString(stat);
+        int maxExtensionStrLength = getMaxLengthOfExtensionString(sortedStatistics);
 
         int counter = 0;
 
-        for (int i = stat.length - 1; i >=0; i--) {
-            if (0 != stat[i].getNumOfLines()) {
+        for (Map.Entry<BaseFilter, Statistics.StatisticsInfo> cur : sortedStatistics) {
+            if (0 != cur.getValue().getNumOfLines()) {
                 counter++;
-
-                if (2 == counter) {
-                    System.out.println("------------");
-                }
-
-                printStatistics(stat[i], maxExtensionStrLength);
             }
+
+            if (2 == counter) {
+                System.out.println("------------");
+            }
+
+            String formatString = "%-" + maxExtensionStrLength + "s - %d lines in %d files\n";
+            System.out.printf(formatString, cur.getKey().getDescriptionForOutput(), cur.getValue().getNumOfLines(), cur.getValue().getNumOfFiles());
         }
     }
 
-    /**
-     * @param stat A statistics you want to print
-     * @param width It's a count of characters that definitely will be printed to align all the extension fields
-     */
-
-    public void printStatistics(Statistics stat, int width) {
-        String formatString = "%-" + width + "s - %d lines in %d files\n";
-        System.out.printf(formatString, stat.getDescription(), stat.getNumOfLines(), stat.getNumOfFiles());
-    }
-
-    /**
-     * @param stat Array of Statistics
-     * @return Maximum of descriptions lengths of each statistic from the array
-     */
-
-    private int getMaxLengthOfExtensionString(Statistics[] stat) {
-        if (0 == stat.length) {
-            throw new IllegalArgumentException("Error! Trying to get max of length extension from empty array of Statistics!");
+    private int getMaxLengthOfExtensionString(List<Map.Entry<BaseFilter, Statistics.StatisticsInfo>> statList) {
+        if (0 == statList.size()) {
+            throw new NullPointerException("StatPrinterOneFilter: Error! Trying to get max of length extension from empty list of Statistics!");
         }
 
         int max = 0;
 
-        for (Statistics cur : stat) {
-            if (cur.getDescription().length() > max && cur.getNumOfLines() != 0) {
-                max = cur.getDescription().length();
+        for (Map.Entry<BaseFilter, Statistics.StatisticsInfo> cur : statList) {
+            if (cur.getKey().getDescriptionForOutput().length() > max && cur.getValue().getNumOfLines() != 0) {
+                max = cur.getKey().getDescriptionForOutput().length();
             }
         }
 

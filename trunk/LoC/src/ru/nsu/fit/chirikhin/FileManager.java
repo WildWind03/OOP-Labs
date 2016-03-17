@@ -1,6 +1,7 @@
 package ru.nsu.fit.chirikhin;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.LinkedList;
 
@@ -19,7 +20,7 @@ public class FileManager {
      * @throws SecurityException if it is impossible to get access to the directory
      */
 
-    public static void handleFilesInDirectory(String dir, BaseFileHandler fileHandler) {
+    public static void handleFilesInDirectory(String dir, BaseFileHandler fileHandler) throws IOException {
         if (curRecursionDepth < MAX_RECURSION_DEPTH) {
             curRecursionDepth++;
 

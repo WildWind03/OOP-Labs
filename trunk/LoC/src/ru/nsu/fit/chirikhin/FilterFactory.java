@@ -25,14 +25,22 @@ public class FilterFactory {
                     filter = new FileExtensionFilter(filterParams[0]);
                 }
                 else {
-                    throw new IllegalArgumentException("Invalid parameters for File Extension Filter!");
+                    throw new IllegalArgumentException("Filter Factory: Invalid parameters for File Extension Filter!");
                 }
 
+                break;
+            case emptyFilter :
+
+                if (null != filterParams) {
+                    throw new IllegalArgumentException("Filter Factory: Too may parameters for EmptyFilter!");
+                }
+
+                filter = new EmptyFilter();
                 break;
 
             default :
 
-                throw new IllegalArgumentException("Invalid filter name!");
+                throw new IllegalArgumentException("Filter Factory: Invalid filter name!");
         }
 
         return filter;
