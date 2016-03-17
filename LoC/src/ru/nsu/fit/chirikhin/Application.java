@@ -1,8 +1,7 @@
 package ru.nsu.fit.chirikhin;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Vector;
 
 class Application {
@@ -15,22 +14,22 @@ class Application {
             String pathToDirectory = consoleParser.getPathToDirectory();
 
             ConfigParserOneFilter configParser = new ConfigParserOneFilter(pathToConfig);
-            Vector<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
+            ArrayList<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
+            filterIdentifier.add(0, new FilterProperties(FilterIdentifier.emptyFilter, null));
 
-            Vector<BaseFilter> filters = new Vector<>();
+            ArrayList<BaseFilter> filters = new ArrayList<>();
 
             for (FilterProperties aFilterIdentifier : filterIdentifier) {
                 filters.add(FilterFactory.createFilters(aFilterIdentifier.getFilterIdentifier(), aFilterIdentifier.getParams()));
             }
 
-            FilterFileHandler filterFileHandler = new FilterFileHandler((BaseFilter[]) filters.toArray());
 
-            //LinkedList<File> files = FileManager.getFullListOfFilesInDirectory(pathToDirectory);
+            LineCounterHandler filterFileHandler = new LineCounterHandler(filters.toArray(new BaseFilter[filters.size()]));
+
             FileManager.handleFilesInDirectory(pathToDirectory, filterFileHandler);
 
-            Statistics stat = filterFileHandler.getStatistics();
 
-            //Statistics[] stat = Counter.getStatistics(filters.toArray(new BaseFilter[filters.size()]), files.toArray(new File[files.size()]));
+            Statistics stat = filterFileHandler.getStatistics();
             StatPrinterOneFilter printer = new StatPrinterOneFilter();
             printer.printStatistics(stat);
         }

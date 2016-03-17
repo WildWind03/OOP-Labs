@@ -8,14 +8,16 @@ import java.io.File;
 
 public class FileExtensionFilter implements BaseFilter {
 
-    private String extension = "";
-    final private static String filterId = "Ext";
-
+    final private String extension;
     /**
      * Creates FileExtensionFilter with specified extension
      * @param extension Extension which filter will filter
      */
     public FileExtensionFilter(String extension) {
+        if (null == extension) {
+            throw new NullPointerException("FileExtensionFilter: Can't create FileExtensionFilter because the extension is null reference!");
+        }
+
         this.extension = extension;
     }
 
@@ -26,26 +28,47 @@ public class FileExtensionFilter implements BaseFilter {
      */
     public boolean isAppropriate(File file) {
         String filePath = file.getPath();
-        String extension = "";
+        String extension = null;
 
         int i = filePath.lastIndexOf(".");
+
+        if (-1 == i || filePath.length() - 1 == i) {
+            return this.extension.equals("");
+        }
+
         int p = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf("\\"));
 
         if (i > p) {
-            try {
-                extension = filePath.substring(i + 1);
-            }
-            catch (IndexOutOfBoundsException e) {
-                throw new RuntimeException ("System Error! Can't get extension of file!", e);
-            }
+            extension = filePath.substring(i + 1);
+        }
+        else {
+            return this.extension.equals("");
         }
 
         return this.extension.equals(extension);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileExtensionFilter that = (FileExtensionFilter) o;
+
+        return extension != null ? extension.equals(that.extension) : that.extension == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return extension != null ? extension.hashCode() : 0;
+    }
+
     /**
      * @return Returns a description of filter which is often used for some output
      */
+
+
 
     public String getDescriptionForOutput() {
         return extension;

@@ -9,7 +9,7 @@ import java.io.File;
  */
 public class ConfigParserOneFilter implements Parser {
 
-    private final Vector<FilterProperties> filters;
+    private final ArrayList<FilterProperties> filters;
 
     /**
      * @param filePath A path to the file where filters which the class should create are described
@@ -19,7 +19,7 @@ public class ConfigParserOneFilter implements Parser {
      */
     public ConfigParserOneFilter(String filePath) throws FileNotFoundException {
 
-        filters = new Vector<>();
+        filters = new ArrayList<>();
 
         File myFile = new File(filePath);
         try (Scanner myScanner = new Scanner(myFile)) {
@@ -39,7 +39,7 @@ public class ConfigParserOneFilter implements Parser {
 
 
                     if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}))) {
-                        filters.addElement(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}));
+                        filters.add(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}));
                     } else {
                         throw new IllegalArgumentException("One filter was met twice!");
                     }
@@ -54,7 +54,7 @@ public class ConfigParserOneFilter implements Parser {
     }
 
     @Override
-    public Vector<FilterProperties> getFiltersProperties() {
+    public ArrayList<FilterProperties> getFiltersProperties() {
         return filters;
     }
 }
