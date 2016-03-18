@@ -40,7 +40,7 @@ public class ConfigParserOneFilter implements Parser {
                     if (strScanner.hasNext()) {
                         ext = strScanner.next();
                     } else {
-                        throw new IllegalArgumentException("ConfigParserOneFilter: Wrong format of input! " + filePath + " is invalid config file");
+                        continue;
                     }
 
 
