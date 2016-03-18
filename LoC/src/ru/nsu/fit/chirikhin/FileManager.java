@@ -21,23 +21,22 @@ public class FileManager {
      */
 
     public static void handleFilesInDirectory(String dir, BaseFileHandler fileHandler) throws IOException {
+        if (null == dir || null == fileHandler) {
+            throw new NullPointerException("File Manager: Error! Null references in handlesFilesInDirectory!");
+        }
         if (curRecursionDepth < MAX_RECURSION_DEPTH) {
             curRecursionDepth++;
 
             File file = new File(dir);
 
-            if (null == file) {
-                throw new IllegalArgumentException("File Manager: can not open the directory " + dir);
-            }
-
             try {
                 if (file.isDirectory()) {
                     for (final File entryFile : file.listFiles()) {
 
-                        if (Files.isSymbolicLink(entryFile.toPath())) {
-                            System.out.println("File Manager: Warning! SymLink " + entryFile.toPath() + " has been found. It will be ignored!");
-                            break;
-                        }
+                        //if (Files.isSymbolicLink(entryFile.toPath())) {
+                         //   System.out.println("File Manager: Warning! SymLink " + entryFile.toPath() + " has been found. It will be ignored!");
+                          //  break;
+                        //}
 
                         if (entryFile.isFile()) {
                             fileHandler.handle(entryFile);

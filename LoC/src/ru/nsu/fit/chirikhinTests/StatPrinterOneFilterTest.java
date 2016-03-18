@@ -1,10 +1,11 @@
-package ru.nsu.fit.chirikhin;
+package ru.nsu.fit.chirikhinTests;
 
 import org.junit.Test;
+import ru.nsu.fit.chirikhin.EmptyFilter;
+import ru.nsu.fit.chirikhin.FileExtensionFilter;
+import ru.nsu.fit.chirikhin.StatPrinterOneFilter;
+import ru.nsu.fit.chirikhin.Statistics;
 
-/**
- * Created by cas on 17.03.16.
- */
 public class StatPrinterOneFilterTest {
     @Test
     public void testPrintStatistics() {

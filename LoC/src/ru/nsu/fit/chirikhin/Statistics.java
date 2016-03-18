@@ -129,27 +129,37 @@ public class Statistics {
      * to add new information to Statistics
      */
     public void updateStatistics (BaseFilter filter, int numOfLines, int numOfFiles) {
+        if (null == filter) {
+            throw new NullPointerException("Statistics: can't update Statistics because the filter tha should be added is null reference!");
+        }
+
         if (filtersStatMap.containsKey(filter)) {
             filtersStatMap.get(filter).addNumOfLines(numOfLines);
             filtersStatMap.get(filter).addNumOfFiles(numOfFiles);
         }
         else {
-            filtersStatMap.put(filter, new StatisticsInfo(numOfLines, numOfFiles));
+            filtersStatMap.put(filter, new StatisticsInfo(numOfFiles, numOfLines));
         }
     }
 
     /**
-     * to create a sortet List of Statistics
+     * to create a sorted List of Statistics
      */
 
     public List<Map.Entry<BaseFilter, StatisticsInfo>>  getSortedStatisticsList() {
         List<Map.Entry<BaseFilter, StatisticsInfo>> list = new LinkedList<>(filtersStatMap.entrySet());
-        Collections.sort(list, new Comparator<Map.Entry<BaseFilter, StatisticsInfo>>() {
-            @Override
-            public int compare(Map.Entry<BaseFilter, StatisticsInfo> baseFilterStatisticsInfoEntry, Map.Entry<BaseFilter, StatisticsInfo> t1) {
-                return baseFilterStatisticsInfoEntry.getValue().compareTo(t1.getValue());
-            }
-        });
+        try {
+            Collections.sort(list, new Comparator<Map.Entry<BaseFilter, StatisticsInfo>>() {
+                @Override
+                public int compare(Map.Entry<BaseFilter, StatisticsInfo> baseFilterStatisticsInfoEntry, Map.Entry<BaseFilter, StatisticsInfo> t1) {
+                    return baseFilterStatisticsInfoEntry.getValue().compareTo(t1.getValue());
+                }
+            });
+        }
+        catch(ClassCastException e) {
+            throw new ClassCastException("Statistics: can't sort because there is object that can't be sorted with certain comparator!");
+        }
+
 
         Collections.reverse(list);
 

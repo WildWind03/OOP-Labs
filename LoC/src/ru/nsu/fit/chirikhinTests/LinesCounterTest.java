@@ -1,6 +1,7 @@
-package ru.nsu.fit.chirikhin;
+package ru.nsu.fit.chirikhinTests;
 
 import org.junit.Test;
+import ru.nsu.fit.chirikhin.LinesCounter;
 
 import java.io.File;
 import java.io.FileNotFoundException;

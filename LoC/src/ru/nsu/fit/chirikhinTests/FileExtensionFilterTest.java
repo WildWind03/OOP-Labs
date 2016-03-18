@@ -1,6 +1,7 @@
-package ru.nsu.fit.chirikhin;
+package ru.nsu.fit.chirikhinTests;
 
 import org.junit.Test;
+import ru.nsu.fit.chirikhin.FileExtensionFilter;
 
 import java.io.File;
 

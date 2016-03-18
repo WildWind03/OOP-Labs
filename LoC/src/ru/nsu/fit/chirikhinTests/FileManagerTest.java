@@ -1,23 +1,14 @@
-package ru.nsu.fit.chirikhin;
+package ru.nsu.fit.chirikhinTests;
 
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-
-import static junit.framework.TestCase.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class FileManagerTest {
     public FileManagerTest() {
 
     }
-
-   // @Test (expected = IllegalArgumentException.class)
-    //public void isDirectoryTest() {
-        //FileManager.getFullListOfFilesInDirectory("Hello");
-    //}
 
     @Test
     public void testIsAllFiles() throws IOException {
@@ -31,14 +22,6 @@ public class FileManagerTest {
         dir2.mkdir();
         File another = new File(dir2, "another.png");
         another.createNewFile();
-
-        /*LinkedList<File> files = FileManager.getFullListOfFilesInDirectory("./NewDir/");
-
-        assertTrue(files.contains(txt));
-        assertTrue(files.contains(jpeg));
-        assertTrue(files.contains(another));
-        assertFalse(files.contains(dir2));
-        */
 
         another.delete();
         txt.delete();
