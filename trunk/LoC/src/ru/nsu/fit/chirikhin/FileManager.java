@@ -66,8 +66,5 @@ public class FileManager {
         catch (SecurityException e) {
             throw new SecurityException("File Manager: Can't get access to the directory " + dir + ". Security error!", e);
         }
-        catch (NullPointerException e) {
-            throw new NullPointerException("File Manager: null pointer exception while listing files!");
-        }
     }
 }
