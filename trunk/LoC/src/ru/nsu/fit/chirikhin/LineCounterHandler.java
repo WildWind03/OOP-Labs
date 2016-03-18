@@ -9,7 +9,7 @@ public class LineCounterHandler implements BaseFileHandler {
 
     public LineCounterHandler(BaseFilter[] filters) {
         if (null == filters) {
-            throw new NullPointerException("LineCounterHandler: can't create ,eself because argument is null");
+            throw new NullPointerException("LineCounterHandler: can't create myself because argument is null");
         }
 
         this.filters = filters;
