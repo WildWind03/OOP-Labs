@@ -28,6 +28,10 @@ public class FileManager {
 
             File file = new File(dir);
 
+            if (!file.exists()) {
+                throw new IllegalArgumentException("File Manager: Error! There isn't directory " + dir);
+            }
+
             try {
                 if (file.isDirectory()) {
                     for (final File entryFile : file.listFiles()) {
