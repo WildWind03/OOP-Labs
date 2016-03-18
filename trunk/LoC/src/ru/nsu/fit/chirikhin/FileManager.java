@@ -26,7 +26,7 @@ public class FileManager {
         handleFilesInDirectory(dir, fileHandler, 0);
     }
 
-    public void handleFilesInDirectory(String dir, BaseFileHandler fileHandler, int curRecursionDepth) throws IOException {
+    private void handleFilesInDirectory(String dir, BaseFileHandler fileHandler, int curRecursionDepth) throws IOException {
         if (null == dir || null == fileHandler) {
             throw new NullPointerException("File Manager: Error! Null references in handlesFilesInDirectory!");
         }
