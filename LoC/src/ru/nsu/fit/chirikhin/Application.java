@@ -14,7 +14,7 @@ class Application {
 
             ConfigParserOneFilter configParser = new ConfigParserOneFilter(pathToConfig);
             ArrayList<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
-            filterIdentifier.add(0, new FilterProperties(FilterIdentifier.emptyFilter, null));
+            //filterIdentifier.add(0, new FilterProperties(FilterIdentifier.emptyFilter, null));
 
             ArrayList<BaseFilter> filters = new ArrayList<>();
 

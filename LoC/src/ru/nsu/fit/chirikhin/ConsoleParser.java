@@ -6,8 +6,8 @@ package ru.nsu.fit.chirikhin;
 
 public class ConsoleParser {
 
-    private String pathToConfig;
-    private String pathToDirectory;
+    final private String pathToConfig;
+    final private String pathToDirectory;
 
     static final private String HELP_STR = "Welcome to LoC by Chirikhin Alexander\n" +
             "Example of using the program: LoC.out ./config.txt ./testDir";
