@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class LineCounterHandler implements BaseFileHandler {
-    private BaseFilter[] filters;
+    final private BaseFilter[] filters;
     private Statistics statistics;
 
     public LineCounterHandler(BaseFilter[] filters) {
