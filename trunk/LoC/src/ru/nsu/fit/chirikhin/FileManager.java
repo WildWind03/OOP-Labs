@@ -32,7 +32,7 @@ public class FileManager {
         }
 
         if (curRecursionDepth > MAX_RECURSION_DEPTH) {
-            System.out.println("File Manager: Warning! Can't open the directory " + dir + " because the limit of recursion is reached! The limit is " + MAX_RECURSION_DEPTH + ". All the files in the directory will be ignored!");
+            System.err.println("File Manager: Warning! Can't open the directory " + dir + " because the limit of recursion is reached! The limit is " + MAX_RECURSION_DEPTH + ". All the files in the directory will be ignored!");
             return;
         }
 
