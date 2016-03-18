@@ -43,6 +43,7 @@ public class StatPrinterOneFilter implements StatPrinter {
 
     private int getMaxLengthOfExtensionString(List<Map.Entry<BaseFilter, Statistics.StatisticsInfo>> statList) {
         if (0 == statList.size()) {
+
             return MIN_LENGTH_FOR_OUTPUT;
         }
 
