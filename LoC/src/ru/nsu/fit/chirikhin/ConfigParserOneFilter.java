@@ -24,6 +24,10 @@ public class ConfigParserOneFilter implements Parser {
         filters = new ArrayList<>();
 
         File myFile = new File(filePath);
+
+        if (!myFile.exists()) {
+            throw new IllegalArgumentException("There isn't file " + filePath);
+        }
         try (Scanner myScanner = new Scanner(myFile)) {
 
             while (myScanner.hasNextLine()) {
