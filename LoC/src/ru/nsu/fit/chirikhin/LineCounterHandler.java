@@ -23,7 +23,7 @@ public class LineCounterHandler implements BaseFileHandler {
         for(BaseFilter filter : filters) {
             if (filter.isAppropriate(file)) {
                 int countOfLines = LinesCounter.getNumberOfLines(file);
-                statistics.updateStatistics(filter, countOfLines, 1);
+                statistics.updateStatistics(filter, countOfLines);
             }
         }
     }

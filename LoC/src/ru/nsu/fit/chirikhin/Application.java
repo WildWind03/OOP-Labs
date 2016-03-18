@@ -14,7 +14,6 @@ class Application {
 
             ConfigParserOneFilter configParser = new ConfigParserOneFilter(pathToConfig);
             ArrayList<FilterProperties> filterIdentifier = configParser.getFiltersProperties();
-            //filterIdentifier.add(0, new FilterProperties(FilterIdentifier.emptyFilter, null));
 
             ArrayList<BaseFilter> filters = new ArrayList<>();
 
@@ -24,7 +23,8 @@ class Application {
 
             LineCounterHandler filterFileHandler = new LineCounterHandler(filters.toArray(new BaseFilter[filters.size()]));
 
-            FileManager.handleFilesInDirectory(pathToDirectory, filterFileHandler);
+            FileManager manager = new FileManager();
+            manager.handleFilesInDirectory(pathToDirectory, filterFileHandler);
 
             Statistics stat = filterFileHandler.getStatistics();
             StatPrinterOneFilter printer = new StatPrinterOneFilter();
