@@ -3,7 +3,6 @@ package ru.nsu.fit.chirikhin;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.LinkedList;
 
 /**
  * It's used to handle files in a directory
@@ -33,10 +32,10 @@ public class FileManager {
                 if (file.isDirectory()) {
                     for (final File entryFile : file.listFiles()) {
 
-                        //if (Files.isSymbolicLink(entryFile.toPath())) {
-                         //   System.out.println("File Manager: Warning! SymLink " + entryFile.toPath() + " has been found. It will be ignored!");
-                          //  break;
-                        //}
+                        if (Files.isSymbolicLink(entryFile.toPath())) {
+                            System.out.println("File Manager: Warning! SymLink " + entryFile.toPath() + " has been found. It will be ignored!");
+                            break;
+                        }
 
                         if (entryFile.isFile()) {
                             fileHandler.handle(entryFile);
@@ -50,6 +49,9 @@ public class FileManager {
             }
             catch (SecurityException e) {
                 throw new SecurityException("File Manager: Can't get access to the directory " + dir + ". Security error!", e);
+            }
+            catch (NullPointerException e) {
+                throw new NullPointerException("File Manager: null pointer exception while listing files!");
             }
 
             curRecursionDepth--;

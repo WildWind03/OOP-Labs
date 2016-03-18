@@ -2,7 +2,6 @@ package ru.nsu.fit.chirikhin;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 class Application {
 
