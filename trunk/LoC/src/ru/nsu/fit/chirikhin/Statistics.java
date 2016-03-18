@@ -142,26 +142,23 @@ public class Statistics {
         }
     }
 
+    public void updateStatistics (BaseFilter filter, int numOfLines) {
+        updateStatistics(filter, numOfLines, 1);
+    }
+
     /**
      * to create a sorted List of Statistics
      */
 
     public List<Map.Entry<BaseFilter, StatisticsInfo>>  getSortedStatisticsList() {
         List<Map.Entry<BaseFilter, StatisticsInfo>> list = new LinkedList<>(filtersStatMap.entrySet());
-        try {
-            Collections.sort(list, new Comparator<Map.Entry<BaseFilter, StatisticsInfo>>() {
-                @Override
-                public int compare(Map.Entry<BaseFilter, StatisticsInfo> baseFilterStatisticsInfoEntry, Map.Entry<BaseFilter, StatisticsInfo> t1) {
-                    return baseFilterStatisticsInfoEntry.getValue().compareTo(t1.getValue());
-                }
-            });
-        }
-        catch(ClassCastException e) {
-            throw new ClassCastException("Statistics: can't sort because there is object that can't be sorted with certain comparator!");
-        }
 
-
-        Collections.reverse(list);
+        Collections.sort(list, Collections.<Map.Entry<BaseFilter,StatisticsInfo>>reverseOrder(new Comparator<Map.Entry<BaseFilter, StatisticsInfo>>() {
+            @Override
+            public int compare(Map.Entry<BaseFilter, StatisticsInfo> baseFilterStatisticsInfoEntry, Map.Entry<BaseFilter, StatisticsInfo> t1) {
+                return baseFilterStatisticsInfoEntry.getValue().compareTo(t1.getValue());
+            }
+        }));
 
         return list;
     }
