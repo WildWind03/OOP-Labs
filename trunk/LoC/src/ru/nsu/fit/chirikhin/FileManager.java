@@ -50,7 +50,7 @@ public class FileManager {
 
                     if (Files.isSymbolicLink(entryFile.toPath())) {
                         System.err.println("File Manager: Warning! SymLink " + entryFile.toPath() + " has been found. It will be ignored!");
-                        break;
+                        continue;
                     }
 
                     if (entryFile.isFile()) {
