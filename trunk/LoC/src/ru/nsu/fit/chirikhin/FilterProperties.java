@@ -12,6 +12,10 @@ public class FilterProperties {
     final private String[] params;
 
     public FilterProperties(FilterIdentifier filterIdentifier, String[] params) {
+        if (null == filterIdentifier) {
+            throw new NullPointerException("FilterProperties: there isn't null filterIdentifier");
+        }
+
         this.filterIdentifier = filterIdentifier;
         this.params = params;
     }

@@ -27,6 +27,10 @@ public class FileExtensionFilter implements BaseFilter {
      * @return true if it is, otherwise false
      */
     public boolean isAppropriate(File file) {
+        if (null == file) {
+            throw new NullPointerException("FileExtensionFilter: Can't solve if file appropriates or not because the file is null reference!");
+        }
+
         String filePath = file.getPath();
         String extension = null;
 

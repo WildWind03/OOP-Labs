@@ -18,7 +18,9 @@ public class ConfigParserOneFilter implements Parser {
      * @throws RuntimeException if the problem in class realization, not in input
      */
     public ConfigParserOneFilter(String filePath) throws FileNotFoundException {
-
+        if (null == filePath) {
+            throw new NullPointerException("ConfigParserOneFilter: can't create myself because of filePath is null!");
+        }
         filters = new ArrayList<>();
 
         File myFile = new File(filePath);
@@ -34,18 +36,18 @@ public class ConfigParserOneFilter implements Parser {
                     if (strScanner.hasNext()) {
                         ext = strScanner.next();
                     } else {
-                        throw new IllegalArgumentException("Wrong format of input!");
+                        throw new IllegalArgumentException("ConfigParserOneFilter: Wrong format of input! " + filePath + " is invalid config file");
                     }
 
 
                     if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}))) {
                         filters.add(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}));
                     } else {
-                        throw new IllegalArgumentException("One filter was met twice!");
+                        throw new IllegalArgumentException("ConfigParserOneFilter: One filter was met twice!");
                     }
 
                     if (strScanner.hasNext()) {
-                        throw new IllegalArgumentException("Too many arguments for Extension File Filter!");
+                        throw new IllegalArgumentException("ConfigParserOneFilter: Too many arguments for Extension File Filter!");
                     }
                 }
 

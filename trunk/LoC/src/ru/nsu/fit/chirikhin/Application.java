@@ -23,11 +23,9 @@ class Application {
                 filters.add(FilterFactory.createFilters(aFilterIdentifier.getFilterIdentifier(), aFilterIdentifier.getParams()));
             }
 
-
             LineCounterHandler filterFileHandler = new LineCounterHandler(filters.toArray(new BaseFilter[filters.size()]));
 
             FileManager.handleFilesInDirectory(pathToDirectory, filterFileHandler);
-
 
             Statistics stat = filterFileHandler.getStatistics();
             StatPrinterOneFilter printer = new StatPrinterOneFilter();

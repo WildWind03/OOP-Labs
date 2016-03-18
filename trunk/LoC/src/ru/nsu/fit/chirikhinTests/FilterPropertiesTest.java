@@ -1,6 +1,8 @@
-package ru.nsu.fit.chirikhin;
+package ru.nsu.fit.chirikhinTests;
 
 import org.junit.Test;
+import ru.nsu.fit.chirikhin.FilterIdentifier;
+import ru.nsu.fit.chirikhin.FilterProperties;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;

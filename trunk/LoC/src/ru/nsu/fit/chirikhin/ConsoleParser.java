@@ -9,19 +9,19 @@ public class ConsoleParser {
     private String pathToConfig;
     private String pathToDirectory;
 
-    static final private String helpStr = "Welcome to LoC by Chirikhin Alexander \n" +
+    static final private String HELP_STR = "Welcome to LoC by Chirikhin Alexander\n" +
             "Example of using the program: LoC.out ./config.txt ./testDir";
-    static final private String configExampleStr = "Example of config.txt: \nExt txt \n Ext jpeg";
+    static final private String CONFIG_EXAMPLE_STR = "Example of config.txt: \ntxt \njpeg";
 
     public ConsoleParser(String params[]) {
         if (0 == params.length) {
-            System.out.println(helpStr);
-            System.out.println(configExampleStr);
+            System.out.println(HELP_STR);
+            System.out.println(CONFIG_EXAMPLE_STR);
             System.exit(0);
         }
 
         if (params.length != 2) {
-            throw new IllegalArgumentException("Incorrect input! Invalid count of arguments!");
+            throw new IllegalArgumentException("Console Parse: Incorrect input! Invalid count of arguments!");
         }
 
         this.pathToConfig = params[0];

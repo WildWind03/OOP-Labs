@@ -8,11 +8,18 @@ public class LineCounterHandler implements BaseFileHandler {
     private Statistics statistics;
 
     public LineCounterHandler(BaseFilter[] filters) {
+        if (null == filters) {
+            throw new NullPointerException("LineCounterHandler: can't create ,eself because argument is null");
+        }
+
         this.filters = filters;
         statistics = new Statistics();
     }
 
     public void handle(File file) throws IOException{
+        if (null == file) {
+            throw new NullPointerException("LineCounterHandler: can't handle null reference");
+        }
         for(BaseFilter filter : filters) {
             if (filter.isAppropriate(file)) {
                 int countOfLines = LinesCounter.getNumberOfLines(file);

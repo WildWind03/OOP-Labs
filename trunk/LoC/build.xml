@@ -3,11 +3,12 @@
 	<target name="clean">
 		<delete dir="testReports/"/>
 		<delete dir="JavadocAnt/"/>
+		<delete dir="bin"/>
 	</target>
 
 	<target name="compile" depends="clean">
 		<mkdir dir="bin/classes"/>
-		<javac srcdir="src" destdir="bin/classes">
+			<javac srcdir = "src" destdir = "bin/classes">
 			<classpath>
 				<pathelement location="./junit-4.12.jar"/>
 			</classpath>
@@ -15,7 +16,7 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar destfile="LoC.jar" basedir="bin/classes">
+		<jar destfile="LoC.jar" basedir="bin/classes" excludes="**/*Test*.class">
 			<manifest>
 				<attribute name="Main-Class" value="ru/nsu/fit/chirikhin/Application"/>
 			</manifest>
@@ -29,14 +30,14 @@
 		</java>
 	</target>
 
-		<target name="test" depends="jar">
+		<target name="test" depends = "compile">
 		<mkdir dir="./testReports"/>
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
-				<pathelement location="bin/classes"/>
-				<pathelement location="bin/classes/ru/nsu/fit/chirikhin"/>
+				<pathelement location="./bin/classes"/>
 				<pathelement location="./junit-4.12.jar"/>
 				<pathelement location="./hamcrest-core-1.3.jar"/>
+				<pathelement location="./testReports"/>
 			</classpath>
 
 			<formatter type="plain"/>

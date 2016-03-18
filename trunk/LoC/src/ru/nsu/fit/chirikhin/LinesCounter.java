@@ -24,10 +24,7 @@ public class LinesCounter {
                 }
         }
         catch(FileNotFoundException e){
-            throw new FileNotFoundException("System error! Can't find a file " + file.getPath());
-        }
-        catch (Exception e) {
-            throw new RuntimeException("System error! Scanner doesn't work!", e);
+            throw new FileNotFoundException("LinesCounter: System error! Can't find a file " + file.getPath());
         }
 
         return counter;

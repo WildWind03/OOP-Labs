@@ -14,6 +14,10 @@ public class StatPrinterOneFilter implements StatPrinter {
     }
 
     public void printStatistics(Statistics stat) {
+        if (null == stat) {
+            throw new NullPointerException("StatPrinterOneFilter: Error! can't print null as Statistics!");
+        }
+
         List<Map.Entry<BaseFilter, Statistics.StatisticsInfo>> sortedStatistics = stat.getSortedStatisticsList();
 
         int maxExtensionStrLength = getMaxLengthOfExtensionString(sortedStatistics);
