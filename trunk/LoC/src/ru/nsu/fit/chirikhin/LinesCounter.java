@@ -14,10 +14,18 @@ public class LinesCounter {
      * @throws FileNotFoundException if it is impossible to get access to the file
      * @throws RuntimeException if it is system error (the error doesn't depend on input)
      */
-    public static int getNumberOfLines(File file) throws FileNotFoundException {
+    public static int getNumberOfLines(File file) throws IOException {
         int counter = 0;
 
-        try(Scanner myScanner = new Scanner(file)) {
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            while (br.readLine() != null) {
+                ++counter;
+            }
+            return counter;
+        } catch (IOException e) {
+            throw new IOException("Can't get number of lines in " + file.getPath());
+        }
+        /*try(Scanner myScanner = new Scanner(file)) {
                 while (myScanner.hasNextLine()) {
                     myScanner.nextLine();
                     counter++;
@@ -26,7 +34,6 @@ public class LinesCounter {
         catch(FileNotFoundException e){
             throw new FileNotFoundException("LinesCounter: System error! Can't find a file " + file.getPath());
         }
-
-        return counter;
+        */
     }
 }
