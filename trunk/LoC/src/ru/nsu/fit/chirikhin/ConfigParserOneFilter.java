@@ -47,7 +47,8 @@ public class ConfigParserOneFilter implements Parser {
                     if (!filters.contains(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}))) {
                         filters.add(new FilterProperties(FilterIdentifier.fileExtensionFilter, new String[]{ext}));
                     } else {
-                        throw new IllegalArgumentException("ConfigParserOneFilter: One filter was met twice!");
+                        continue;
+                        //throw new IllegalArgumentException("ConfigParserOneFilter: One filter was met twice!");
                     }
 
                     if (strScanner.hasNext()) {
