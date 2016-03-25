@@ -1,5 +1,7 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +16,7 @@ public class ConfigParser {
     final static String ENGINE_STORAGE_SIZE_STR = "EngineStorageSize";
     final static String ACCESSORY_STORAGE_SIZE_STR = "AccessoryStorageSize";
     final static String CAR_BODY_STORAGE_SIZE_STR = "CarBodyStorageSize";
-    final static String LOG_STR = "LOGGING";
+    final static String LOG_STR = "Logging";
 
     private int workersCount;
     private int dealersCount;
@@ -24,6 +26,10 @@ public class ConfigParser {
     private int accessoryStorageSize;
     private int carBodyStorageSize;
     private boolean isLog;
+
+    private boolean isNumber(String string) {
+        return string.matches("\\d+");
+    }
 
     public ConfigParser(String pathToConfig) throws IOException, InvalidConfigException, DeveloperBugException {
         if (null == pathToConfig) {
@@ -47,7 +53,7 @@ public class ConfigParser {
                 configLine = bufferedReader.readLine();
 
                 if (null == configLine) {
-                    throw new InvalidConfigException("Config Parser: invalid config file. " + (i + 1) + " strings has been found instead of " + COUNT_OF_LINES_IN_CONFIG);
+                    throw new InvalidConfigException("Config Parser: invalid config file. " + i + " strings has been found instead of " + COUNT_OF_LINES_IN_CONFIG);
                 }
 
                 Pattern pattern;
@@ -79,19 +85,56 @@ public class ConfigParser {
                         lookedForString = LOG_STR;
                         break;
                     default :
-                        throw new DeveloperBugException("Config Parser: can;t solve what string i should look for in config. Unexpected exception");
+                        throw new DeveloperBugException("Config Parser: can;t solve what string I should look for in config. Unexpected exception");
 
                 }
 
-                pattern = Pattern.compile("^" + lookedForString + "=.+$");
+                pattern = Pattern.compile("^" + lookedForString + "=(.+)$");
 
                 Matcher matcher = pattern.matcher(configLine);
                 if (!matcher.matches()) {
-                    throw new InvalidConfigException("Config Parser: invalid config file. Illegal format is string number " + (i + 1));
+                    throw new InvalidConfigException("Config Parser: invalid config file. String " + configLine + " is invalid");
                 }
 
-                int lastIndexOfEquals =  configLine.lastIndexOf('=');
-                String arg = configLine.substring(lastIndexOfEquals);
+                String arg = matcher.group(1);
+
+                if (!isNumber(arg)) {
+                    throw new InvalidConfigException("Config Parser: invalid config file. Not numbers have been found after " + lookedForString);
+                }
+
+                int argValue = Integer.parseInt(arg);
+
+                switch(i) {
+                    case 0:
+                        carBodyStorageSize = argValue;
+                        break;
+                    case 1:
+                        engineStorageSize = argValue;
+                        break;
+                    case 2:
+                        accessoryStorageSize = argValue;
+                        break;
+                    case 3 :
+                        carStorageSize = argValue;
+                        break;
+                    case 4:
+                        accessorySupplCount = argValue;
+                        break;
+                    case 5:
+                        workersCount = argValue;
+                        break;
+                    case 6:
+                        dealersCount = argValue;
+                        break;
+                    case 7:
+                        if (argValue > 0) {
+                            isLog = true;
+                        }
+                        else {
+                            isLog = false;
+                        }
+                        break;
+                }
             }
         }
     }
