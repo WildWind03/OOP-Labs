@@ -1,7 +1,18 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-/**
- * Created by cas on 21.03.16.
- */
 abstract public class CarDetail {
+    static long idCounter = 0;
+
+    private long id;
+
+    public CarDetail() {
+        this.id = idCounter++;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    @Override
+    abstract public String toString();
 }
