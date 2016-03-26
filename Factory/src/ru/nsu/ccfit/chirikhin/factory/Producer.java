@@ -1,8 +1,18 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-/**
- * Created by cas on 21.03.16.
- */
-public interface Producer {
-    CarDetail produce();
+import java.util.Objects;
+
+public class Producer <Item> {
+    public Producer() {
+
+    }
+
+    Item create(Class<Item> itemClass) throws IllegalAccessException, InstantiationException {
+        return itemClass.newInstance();
+    }
+
+    Item produce() {
+        Item item = create();
+        return  item;
+    }
 }
