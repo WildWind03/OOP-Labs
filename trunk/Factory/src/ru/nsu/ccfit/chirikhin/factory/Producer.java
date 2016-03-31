@@ -1,18 +1,16 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-import java.util.Objects;
-
 public class Producer <Item> {
+
+    //Class<Item> itemClass;
+
     public Producer() {
 
     }
 
-    Item create(Class<Item> itemClass) throws IllegalAccessException, InstantiationException {
-        return itemClass.newInstance();
-    }
-
-    Item produce() {
-        Item item = create();
-        return  item;
-    }
+    //public Item produce() throws IllegalAccessException, InstantiationException {
+        //Class<Item> itemClass;
+        //Item item = itemClass.newInstance();
+        //return  item;
+    //}
 }
