@@ -2,7 +2,7 @@ package ru.nsu.ccfit.chirikhin.factorytests;
 
 import org.junit.Test;
 import ru.nsu.ccfit.chirikhin.factory.CarBody;
-import ru.nsu.ccfit.chirikhin.factory.Producer;
+import ru.nsu.ccfit.chirikhin.factory.EngineProducer;
 
 public class ProducerTest {
     public ProducerTest() {
@@ -11,7 +11,7 @@ public class ProducerTest {
 
     @Test
     public void produceTest() throws InstantiationException, IllegalAccessException {
-        Producer<CarBody> producer = new Producer<>();
+        EngineProducer<CarBody> producer = new EngineProducer<>();
         //CarBody carBody = producer.produce();
     }
 }

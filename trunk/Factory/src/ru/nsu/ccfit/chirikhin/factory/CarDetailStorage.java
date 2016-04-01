@@ -2,7 +2,7 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import java.util.ArrayList;
 
-public class CarDetailStorage <Detail> implements Storage {
+public class CarDetailStorage <Detail> {
     static final int defaultDetailIndexToGet = 0;
 
     final int maxSize;
