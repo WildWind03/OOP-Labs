@@ -21,7 +21,7 @@ public class ThreadPool {
                     task.run();
                 }
             }
-            catch(InterruptedException interruptedException){
+            catch(InterruptedException interruptedException) {
 
             }
         }

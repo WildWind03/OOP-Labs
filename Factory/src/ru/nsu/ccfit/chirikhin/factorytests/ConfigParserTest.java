@@ -86,7 +86,7 @@ public class ConfigParserTest {
         assertEquals(true, configParser.isLog());
     }
 
-    @Test (expected = InvalidConfigException.class)
+    @Test
     public void constructorTestInvalidConfigIncorrectLines () throws IOException, InvalidConfigException, DeveloperBugException {
         File file = new File ("./config.txt");
 
@@ -126,7 +126,7 @@ public class ConfigParserTest {
         }
 
         try (PrintWriter printWriter = new PrintWriter(file)) {
-            printWriter.println("CarBodyStorageSize=5");
+            printWriter.println("CarBodyStorageSize=5=6");
             printWriter.println("EngineStorageSize=10");
             printWriter.println("AccessoryStorageSize=6");
             printWriter.println("CarStorageSize=7");

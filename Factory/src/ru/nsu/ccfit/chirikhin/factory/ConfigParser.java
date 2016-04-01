@@ -1,8 +1,8 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-import com.sun.xml.internal.ws.util.StringUtils;
 
 import java.io.*;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +28,9 @@ public class ConfigParser {
     private boolean isLog;
 
     private boolean isNumber(String string) {
+        if (null == string) {
+            throw new NullPointerException("ConfigParser: trying to know if null is a number!");
+        }
         return string.matches("\\d+");
     }
 
@@ -46,95 +49,44 @@ public class ConfigParser {
             throw new IllegalArgumentException("Config Parser: " + pathToConfig + " is not a file");
         }
 
+
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String configLine;
 
-            for (int i = 0; i < COUNT_OF_LINES_IN_CONFIG; ++i) {
-                configLine = bufferedReader.readLine();
+            Properties properties = new Properties();
+            properties.load(bufferedReader);
 
-                if (null == configLine) {
-                    throw new InvalidConfigException("Config Parser: invalid config file. " + i + " strings has been found instead of " + COUNT_OF_LINES_IN_CONFIG);
-                }
+            String workersCountStr = properties.getProperty(WORKERS_COUNT_STR);
+            String dealersCountStr = properties.getProperty(DEALERS_COUNT_STR);
+            String accessorySuppliersCountStr = properties.getProperty(ACCESSORY_SUPPLIERS_COUNT_STR);
+            String carStorageSizeStr = properties.getProperty(CAR_STORAGE_SIZE_STR);
+            String engineStorageSizeStr = properties.getProperty(ENGINE_STORAGE_SIZE_STR);
+            String accessoryStorageSizeStr = properties.getProperty(ACCESSORY_STORAGE_SIZE_STR);
+            String carBodyStorageSizeStr = properties.getProperty(CAR_BODY_STORAGE_SIZE_STR);
+            String logStr = properties.getProperty(LOG_STR);
 
-                Pattern pattern;
-                String lookedForString;
+            if (null == workersCountStr || null == dealersCountStr || null == accessorySuppliersCountStr || null == carStorageSizeStr
+                    || null == engineStorageSizeStr || null == accessoryStorageSizeStr || null == carBodyStorageSizeStr || null == logStr) {
+                throw new InvalidConfigException("Config Parser: invalid config file");
+            }
 
-                switch(i) {
-                    case 0:
-                        lookedForString = CAR_BODY_STORAGE_SIZE_STR;
-                        break;
-                    case 1:
-                        lookedForString = ENGINE_STORAGE_SIZE_STR;
-                        break;
-                    case 2:
-                        lookedForString = ACCESSORY_STORAGE_SIZE_STR;
-                        break;
-                    case 3 :
-                        lookedForString = CAR_STORAGE_SIZE_STR;
-                        break;
-                    case 4:
-                        lookedForString = ACCESSORY_SUPPLIERS_COUNT_STR;
-                        break;
-                    case 5:
-                        lookedForString = WORKERS_COUNT_STR;
-                        break;
-                    case 6:
-                        lookedForString = DEALERS_COUNT_STR;
-                        break;
-                    case 7:
-                        lookedForString = LOG_STR;
-                        break;
-                    default :
-                        throw new DeveloperBugException("Config Parser: can;t solve what string I should look for in config. Unexpected exception");
+            if (!isNumber(workersCountStr) || !isNumber(dealersCountStr) || !isNumber(accessoryStorageSizeStr) || !isNumber(carStorageSizeStr)
+                    || !isNumber(engineStorageSizeStr) || !isNumber(accessoryStorageSizeStr) || !isNumber(carBodyStorageSizeStr) || !isNumber(logStr)) {
+                throw new InvalidConfigException("Config Parser: not numbers have been found as values in config!");
+            }
 
-                }
-
-                pattern = Pattern.compile("^" + lookedForString + "=(.+)$");
-
-                Matcher matcher = pattern.matcher(configLine);
-                if (!matcher.matches()) {
-                    throw new InvalidConfigException("Config Parser: invalid config file. String " + configLine + " is invalid");
-                }
-
-                String arg = matcher.group(1);
-
-                if (!isNumber(arg)) {
-                    throw new InvalidConfigException("Config Parser: invalid config file. Not numbers have been found after " + lookedForString);
-                }
-
-                int argValue = Integer.parseInt(arg);
-
-                switch(i) {
-                    case 0:
-                        carBodyStorageSize = argValue;
-                        break;
-                    case 1:
-                        engineStorageSize = argValue;
-                        break;
-                    case 2:
-                        accessoryStorageSize = argValue;
-                        break;
-                    case 3 :
-                        carStorageSize = argValue;
-                        break;
-                    case 4:
-                        accessorySupplCount = argValue;
-                        break;
-                    case 5:
-                        workersCount = argValue;
-                        break;
-                    case 6:
-                        dealersCount = argValue;
-                        break;
-                    case 7:
-                        if (argValue > 0) {
-                            isLog = true;
-                        }
-                        else {
-                            isLog = false;
-                        }
-                        break;
-                }
+            accessorySupplCount = Integer.parseInt(accessorySuppliersCountStr);
+            workersCount = Integer.parseInt(workersCountStr);
+            dealersCount = Integer.parseInt(dealersCountStr);
+            accessoryStorageSize = Integer.parseInt(accessoryStorageSizeStr);
+            carStorageSize = Integer.parseInt(carStorageSizeStr);
+            engineStorageSize = Integer.parseInt(engineStorageSizeStr);
+            accessoryStorageSize = Integer.parseInt(accessoryStorageSizeStr);
+            carBodyStorageSize = Integer.parseInt(carBodyStorageSizeStr);
+            if (Integer.parseInt(logStr) <= 0) {
+                isLog = false;
+            }
+            else {
+                isLog = true;
             }
         }
     }

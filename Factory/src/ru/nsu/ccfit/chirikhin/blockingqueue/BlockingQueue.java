@@ -18,12 +18,24 @@ public class BlockingQueue<T> {
         insideQueue = new LinkedList<>();
     }
 
+    public int maxSize() {
+        return maxSize;
+    }
+
     public int size() {
         return insideQueue.size();
     }
 
     public boolean isEmpty() {
        return insideQueue.isEmpty();
+    }
+
+    public boolean isFull() {
+        if (maxSize == insideQueue.size()) {
+            return true;
+        }
+
+        return false;
     }
 
     public void put(T obj) throws InterruptedException {
