@@ -6,11 +6,11 @@ import static java.lang.Thread.*;
 
 public class EngineProducer extends Producer {
 
-    CarDetailStorage<Engine> engineCarDetailStorage;
+    Storage<Engine> engineCarDetailStorage;
 
     private static final Logger logger = Logger.getLogger(AccessoryProducer.class.getName());
 
-    public EngineProducer(ProducingSpeed producingSpeed, CarDetailStorage<Engine> engineCarDetailStorage) {
+    public EngineProducer(Storage<Engine> engineCarDetailStorage, ProducingSpeed producingSpeed) {
         super(producingSpeed);
         this.engineCarDetailStorage = engineCarDetailStorage;
         logger.info("EngineProducer: New engine has been produced successfully!");
@@ -20,7 +20,7 @@ public class EngineProducer extends Producer {
     public void run() {
         while (true) {
             try {
-                engineCarDetailStorage.addDetail(new Engine());
+                engineCarDetailStorage.add(new Engine());
                 sleep(getTimeToSleep());
             } catch (StorageOverflowedException e) {
                 logger.error("EngineProducer: Can not produce new engine. Storage is full");
