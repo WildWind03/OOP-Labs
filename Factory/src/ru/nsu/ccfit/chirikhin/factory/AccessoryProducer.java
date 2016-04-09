@@ -7,14 +7,14 @@ public class AccessoryProducer extends Producer {
 
     private static final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
 
-    private AccessoryStorage storage;
+    private Storage<Accessory> storage;
 
-    public AccessoryProducer(AccessoryStorage storage, ProducingSpeed producingSpeed) {
+    public AccessoryProducer(Storage<Accessory> storage, ProducingSpeed producingSpeed) {
         super(producingSpeed);
         this.storage = storage;
     }
 
-    public AccessoryProducer(AccessoryStorage storage) {
+    public AccessoryProducer(Storage<Accessory> storage) {
         this(storage, ProducingSpeed.NORMAL);
     }
 
@@ -22,7 +22,7 @@ public class AccessoryProducer extends Producer {
     public void run() {
         while(true) {
             try {
-                storage.addAccessory(new Accessory());
+                storage.add(new Accessory());
                 logger.info("AccessoryProducer: New detail has been produced successfully!");
                 Thread.sleep(getTimeToSleep());
             } catch (StorageOverflowedException e) {

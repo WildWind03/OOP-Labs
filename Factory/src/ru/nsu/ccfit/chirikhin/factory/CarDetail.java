@@ -1,12 +1,14 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 abstract public class CarDetail {
-    static long idCounter = 0;
+    static AtomicLong idCounter = new AtomicLong(0);
 
     private long id;
 
     public CarDetail() {
-        this.id = idCounter++;
+        this.id = idCounter.getAndIncrement();
     }
 
     public long getId() {

@@ -44,6 +44,8 @@ public class BlockingQueue<T> {
                 lock.wait();
             }
 
+            lock.notify();
+
             insideQueue.add(obj);
         }
     }
@@ -60,7 +62,4 @@ public class BlockingQueue<T> {
 
         }
     }
-
-    //log2j
-    //properties
 }

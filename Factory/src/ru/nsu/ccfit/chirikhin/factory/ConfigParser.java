@@ -3,11 +3,8 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import java.io.*;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ConfigParser {
-    final static int COUNT_OF_LINES_IN_CONFIG = 8;
 
     final static String WORKERS_COUNT_STR = "CountOfWorkers";
     final static String DEALERS_COUNT_STR = "CountOfDealers";
