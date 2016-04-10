@@ -18,8 +18,10 @@ public class Main {
             Storage<Engine> engineStorage = new Storage<>(configParser.getEngineStorageSize());
             Storage<Car> carStorage = new Storage<>(configParser.getCarStorageSize());
 
+
+            Thread accessoryProducers[] = new Thread[configParser.getAccessorySupplCount()];
             for (int k = 0; k < configParser.getAccessorySupplCount(); ++k) {
-                Thread accessoryProducer = new Thread(new AccessoryProducer(accessoryStorage, DEFAULT_PRODUCING_SPEED));
+                accessoryProducers[k] = new Thread(new AccessoryProducer(accessoryStorage, "Accessory Producer num " + k, DEFAULT_PRODUCING_SPEED));
             }
 
             Thread engineProducer = new Thread (new EngineProducer(engineStorage, DEFAULT_PRODUCING_SPEED));
@@ -28,7 +30,13 @@ public class Main {
             CarCollectors carCollectors = new CarCollectors(configParser.getWorkersCount(), engineStorage, carBodyStorage, accessoryStorage, carStorage);
             CarStorageController carStorageController = new CarStorageController(carStorage, carCollectors);
 
+            Thread carStorageCollectorThread = new Thread(carStorageController);
 
+
+            Thread dealerThread[] = new Thread[configParser.getDealersCount()];
+            for (int k = 0; k < configParser.getDealersCount(); ++k) {
+                dealerThread[k] = new Thread(new Dealer(carStorage, "Dealer " + k));
+            }
         } catch(Exception e) {
             logger.error(e.toString());
         }

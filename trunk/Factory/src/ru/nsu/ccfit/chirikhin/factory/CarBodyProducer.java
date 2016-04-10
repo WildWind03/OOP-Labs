@@ -8,6 +8,11 @@ public class CarBodyProducer extends Producer {
 
     public CarBodyProducer(Storage<CarBody> carBodyCarDetailStorage, ProducingSpeed producingSpeed) {
         super(producingSpeed);
+
+        if (null == carBodyCarDetailStorage || null == producingSpeed) {
+            String text = "Can not create myself because of null reference!";
+            throw new IllegalArgumentException(text);
+        }
         this.carBodyCarDetailStorage = carBodyCarDetailStorage;
     }
 
@@ -15,15 +20,16 @@ public class CarBodyProducer extends Producer {
     public void run() {
         while(true) {
             try {
-                carBodyCarDetailStorage.add(new CarBody());
+                CarBody carBody = new CarBody();
+                carBodyCarDetailStorage.add(carBody);
                 Thread.sleep(getTimeToSleep());
-                logger.info("CarBodyProducer: new car body has been produced successfully!");
+                logger.info("New car body has been produced successfully! Its ID is " + carBody.getId());
             } catch (StorageOverflowedException e) {
-                logger.error("CarBodyProducer: Can not produce car body. Storage is full");
+                logger.error("Can not produce car body. Storage is full");
             } catch (InterruptedException e) {
-                logger.fatal("CarBodyProducer: Can not produce car body! Interrupt exception!");
+                logger.fatal("Can not produce car body! Interrupt exception!");
             } catch (DeveloperBugException e) {
-                logger.fatal("CarBodyProducer: Can not produce car body! The developer is stupid!");
+                logger.fatal("Can not produce car body! The developer is stupid!");
             }
         }
     }
