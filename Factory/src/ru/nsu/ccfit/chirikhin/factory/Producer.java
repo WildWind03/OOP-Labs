@@ -1,8 +1,5 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-/**
- * Created by cas on 02.04.16.
- */
 abstract public class Producer implements Runnable {
     private ProducingSpeed producingSpeed;
 
@@ -30,6 +27,10 @@ abstract public class Producer implements Runnable {
         }
 
         return time;
+    }
+
+    public void changeProducingSpeed(ProducingSpeed producingSpeed) {
+        this.producingSpeed = producingSpeed;
     }
 
     public Producer(ProducingSpeed producingSpeed) {

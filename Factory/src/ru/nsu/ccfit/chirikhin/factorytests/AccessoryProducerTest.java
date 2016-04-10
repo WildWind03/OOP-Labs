@@ -12,6 +12,6 @@ public class AccessoryProducerTest {
 
     @Test
     public void produceTest() throws InstantiationException, IllegalAccessException {
-        AccessoryProducer accessoryProducer = new AccessoryProducer(new Storage<Accessory>(10));
+        AccessoryProducer accessoryProducer = new AccessoryProducer(new Storage<Accessory>(10), "1");
     }
 }
