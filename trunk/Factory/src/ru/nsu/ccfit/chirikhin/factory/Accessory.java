@@ -3,11 +3,12 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
-public class Accessory extends CarDetail {
+public class Accessory {
     final static String description = "Accessory";
+    final long id;
 
-    public Accessory() {
-        super();
+    public Accessory(IDRegisterer idRegisterer) {
+        id = idRegisterer.getId();
     }
 
     @Override

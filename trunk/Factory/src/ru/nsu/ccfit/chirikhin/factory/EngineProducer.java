@@ -2,32 +2,33 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
-import static java.lang.Thread.*;
+import static java.lang.Thread.sleep;
 
-public class EngineProducer extends Producer {
 
-    Storage<Engine> engineCarDetailStorage;
+public class EngineProducer implements Runnable {
 
-    private static final Logger logger = Logger.getLogger(AccessoryProducer.class.getName());
+    private final Storage<Engine> engineCarDetailStorage;
+    private final Logger logger = Logger.getLogger(AccessoryProducer.class.getName());
+    private final IDRegisterer idRegisterer;
+    private final int producingSpeed;
 
-    public EngineProducer(Storage<Engine> engineCarDetailStorage, ProducingSpeed producingSpeed) {
-        super(producingSpeed);
+    public EngineProducer(Storage<Engine> engineCarDetailStorage, int producingSpeed, IDRegisterer idRegisterer) {
+        this.producingSpeed = producingSpeed;
+        this.idRegisterer = idRegisterer;
         this.engineCarDetailStorage = engineCarDetailStorage;
-        logger.info("EngineProducer: New engine has been produced successfully!");
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                engineCarDetailStorage.add(new Engine());
-                sleep(getTimeToSleep());
+                engineCarDetailStorage.add(new Engine(idRegisterer));
+                logger.info("New engine has been produced successfully");
+                sleep(producingSpeed);
             } catch (StorageOverflowedException e) {
-                logger.error("EngineProducer: Can not produce new engine. Storage is full");
+                logger.error("Can not produce new engine. Storage is full");
             } catch (InterruptedException e) {
-                logger.fatal("EngineProducer: Can not produce new engine! Interrupt exception!");
-            } catch (DeveloperBugException e) {
-                logger.fatal("EngineProducer: Can not produce new engine! The developer is stupid!");
+                logger.fatal("Can not produce new engine! Interrupt exception!");
             }
 
         }

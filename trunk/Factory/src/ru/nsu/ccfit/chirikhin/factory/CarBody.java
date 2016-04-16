@@ -1,10 +1,15 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-public class CarBody extends CarDetail {
-    final static String description = "Car Body";
+public class CarBody {
+    private final static String description = "Car Body";
+    private final long id;
 
-    public CarBody() {
-        super();
+    public CarBody(IDRegisterer idRegisterer) {
+        id = idRegisterer.getId();
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override
