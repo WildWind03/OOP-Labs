@@ -16,7 +16,11 @@ public class AccessoryProducer implements Runnable{
         if (null == storage || null == name || null == idRegisterer) {
             String text = name + ": can't create myself because of null reference!";
             logger.fatal(text);
-            throw new IllegalArgumentException(text);
+            throw new NullPointerException(text);
+        }
+
+        if (producingSpeed < 0) {
+            throw new IllegalArgumentException("Producing speed is negative!");
         }
 
         this.name = name;
@@ -35,10 +39,6 @@ public class AccessoryProducer implements Runnable{
         logger.info(getName() + " changed producing speed to " + producingSpeed);
     }
 
-    public AccessoryProducer(Storage<Accessory> storage, String name, IDRegisterer idRegisterer) {
-        this(storage, name, 0, idRegisterer);
-    }
-
     public String getName() {
         return name;
     }
@@ -47,16 +47,14 @@ public class AccessoryProducer implements Runnable{
     public void run() {
         while(true) {
             try {
-                Accessory accessory = new Accessory();
+                Accessory accessory = new Accessory(idRegisterer);
                 storage.add(accessory);
-                logger.info(getName() + "New detail has been produced successfully! Its ID is " + accessory.getId());
-                Thread.sleep();
+                logger.info(getName() + ": new detail has been produced successfully! Its ID is " + accessory.getId());
+                Thread.sleep(producingSpeed);
             } catch (StorageOverflowedException e) {
                 logger.error(getName() + "Can not produce accessory. Storage is full");
             } catch (InterruptedException e) {
                 logger.fatal(getName() + "Can not produce accessory! Interrupt exception!");
-            } catch (DeveloperBugException e) {
-                logger.fatal(getName() + "Can not produce accessory! The developer is stupid!");
             }
         }
     }

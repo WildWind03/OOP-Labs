@@ -1,14 +1,19 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-
-import org.apache.log4j.Logger;
-
 public class Accessory {
-    final static String description = "Accessory";
-    final long id;
+    private final static String description = "Accessory";
+    private final long id;
 
     public Accessory(IDRegisterer idRegisterer) {
+        if (null == idRegisterer) {
+            throw new NullPointerException("Null reference instead of IDRegister");
+        }
+
         id = idRegisterer.getId();
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override

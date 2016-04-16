@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.threadpool;
 
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
+import ru.nsu.ccfit.chirikhin.factory.TaskContext;
 
 import java.util.ArrayList;
 
@@ -15,19 +16,22 @@ public class ThreadPool {
 
         @Override
         public void run() {
+            TaskContext taskContext;
+
             try {
                 while (!isInterrupted()) {
-                    Runnable task = tasks.pop();
-                    task.run();
+                    taskContext = tasks.pop();
+                    int result = taskContext.getTask().run();
                 }
             }
             catch(InterruptedException interruptedException) {
 
             }
-        }
+
+            }
     }
 
-    private BlockingQueue<Runnable> tasks;
+    private BlockingQueue<TaskContext> tasks;
     private ArrayList<ThreadPoolThread> threads;
 
     public ThreadPool(int threadCount) throws InterruptedException {
@@ -46,8 +50,8 @@ public class ThreadPool {
         }
     }
 
-    public void addTask(Runnable task) throws InterruptedException {
-        tasks.put(task);
+    public void addTask(TaskContext taskContext) throws InterruptedException {
+        tasks.put(taskContext);
     }
 
     public void stop() throws InterruptedException {
