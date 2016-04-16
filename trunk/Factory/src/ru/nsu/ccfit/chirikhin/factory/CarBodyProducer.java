@@ -2,7 +2,8 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
-public class CarBodyProducer implements Runnable{
+public class CarBodyProducer implements Runnable {
+
     private final Storage<CarBody> carBodyCarDetailStorage;
     private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
     private final IDRegisterer idRegisterer;
@@ -10,9 +11,12 @@ public class CarBodyProducer implements Runnable{
 
     public CarBodyProducer(Storage<CarBody> carBodyCarDetailStorage, long producingSpeed, IDRegisterer idRegisterer) {
 
-        if (null == carBodyCarDetailStorage) {
-            String text = "Can not create myself because of null reference!";
-            throw new IllegalArgumentException(text);
+        if (null == carBodyCarDetailStorage || null == idRegisterer) {
+            throw new NullPointerException("Can not create myself because of null reference!");
+        }
+
+        if (producingSpeed < 0) {
+            throw new IllegalArgumentException("Producing speed is negative");
         }
 
         this.idRegisterer = idRegisterer;

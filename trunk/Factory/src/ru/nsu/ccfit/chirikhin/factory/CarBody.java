@@ -5,6 +5,10 @@ public class CarBody {
     private final long id;
 
     public CarBody(IDRegisterer idRegisterer) {
+        if (null == idRegisterer) {
+            throw new NullPointerException("Null reference instead of IDRegister");
+        }
+
         id = idRegisterer.getId();
     }
 
