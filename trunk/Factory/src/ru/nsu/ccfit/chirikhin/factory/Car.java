@@ -27,4 +27,16 @@ public class Car {
     public long getId() {
         return id;
     }
+
+    public long getBodyId() {
+        return carBody.getId();
+    }
+
+    public long getEngineId() {
+        return engine.getId();
+    }
+
+    public long getAccessoryId() {
+        return accessory.getId();
+    }
 }

@@ -10,20 +10,22 @@ public class EngineProducer implements Runnable {
     private final Storage<Engine> engineCarDetailStorage;
     private final Logger logger = Logger.getLogger(AccessoryProducer.class.getName());
     private final IDRegisterer idRegisterer;
-    private final int producingSpeed;
+    private final long producingSpeed;
 
-    public EngineProducer(Storage<Engine> engineCarDetailStorage, int producingSpeed, IDRegisterer idRegisterer) {
+    public EngineProducer(Storage<Engine> engineCarDetailStorage, long producingSpeed, IDRegisterer idRegisterer) {
         this.producingSpeed = producingSpeed;
         this.idRegisterer = idRegisterer;
         this.engineCarDetailStorage = engineCarDetailStorage;
+        logger.info ("Engine producers has been created!");
     }
 
     @Override
     public void run() {
         while (true) {
             try {
-                engineCarDetailStorage.add(new Engine(idRegisterer));
-                logger.info("New engine has been produced successfully");
+                Engine engine = new Engine(idRegisterer.getId());
+                engineCarDetailStorage.add(engine);
+                logger.info("New engine has been produced successfully! It's ID is " + engine.getId());
                 sleep(producingSpeed);
             } catch (StorageOverflowedException e) {
                 logger.error("Can not produce new engine. Storage is full");

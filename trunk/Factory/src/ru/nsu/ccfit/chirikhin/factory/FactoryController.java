@@ -4,6 +4,8 @@ package ru.nsu.ccfit.chirikhin.factory;/**
 
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+
 public class FactoryController {
     private Logger logger = Logger.getLogger(FactoryController.class.getName());
     private final String pathToFile;
@@ -18,7 +20,7 @@ public class FactoryController {
         factory.addObserver(view);
     }
 
-    public void startFactory() {
+    public void startFactory() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
         logger.info("Factory has started!");
         factory.start();
     }

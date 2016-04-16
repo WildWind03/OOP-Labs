@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 public class TaskContext {
 
-    public TaskContext(MyRunnable task, Handler resultHandler, Handler errorHandler) {
+    public TaskContext(MyRunnable task, OnResultHandler resultHandler, OnErrorHandler errorHandler) {
         this.task = task;
         this.resultHandler = resultHandler;
         this.errorHandler = errorHandler;
@@ -14,17 +14,17 @@ public class TaskContext {
         return task;
     }
 
-    public Handler getResultHandler() {
+    public OnResultHandler getResultHandler() {
         return resultHandler;
     }
 
-    public Handler getErrorHandler() {
+    public OnErrorHandler getErrorHandler() {
         return errorHandler;
     }
 
     private Logger logger = Logger.getLogger(TaskContext.class.getName());
 
-    MyRunnable task;
-    Handler resultHandler;
-    Handler errorHandler;
+    private final MyRunnable task;
+    private final OnResultHandler resultHandler;
+    private final OnErrorHandler errorHandler;
 }

@@ -16,18 +16,18 @@ public class Storage<T> extends Observable {
     }
 
     public T getNext() throws StorageEmptyException, InterruptedException {
-        if (0 == items.size()) {
-            throw new StorageEmptyException("Engine Storage is empty! Trying to get next engine!");
-        }
-        else {
+        //if (0 == items.size()) {
+         //   throw new StorageEmptyException("Engine Storage is empty! Trying to get next engine!");
+        //}
+       // else {
             return items.pop();
-        }
+        //}
     }
 
     public void add(T item) throws StorageOverflowedException, InterruptedException {
-        if (maxSize == items.size()) {
-            throw new StorageOverflowedException("Storage of " + item.toString() + " is overflowed");
-        }
+        //if (maxSize == items.size()) {
+         //   throw new StorageOverflowedException("Storage of " + item.toString() + " is overflowed");
+        //}
 
         items.put(item);
     }

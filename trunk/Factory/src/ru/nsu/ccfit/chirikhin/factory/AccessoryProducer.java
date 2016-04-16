@@ -47,9 +47,9 @@ public class AccessoryProducer implements Runnable{
     public void run() {
         while(true) {
             try {
-                Accessory accessory = new Accessory(idRegisterer);
+                Accessory accessory = new Accessory(idRegisterer.getId());
                 storage.add(accessory);
-                logger.info(getName() + ": new detail has been produced successfully! Its ID is " + accessory.getId());
+                logger.info(getName() + ": new accessory has been produced successfully! Its ID is " + accessory.getId());
                 Thread.sleep(producingSpeed);
             } catch (StorageOverflowedException e) {
                 logger.error(getName() + "Can not produce accessory. Storage is full");

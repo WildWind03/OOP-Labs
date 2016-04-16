@@ -4,8 +4,12 @@ public class Engine {
     private static String description = "Engine";
     private final long id;
 
-    public Engine(IDRegisterer idRegisterer) {
-        id = idRegisterer.getId();
+    public Engine(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
     }
 
     @Override
