@@ -2,34 +2,36 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
-public class CarBodyProducer extends Producer {
-    private Storage<CarBody> carBodyCarDetailStorage;
-    private static final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
+public class CarBodyProducer implements Runnable{
+    private final Storage<CarBody> carBodyCarDetailStorage;
+    private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
+    private final IDRegisterer idRegisterer;
+    private final long producingSpeed;
 
-    public CarBodyProducer(Storage<CarBody> carBodyCarDetailStorage, ProducingSpeed producingSpeed) {
-        super(producingSpeed);
+    public CarBodyProducer(Storage<CarBody> carBodyCarDetailStorage, long producingSpeed, IDRegisterer idRegisterer) {
 
-        if (null == carBodyCarDetailStorage || null == producingSpeed) {
+        if (null == carBodyCarDetailStorage) {
             String text = "Can not create myself because of null reference!";
             throw new IllegalArgumentException(text);
         }
+
+        this.idRegisterer = idRegisterer;
         this.carBodyCarDetailStorage = carBodyCarDetailStorage;
+        this.producingSpeed = producingSpeed;
     }
 
     @Override
     public void run() {
         while(true) {
             try {
-                CarBody carBody = new CarBody();
+                CarBody carBody = new CarBody(idRegisterer);
                 carBodyCarDetailStorage.add(carBody);
-                Thread.sleep(getTimeToSleep());
+                Thread.sleep(producingSpeed);
                 logger.info("New car body has been produced successfully! Its ID is " + carBody.getId());
             } catch (StorageOverflowedException e) {
                 logger.error("Can not produce car body. Storage is full");
             } catch (InterruptedException e) {
                 logger.fatal("Can not produce car body! Interrupt exception!");
-            } catch (DeveloperBugException e) {
-                logger.fatal("Can not produce car body! The developer is stupid!");
             }
         }
     }

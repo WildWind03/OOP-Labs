@@ -3,43 +3,40 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
-public class AccessoryProducer extends Producer {
+public class AccessoryProducer implements Runnable{
 
-    private static final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
+    private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
+    private final String name;
+    private final IDRegisterer idRegisterer;
+    private final Storage<Accessory> storage;
+    private final long producingSpeed;
 
-    final private String name;
-    final private String NULL_REFERENCE_ERROR_STR = "Can't create myself because of null reference!";
+    public AccessoryProducer(Storage<Accessory> storage, String name, long producingSpeed, IDRegisterer idRegisterer) {
 
-    private Storage<Accessory> storage;
-
-    public AccessoryProducer(Storage<Accessory> storage, String name, ProducingSpeed producingSpeed) {
-        super(producingSpeed);
-
-        if (null == storage || null == name || null == producingSpeed) {
-            String text = name + " " + NULL_REFERENCE_ERROR_STR;
+        if (null == storage || null == name || null == idRegisterer) {
+            String text = name + ": can't create myself because of null reference!";
             logger.fatal(text);
             throw new IllegalArgumentException(text);
         }
 
         this.name = name;
         this.storage = storage;
+        this.idRegisterer = idRegisterer;
+        this.producingSpeed = producingSpeed;
 
         logger.info(getName() + " has been created! Producing speed is " + producingSpeed);
     }
 
-    public void changeProducingSpeed(ProducingSpeed producingSpeed) {
-        if (null == producingSpeed) {
-            String text = getName() + " can not change producing speed because of null reference";
-            throw new IllegalArgumentException(text);
+    public void changeProducingSpeed(long producingSpeed) {
+        if (producingSpeed < 0) {
+            throw new IllegalArgumentException("Can't change producing speed! It can't be negative!");
         }
-
-        super.changeProducingSpeed(producingSpeed);
 
         logger.info(getName() + " changed producing speed to " + producingSpeed);
     }
 
-    public AccessoryProducer(Storage<Accessory> storage, String name) {
-        this(storage, name, ProducingSpeed.NORMAL);
+    public AccessoryProducer(Storage<Accessory> storage, String name, IDRegisterer idRegisterer) {
+        this(storage, name, 0, idRegisterer);
     }
 
     public String getName() {
@@ -53,7 +50,7 @@ public class AccessoryProducer extends Producer {
                 Accessory accessory = new Accessory();
                 storage.add(accessory);
                 logger.info(getName() + "New detail has been produced successfully! Its ID is " + accessory.getId());
-                Thread.sleep(getTimeToSleep());
+                Thread.sleep();
             } catch (StorageOverflowedException e) {
                 logger.error(getName() + "Can not produce accessory. Storage is full");
             } catch (InterruptedException e) {
