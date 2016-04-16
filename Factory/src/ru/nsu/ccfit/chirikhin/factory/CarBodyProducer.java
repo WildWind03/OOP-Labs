@@ -28,7 +28,7 @@ public class CarBodyProducer implements Runnable {
     public void run() {
         while(true) {
             try {
-                CarBody carBody = new CarBody(idRegisterer);
+                CarBody carBody = new CarBody(idRegisterer.getId());
                 carBodyCarDetailStorage.add(carBody);
                 Thread.sleep(producingSpeed);
                 logger.info("New car body has been produced successfully! Its ID is " + carBody.getId());

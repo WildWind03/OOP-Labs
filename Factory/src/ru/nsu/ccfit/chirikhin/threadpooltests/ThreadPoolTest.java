@@ -3,6 +3,10 @@ package ru.nsu.ccfit.chirikhin.threadpooltests;
 import org.junit.Assert;
 import org.junit.Test;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
+import ru.nsu.ccfit.chirikhin.factory.MyRunnable;
+import ru.nsu.ccfit.chirikhin.factory.OnErrorHandler;
+import ru.nsu.ccfit.chirikhin.factory.OnResultHandler;
+import ru.nsu.ccfit.chirikhin.factory.TaskContext;
 import ru.nsu.ccfit.chirikhin.threadpool.ThreadPool;
 
 
@@ -10,24 +14,28 @@ public class ThreadPoolTest {
     public ThreadPoolTest() {
     }
 
-    class Printer implements Runnable {
+    class Printer implements MyRunnable {
         private BlockingQueue<String> blockingQueue;
         private String str;
+
         public Printer(BlockingQueue<String> blockingQueue, String str) {
             this.blockingQueue = blockingQueue;
             this.str = str;
         }
 
         @Override
-        public void run() {
+        public int run() {
             try {
                 blockingQueue.put(str);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println(str);
+
+            return 1;
         }
     }
+
 
     @Test
     public void threadPoolTest() throws InterruptedException {
@@ -43,14 +51,14 @@ public class ThreadPoolTest {
 
         ThreadPool threadPool = new ThreadPool(3);
 
-        threadPool.addTask(printer1);
-        threadPool.addTask(printer2);
-        threadPool.addTask(printer3);
-        threadPool.addTask(printer4);
-        threadPool.addTask(printer5);
-        threadPool.addTask(printer6);
-        threadPool.addTask(printer7);
-        threadPool.addTask(printer8);
+        threadPool.addTask(new TaskContext(printer1, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer2, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer3, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer4, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer5, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer6, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer7, new OnResultHandler(), new OnErrorHandler()));
+        threadPool.addTask(new TaskContext(printer8, new OnResultHandler(), new OnErrorHandler()));
     }
 
 }

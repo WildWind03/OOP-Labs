@@ -4,12 +4,8 @@ public class CarBody {
     private final static String description = "Car Body";
     private final long id;
 
-    public CarBody(IDRegisterer idRegisterer) {
-        if (null == idRegisterer) {
-            throw new NullPointerException("Null reference instead of IDRegister");
-        }
-
-        id = idRegisterer.getId();
+    public CarBody(long id) {
+        this.id = id;
     }
 
     public long getId() {

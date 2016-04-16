@@ -27,18 +27,11 @@ public class CarCollectors {
         }
 
         @Override
-        public int run() {
-            try {
-                Car car = new Car(engineStorage.getNext(), accessoryStorage.getNext(), carBodyStorage.getNext(), idRegisterer.getId());
-                carStorage.add(car);
-                logger.info("Car ID" + car.getId() + " has been made and sent to car storage!");
-            } catch (StorageOverflowedException e) {
-                logger.error(e.toString());
-            } catch (InterruptedException e) {
-                logger.fatal(e.toString());
-            } catch (StorageEmptyException e) {
-                logger.fatal(e.toString());
-            }
+        public int run() throws StorageEmptyException, InterruptedException, StorageOverflowedException {
+            Car car = new Car(engineStorage.getNext(), accessoryStorage.getNext(), carBodyStorage.getNext(), idRegisterer.getId());
+            carStorage.add(car);
+            logger.info("Car ID " + car.getId() + "(" + car.getBodyId() + " " + car.getEngineId() + " " + car.getAccessoryId() + ") has been made and sent to car storage!");
+            return 1;
         }
 
 
@@ -52,6 +45,6 @@ public class CarCollectors {
     }
 
     public void makeCar() throws InterruptedException {
-        collectors.addTask(new TaskContext(task, , ));
+        collectors.addTask(new TaskContext(task, new OnResultHandler(), new OnErrorHandler()));
     }
 }

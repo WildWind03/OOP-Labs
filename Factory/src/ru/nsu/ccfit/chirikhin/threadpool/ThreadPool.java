@@ -1,15 +1,19 @@
 package ru.nsu.ccfit.chirikhin.threadpool;
 
+import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 import ru.nsu.ccfit.chirikhin.factory.TaskContext;
 
 import java.util.ArrayList;
 
+
 public class ThreadPool {
 
     final private int DEFAULT_SIZE_OF_BLOCKING_QUEUE = 200;
 
-    class ThreadPoolThread extends Thread {
+    public class ThreadPoolThread extends Thread {
+        final private Logger logger = Logger.getLogger(ThreadPool.class.getName());
+
         public ThreadPoolThread(String name) {
             super(name);
         }
@@ -21,14 +25,19 @@ public class ThreadPool {
             try {
                 while (!isInterrupted()) {
                     taskContext = tasks.pop();
-                    int result = taskContext.getTask().run();
+                    try {
+                        int result = taskContext.getTask().run();
+                        taskContext.getResultHandler().handle();
+                    } catch(Exception e) {
+                        taskContext.getErrorHandler().handle(e);
+                    }
                 }
+            } catch(InterruptedException interruptedException) {
+                logger.fatal(getName() + ": interrupted exception");
+                System.exit(-1);
             }
-            catch(InterruptedException interruptedException) {
 
-            }
-
-            }
+        }
     }
 
     private BlockingQueue<TaskContext> tasks;
