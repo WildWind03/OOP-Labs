@@ -5,15 +5,18 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.util.Observable;
 
-public class Factory extends Observable {
+public class Factory {
     public static final long DEFAULT_PRODUCING_SPEED = 1000;
 
     private final Logger logger = Logger.getLogger(Factory.class.getName());
     private final String pathToConfig;
     private final IDRegisterer idRegisterer = new IDRegisterer();
 
-    public Factory(String pathToConfig) {
+    JavaFXView view;
+
+    public Factory(String pathToConfig, JavaFXView view) {
         this.pathToConfig = pathToConfig;
+        this.view = view;
     }
 
     public void start() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
@@ -23,9 +26,16 @@ public class Factory extends Observable {
             configParser = new ConfigParser(pathToConfig);
 
             Storage<Accessory> accessoryStorage = new Storage<>(configParser.getAccessoryStorageSize());
+            accessoryStorage.addObserver(view);
+
             Storage<CarBody> carBodyStorage = new Storage<>(configParser.getCarBodyStorageSize());
+            carBodyStorage.addObserver(view);
+
             Storage<Engine> engineStorage = new Storage<>(configParser.getEngineStorageSize());
+            engineStorage.addObserver(view);
+
             Storage<Car> carStorage = new Storage<>(configParser.getCarStorageSize());
+            carStorage.addObserver(view);
 
 
             Thread accessoryProducers[] = new Thread[configParser.getAccessorySupplCount()];
