@@ -1,10 +1,32 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
+import javafx.application.Platform;
+import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 
 import java.util.Observable;
 
 public class Storage<T> extends Observable {
+
+    Logger logger = Logger.getLogger(Storage.class.getName());
+
+    public static class StorageContext {
+        private int size;
+        private int maxSize;
+
+        public StorageContext(int size, int maxSize) {
+            this.size = size;
+            this.maxSize = maxSize;
+        }
+
+        public int getSize() {
+            return size;
+        }
+
+        public int getMaxSize() {
+            return maxSize;
+        }
+    }
 
     final private int maxSize;
 
@@ -16,20 +38,16 @@ public class Storage<T> extends Observable {
     }
 
     public T getNext() throws StorageEmptyException, InterruptedException {
-        //if (0 == items.size()) {
-         //   throw new StorageEmptyException("Engine Storage is empty! Trying to get next engine!");
-        //}
-       // else {
-            return items.pop();
-        //}
+        T tmp = items.pop();
+        setChanged();
+        notifyObservers(new StorageContext(size(), getMaxSize()));
+        return tmp;
     }
 
     public void add(T item) throws StorageOverflowedException, InterruptedException {
-        //if (maxSize == items.size()) {
-         //   throw new StorageOverflowedException("Storage of " + item.toString() + " is overflowed");
-        //}
-
         items.put(item);
+        setChanged();
+        notifyObservers(new StorageContext(size(), getMaxSize()));
     }
 
     public boolean isEmpty() {
