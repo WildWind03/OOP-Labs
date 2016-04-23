@@ -1,6 +1,5 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-import javafx.application.Platform;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 
@@ -46,6 +45,7 @@ public class Storage<T> extends Observable {
 
     public void add(T item) throws StorageOverflowedException, InterruptedException {
         items.put(item);
+        logger.debug("size is " + items.size());
         setChanged();
         notifyObservers(new StorageContext(size(), getMaxSize()));
     }

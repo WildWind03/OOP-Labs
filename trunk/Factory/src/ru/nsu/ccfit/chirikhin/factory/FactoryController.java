@@ -6,20 +6,44 @@ import javafx.application.Platform;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Observable;
 
 public class FactoryController {
     private Logger logger = Logger.getLogger(FactoryController.class.getName());
     private final String pathToFile;
     private final Factory factory;
-    private final JavaFXView view;
 
-    public FactoryController(String pathToFile) throws InvalidConfigException, IOException, DeveloperBugException {
+    public FactoryController(String pathToFile, FXMLViewController fxmlViewController) throws InvalidConfigException, IOException, DeveloperBugException{
         logger.info("------------------------ Factory Controller has started!");
         this.pathToFile = pathToFile;
         factory = new Factory(pathToFile);
-        JavaFXView.initView();
-        view = new JavaFXView();
-        factory.setOnEngineStorageChangedHandler(new OnEngineStorageChangedHandler(view));
+        factory.setOnEngineStorageChangedHandler(new Handler(fxmlViewController) {
+            @Override
+            public void update(Observable o, Object arg) {
+                Platform.runLater(() -> fxmlViewController.onEngineStorageChanged((Storage.StorageContext) arg));
+            }
+        });
+
+        factory.setOnAccessoryStorageChangedHandler(new Handler(fxmlViewController) {
+            @Override
+            public void update(Observable o, Object arg) {
+                Platform.runLater(() -> fxmlViewController.onAccessoryStorageChanged((Storage.StorageContext) arg));
+            }
+        });
+
+        factory.setOnCarBodyStorageChangedHandler(new Handler(fxmlViewController) {
+            @Override
+            public void update(Observable o, Object arg) {
+                Platform.runLater(() -> fxmlViewController.onCarBodyStorageChanged((Storage.StorageContext) arg));
+            }
+        });
+
+        factory.setOnCarStorageChangedHandler(new Handler(fxmlViewController) {
+            @Override
+            public void update(Observable o, Object arg) {
+                Platform.runLater(() -> fxmlViewController.onCarStorageChanged((Storage.StorageContext) arg));
+            }
+        });
     }
 
     public void startFactory() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
