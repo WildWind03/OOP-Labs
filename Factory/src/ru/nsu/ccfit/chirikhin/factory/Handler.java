@@ -1,5 +1,11 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-public interface Handler {
-    void handle();
+import java.util.Observer;
+
+public abstract class Handler implements Observer {
+    FXMLViewController fxmlViewController;
+
+    public Handler(FXMLViewController fxmlViewController) {
+        this.fxmlViewController = fxmlViewController;
+    }
 }

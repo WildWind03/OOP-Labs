@@ -15,16 +15,34 @@ public class Factory extends Observable {
     private final IDRegisterer idRegisterer = new IDRegisterer();
 
     private Storage<Engine> engineStorage;
+    private Storage<Accessory> accessoryStorage;
+    private Storage<Car> carStorage;
+    private Storage<CarBody> carBodyStorage;
 
     public Factory(String pathToConfig) throws InvalidConfigException, IOException, DeveloperBugException {
         this.pathToConfig = pathToConfig;
         ConfigParser configParser = new ConfigParser(pathToConfig);
         engineStorage = new Storage<>(configParser.getEngineStorageSize());
+        accessoryStorage = new Storage<>(configParser.getAccessoryStorageSize());
+        carBodyStorage = new Storage<>(configParser.getCarBodyStorageSize());
+        carStorage = new Storage<>(configParser.getCarStorageSize());
     }
 
-    public void setOnEngineStorageChangedHandler(OnEngineStorageChangedHandler handler) {
+    public void setOnEngineStorageChangedHandler(Handler handler) {
         engineStorage.addObserver(handler);
         logger.debug("Engine Handler has been successfully added as observer to engine storage!");
+    }
+
+    public void setOnAccessoryStorageChangedHandler(Handler handler) {
+        accessoryStorage.addObserver(handler);
+    }
+
+    public void setOnCarBodyStorageChangedHandler(Handler handler) {
+        carBodyStorage.addObserver(handler);
+    }
+
+    public void setOnCarStorageChangedHandler(Handler handler) {
+        carStorage.addObserver(handler);
     }
 
     public void start() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
@@ -32,15 +50,6 @@ public class Factory extends Observable {
 
         try {
             configParser = new ConfigParser(pathToConfig);
-
-            Storage<Accessory> accessoryStorage = new Storage<>(configParser.getAccessoryStorageSize());
-
-            Storage<CarBody> carBodyStorage = new Storage<>(configParser.getCarBodyStorageSize());
-
-            //engineStorage = new Storage<>(configParser.getEngineStorageSize());
-
-            Storage<Car> carStorage = new Storage<>(configParser.getCarStorageSize());
-
 
             Thread accessoryProducers[] = new Thread[configParser.getAccessorySupplCount()];
             for (int k = 0; k < configParser.getAccessorySupplCount(); ++k) {

@@ -1,0 +1,32 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<GridPane fx:controller="ru.nsu.ccfit.chirikhin.factory.FXMLViewController"
+          xmlns:fx="http://javafx.com/fxml" alignment="top_left" hgap="10" vgap="10">
+    <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
+
+    <Label fx:id="countOfAccessories" text="Accessories - "
+           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <ProgressBar fx:id="countOfAccessoriesBar" progress="0"
+                 GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+    <Label fx:id="countOfCarBodies" text="Car Bodies - "
+           GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+    <ProgressBar fx:id="countOfCarBodiesBar" progress="0"
+                 GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+
+    <Label fx:id="countOfEngines" text="Engines - "
+           GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+    <ProgressBar fx:id="countOfEnginesBar" progress="0"
+                 GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+    <Label fx:id="countOfCars" text="Cars - "
+           GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+    <ProgressBar fx:id="countOfCarsBar" progress="0"
+                 GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+</GridPane>
