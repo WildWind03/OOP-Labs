@@ -1,22 +1,30 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
+import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Observable;
+import java.util.Observer;
 
-public class Factory {
+public class Factory extends Observable {
     public static final long DEFAULT_PRODUCING_SPEED = 1000;
 
     private final Logger logger = Logger.getLogger(Factory.class.getName());
     private final String pathToConfig;
     private final IDRegisterer idRegisterer = new IDRegisterer();
 
-    JavaFXView view;
+    private Storage<Engine> engineStorage;
 
-    public Factory(String pathToConfig, JavaFXView view) {
+    public Factory(String pathToConfig) throws InvalidConfigException, IOException, DeveloperBugException {
         this.pathToConfig = pathToConfig;
-        this.view = view;
+        ConfigParser configParser = new ConfigParser(pathToConfig);
+        engineStorage = new Storage<>(configParser.getEngineStorageSize());
+    }
+
+    public void setOnEngineStorageChangedHandler(OnEngineStorageChangedHandler handler) {
+        engineStorage.addObserver(handler);
+        logger.debug("Engine Handler has been successfully added as observer to engine storage!");
     }
 
     public void start() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
@@ -26,16 +34,12 @@ public class Factory {
             configParser = new ConfigParser(pathToConfig);
 
             Storage<Accessory> accessoryStorage = new Storage<>(configParser.getAccessoryStorageSize());
-            accessoryStorage.addObserver(view);
 
             Storage<CarBody> carBodyStorage = new Storage<>(configParser.getCarBodyStorageSize());
-            carBodyStorage.addObserver(view);
 
-            Storage<Engine> engineStorage = new Storage<>(configParser.getEngineStorageSize());
-            engineStorage.addObserver(view);
+            //engineStorage = new Storage<>(configParser.getEngineStorageSize());
 
             Storage<Car> carStorage = new Storage<>(configParser.getCarStorageSize());
-            carStorage.addObserver(view);
 
 
             Thread accessoryProducers[] = new Thread[configParser.getAccessorySupplCount()];
