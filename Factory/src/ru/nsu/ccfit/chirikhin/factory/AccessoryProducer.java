@@ -9,9 +9,12 @@ public class AccessoryProducer implements Runnable{
     private final String name;
     private final IDRegisterer idRegisterer;
     private final Storage<Accessory> storage;
-    private final long producingSpeed;
+    private int producingSpeed;
 
-    public AccessoryProducer(Storage<Accessory> storage, String name, long producingSpeed, IDRegisterer idRegisterer) {
+    private boolean isRunning;
+
+    public AccessoryProducer(Storage<Accessory> storage, String name, int producingSpeed, IDRegisterer idRegisterer) {
+        isRunning = true;
 
         if (null == storage || null == name || null == idRegisterer) {
             String text = name + ": can't create myself because of null reference!";
@@ -31,12 +34,13 @@ public class AccessoryProducer implements Runnable{
         logger.info(getName() + " has been created! Producing speed is " + producingSpeed);
     }
 
-    public void changeProducingSpeed(long producingSpeed) {
+    public void changeProducingSpeed(int producingSpeed) {
         if (producingSpeed < 0) {
             throw new IllegalArgumentException("Can't change producing speed! It can't be negative!");
         }
 
         logger.info(getName() + " changed producing speed to " + producingSpeed);
+        this.producingSpeed = producingSpeed;
     }
 
     public String getName() {
@@ -45,7 +49,7 @@ public class AccessoryProducer implements Runnable{
 
     @Override
     public void run() {
-        while(true) {
+        while(isRunning) {
             try {
                 Accessory accessory = new Accessory(idRegisterer.getId());
                 storage.add(accessory);
@@ -57,5 +61,9 @@ public class AccessoryProducer implements Runnable{
                 logger.fatal(getName() + "Can not produce accessory! Interrupt exception!");
             }
         }
+    }
+
+    public void kill() {
+        isRunning = false;
     }
 }

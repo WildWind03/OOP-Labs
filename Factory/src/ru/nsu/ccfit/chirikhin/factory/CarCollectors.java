@@ -3,7 +3,11 @@ package ru.nsu.ccfit.chirikhin.factory;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.threadpool.ThreadPool;
 
-public class CarCollectors {
+import java.util.Observable;
+import java.util.Observer;
+
+public class CarCollectors extends Observable {
+
 
     public static class CollectorTask implements MyRunnable {
 
@@ -44,7 +48,20 @@ public class CarCollectors {
         collectors = new ThreadPool(collectorsCount);
     }
 
+
     public void makeCar() throws InterruptedException {
-        collectors.addTask(new TaskContext(task, new OnResultHandler(), new OnErrorHandler()));
+        setChanged();
+        notifyObservers(TaskState.START);
+
+        TaskContext taskContext = new TaskContext(task, () -> {
+            setChanged();
+            notifyObservers(TaskState.COMPLETED);
+        });
+
+        collectors.addTask(taskContext);
+    }
+
+    public void kill() throws InterruptedException {
+        collectors.stop();
     }
 }

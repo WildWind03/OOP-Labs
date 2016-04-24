@@ -9,24 +9,6 @@ public class Storage<T> extends Observable {
 
     Logger logger = Logger.getLogger(Storage.class.getName());
 
-    public static class StorageContext {
-        private int size;
-        private int maxSize;
-
-        public StorageContext(int size, int maxSize) {
-            this.size = size;
-            this.maxSize = maxSize;
-        }
-
-        public int getSize() {
-            return size;
-        }
-
-        public int getMaxSize() {
-            return maxSize;
-        }
-    }
-
     final private int maxSize;
 
     BlockingQueue<T> items;
@@ -39,15 +21,14 @@ public class Storage<T> extends Observable {
     public T getNext() throws StorageEmptyException, InterruptedException {
         T tmp = items.pop();
         setChanged();
-        notifyObservers(new StorageContext(size(), getMaxSize()));
+        notifyObservers(StorageEvent.GET);
         return tmp;
     }
 
     public void add(T item) throws StorageOverflowedException, InterruptedException {
         items.put(item);
-        logger.debug("size is " + items.size());
         setChanged();
-        notifyObservers(new StorageContext(size(), getMaxSize()));
+        notifyObservers(StorageEvent.PUT);
     }
 
     public boolean isEmpty() {

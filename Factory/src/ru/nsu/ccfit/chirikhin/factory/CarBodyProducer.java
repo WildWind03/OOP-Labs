@@ -7,13 +7,21 @@ public class CarBodyProducer implements Runnable {
     private final Storage<CarBody> carBodyCarDetailStorage;
     private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
     private final IDRegisterer idRegisterer;
-    private final long producingSpeed;
+    private int producingSpeed;
 
-    public CarBodyProducer(Storage<CarBody> carBodyCarDetailStorage, long producingSpeed, IDRegisterer idRegisterer) {
+    private boolean isRunning;
+
+    public void changeProducingSpeed(int producingSpeed) {
+        this.producingSpeed = producingSpeed;
+    }
+
+    public CarBodyProducer(Storage<CarBody> carBodyCarDetailStorage, int producingSpeed, IDRegisterer idRegisterer) {
 
         if (null == carBodyCarDetailStorage || null == idRegisterer) {
             throw new NullPointerException("Can not create myself because of null reference!");
         }
+
+        isRunning = true;
 
         if (producingSpeed < 0) {
             throw new IllegalArgumentException("Producing speed is negative");
@@ -26,7 +34,7 @@ public class CarBodyProducer implements Runnable {
 
     @Override
     public void run() {
-        while(true) {
+        while(isRunning) {
             try {
                 CarBody carBody = new CarBody(idRegisterer.getId());
                 carBodyCarDetailStorage.add(carBody);
@@ -38,5 +46,9 @@ public class CarBodyProducer implements Runnable {
                 logger.fatal("Can not produce car body! Interrupt exception!");
             }
         }
+    }
+
+    public void kill() {
+        isRunning = false;
     }
 }

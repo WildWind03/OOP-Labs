@@ -50,15 +50,6 @@ public class ThreadPoolTest {
         Printer printer8 = new Printer(blockingQueue, "8");
 
         ThreadPool threadPool = new ThreadPool(3);
-
-        threadPool.addTask(new TaskContext(printer1, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer2, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer3, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer4, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer5, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer6, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer7, new OnResultHandler(), new OnErrorHandler()));
-        threadPool.addTask(new TaskContext(printer8, new OnResultHandler(), new OnErrorHandler()));
     }
 
 }
