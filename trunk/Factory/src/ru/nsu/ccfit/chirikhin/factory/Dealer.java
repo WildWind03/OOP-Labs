@@ -22,9 +22,11 @@ public class Dealer implements Runnable{
         Car car;
 
         try {
+            while(true) {
             car = carStorage.getNext();
             logger.info("Car with id " + car.getId() + " has been successfully sold by dealer with name " + name);
             Thread.sleep(timeToSleep);
+            }
         } catch (StorageEmptyException e) {
             logger.error(name + ": can not get car from storage!");
         } catch (InterruptedException e) {

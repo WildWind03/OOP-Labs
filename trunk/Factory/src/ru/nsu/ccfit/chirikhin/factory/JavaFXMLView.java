@@ -19,9 +19,11 @@ public class JavaFXMLView extends Application {
         FactoryController factoryController = new FactoryController("./config.txt", loader.getController());
         factoryController.startFactory();
 
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(root);
         stage.setTitle("Factory");
         stage.setScene(scene);
+        stage.setResizable(false);
+        stage.sizeToScene();
         stage.show();
     }
 
