@@ -9,12 +9,19 @@ public class Dealer implements Runnable{
 
     Logger logger = Logger.getLogger(Dealer.class.getName());
 
-    final static long timeToSleep = 5000;
+    private int timeToSleep = 5000;
+
+    private boolean isRunning;
+
+    public void setSellingSpeed(int newSpeed) {
+        this.timeToSleep = newSpeed;
+    }
 
     public Dealer(Storage<Car> carStorage, String name) {
         this.carStorage = carStorage;
         this.name = name;
         logger.info("Dealer with name " + name + " has been created!");
+        isRunning = true;
     }
 
     @Override
@@ -22,10 +29,10 @@ public class Dealer implements Runnable{
         Car car;
 
         try {
-            while(true) {
-            car = carStorage.getNext();
-            logger.info("Car with id " + car.getId() + " has been successfully sold by dealer with name " + name);
-            Thread.sleep(timeToSleep);
+            while(isRunning) {
+                car = carStorage.getNext();
+                logger.info("Car with id " + car.getId() + " has been successfully sold by dealer with name " + name);
+                Thread.sleep(timeToSleep);
             }
         } catch (StorageEmptyException e) {
             logger.error(name + ": can not get car from storage!");
@@ -33,4 +40,9 @@ public class Dealer implements Runnable{
             logger.error(name + ": unexpected interrupted error!");
         }
     }
+
+    public void kill() {
+        isRunning = false;
+    }
+
 }

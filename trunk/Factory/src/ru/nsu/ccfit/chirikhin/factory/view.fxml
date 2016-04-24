@@ -4,7 +4,8 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.text.Font?>
+
+<?import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField?>
 <GridPane fx:controller="ru.nsu.ccfit.chirikhin.factory.FXMLViewController"
           xmlns:fx="http://javafx.com/fxml" alignment="top_left" hgap="10" vgap="10">
     <padding><Insets top="25" right="25" bottom="25" left="25"/></padding>
@@ -58,11 +59,13 @@
     <Label text="Producing speed - "
            GridPane.columnIndex="2" GridPane.rowIndex="5"/>
 
-    <TextField fx:id="accessoryProducersEdit" maxWidth="60"
-               GridPane.columnIndex="3" GridPane.rowIndex="5"/>
+    <NumericTextField fx:id="accessoryProducersEdit" maxWidth="60"
+               GridPane.columnIndex="3" GridPane.rowIndex="5"
+                      onKeyReleased="#onAccessoryProducerSpeedChanged"/>
 
     <Slider fx:id="accessoryProducersSlider" max="100" min="0"
-            GridPane.columnIndex="4" GridPane.rowIndex="5"/>
+            GridPane.columnIndex="4" GridPane.rowIndex="5"
+            onMouseDragged="#onAccessoryProducerSliderDragged"/>
 
 
 
@@ -78,11 +81,12 @@
     <Label text="Producing speed - "
            GridPane.columnIndex="2" GridPane.rowIndex="6"/>
 
-    <Slider fx:id="dealersSlider" max="100" min="0"
-            GridPane.columnIndex="4" GridPane.rowIndex="6"/>
+    <Slider fx:id="dealersProducingSpeedSlider" max="100" min="0"
+            GridPane.columnIndex="4" GridPane.rowIndex="6" onMouseDragged="#onDealerSliderDragged"/>
 
-    <TextField fx:id="dealersEdit" maxWidth="60"
-               GridPane.columnIndex="3" GridPane.rowIndex="6" />
+    <NumericTextField fx:id="dealersProducingSpeedEdit" maxWidth="60"
+               GridPane.columnIndex="3" GridPane.rowIndex="6"
+                      onKeyReleased="#onDealerSpeedChanged"/>
 
 
     <Label text="Engine Producers - 1"
@@ -91,11 +95,13 @@
     <Label text="Producing speed - "
            GridPane.columnIndex="2" GridPane.rowIndex="7"/>
 
-    <Slider fx:id="engineProducersSlider" max="100" min="0"
-            GridPane.columnIndex="4" GridPane.rowIndex="7"/>
+    <Slider fx:id="enginesProducerSlider" max="100" min="0"
+            GridPane.columnIndex="4" GridPane.rowIndex="7"
+    onMouseDragged="#onEngineProducerSliderDragged"/>
 
-    <TextField fx:id="engineProducersEdit" maxWidth="60"
-               GridPane.columnIndex="3" GridPane.rowIndex="7" />
+    <NumericTextField fx:id="enginesProducerEdit" maxWidth="60"
+               GridPane.columnIndex="3" GridPane.rowIndex="7"
+                      onKeyReleased="#onEngineProducingSpeedChanged"/>
 
 
 
@@ -106,10 +112,12 @@
            GridPane.columnIndex="2" GridPane.rowIndex="8"/>
 
     <Slider fx:id="carBodyProducerSlider" max="100" min="0"
-            GridPane.columnIndex="4" GridPane.rowIndex="8"/>
+            GridPane.columnIndex="4" GridPane.rowIndex="8"
+            onMouseDragged="#onCarBodyProducerSliderDragged"/>
 
-    <TextField fx:id="carBodyProducerEdit" maxWidth="60"
-               GridPane.columnIndex="3" GridPane.rowIndex="8" />
+    <NumericTextField fx:id="carBodyProducerEdit" maxWidth="60"
+                      GridPane.columnIndex="3" GridPane.rowIndex="8"
+                      onKeyReleased="#onCarBodyProducingSpeedChanged"/>
 
 
 

@@ -2,26 +2,36 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import static java.lang.Thread.sleep;
 
 
-public class EngineProducer implements Runnable {
+public class EngineProducer implements Observer, Runnable{
 
     private final Storage<Engine> engineCarDetailStorage;
     private final Logger logger = Logger.getLogger(AccessoryProducer.class.getName());
     private final IDRegisterer idRegisterer;
-    private final long producingSpeed;
+    private int producingSpeed;
 
-    public EngineProducer(Storage<Engine> engineCarDetailStorage, long producingSpeed, IDRegisterer idRegisterer) {
+    private boolean isRunning;
+
+    public EngineProducer(Storage<Engine> engineCarDetailStorage, int producingSpeed, IDRegisterer idRegisterer) {
+        isRunning = true;
         this.producingSpeed = producingSpeed;
         this.idRegisterer = idRegisterer;
         this.engineCarDetailStorage = engineCarDetailStorage;
         logger.info ("Engine producers has been created!");
     }
 
+    public void changeProducingSpeed(int producingSpeed) {
+        this.producingSpeed = producingSpeed;
+    }
+
     @Override
     public void run() {
-        while (true) {
+        while (isRunning) {
             try {
                 Engine engine = new Engine(idRegisterer.getId());
                 engineCarDetailStorage.add(engine);
@@ -34,5 +44,14 @@ public class EngineProducer implements Runnable {
             }
 
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        changeProducingSpeed((int) arg);
+    }
+
+    public void kill() {
+        isRunning = false;
     }
 }

@@ -10,13 +10,21 @@ import org.apache.log4j.Logger;
 
 public class JavaFXMLView extends Application {
     private Logger logger = Logger.getLogger(JavaFXMLView.class.getName());
+    FactoryController factoryController;
+
+    @Override
+    public void stop() throws Exception {
+        factoryController.stop();
+        super.stop();
+
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("view.fxml"));
         Parent root = loader.load();
 
-        FactoryController factoryController = new FactoryController("./config.txt", loader.getController());
+        factoryController = new FactoryController("./config.txt", loader.getController());
         factoryController.startFactory();
 
         Scene scene = new Scene(root);
