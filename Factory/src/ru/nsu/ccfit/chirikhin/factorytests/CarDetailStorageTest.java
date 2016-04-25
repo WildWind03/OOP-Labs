@@ -12,23 +12,15 @@ public class CarDetailStorageTest {
     }
 
     @Test
-    public void isFullTest() throws StorageOverflowedException, InterruptedException {
+    public void isFullTest() throws InterruptedException {
         Storage<Engine> carDetailStorage = new Storage<>(2);
         carDetailStorage.add(new Engine(1));
         carDetailStorage.add(new Engine(2));
         Assert.assertTrue(carDetailStorage.isFull());
     }
 
-    @Test (expected = StorageOverflowedException.class)
-    public void storageOverflowed() throws StorageOverflowedException, StorageEmptyException, InterruptedException {
-        Storage<Engine> carDetailStorage = new Storage<>(2);
-        carDetailStorage.add(new Engine(1));
-        carDetailStorage.add(new Engine(2));
-        carDetailStorage.add(new Engine(3));
-    }
-
     @Test
-    public void checkIdAndMaxSize() throws StorageOverflowedException, StorageEmptyException, InterruptedException {
+    public void checkIdAndMaxSize() throws  InterruptedException {
         Storage<Engine> carDetailStorage = new Storage<>(2);
         carDetailStorage.add(new Engine(0));
         carDetailStorage.add(new Engine(1));

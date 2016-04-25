@@ -12,8 +12,6 @@ public class CarStorageController implements Runnable, Observer {
 
     private final Object lock;
 
-    private boolean isRunning;
-
     public CarStorageController(Storage<Car> carStorage, CarCollectors carCollectors) {
         if (null == carCollectors || null == carStorage) {
             throw new IllegalArgumentException("Null refrence in constructor");
@@ -23,38 +21,39 @@ public class CarStorageController implements Runnable, Observer {
         this.carStorage = carStorage;
         this.carCollectors = carCollectors;
         lock = new Object();
-        isRunning = true;
     }
 
     @Override
     public void run() {
-        while(isRunning) {
-            try {
+        try {
+            while (true) {
                 synchronized (lock) {
-                    if (carStorage.size() < carStorage.getMaxSize() / 2) {
+
+                    /*logger.debug("Checking car storage size!");
+                    System.out.println(currentSize + "/" + (carStorage.getMaxSize() / 2));
+                    if (currentSize < carStorage.getMaxSize() / 2) {
+                        logger.debug("I want to make " + carStorage.getMaxSize() / 2 + " cars");
                         carCollectors.makeCars(carStorage.getMaxSize() / 2);
                     }
                     lock.wait();
+                    */
+
+                    carCollectors.makeCars(1);
+                    lock.wait();
+
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            logger.error("Interrupted Exception!");
         }
+
+        logger.info("Car Storage Controller finished successfully!");
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        if (arg == StorageEvent.PUT) {
-            synchronized (lock) {
-                lock.notifyAll();
-            }
-        }
-    }
-
-    public void kill() {
         synchronized (lock) {
-            isRunning = false;
             lock.notifyAll();
-        }
+       }
     }
 }

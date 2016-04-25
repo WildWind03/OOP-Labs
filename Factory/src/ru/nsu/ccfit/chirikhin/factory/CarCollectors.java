@@ -78,7 +78,7 @@ public class CarCollectors extends Observable {
         }
     }
 
-    public void kill() throws InterruptedException {
+    public void stop() throws InterruptedException {
             collectors.stop();
     }
 }

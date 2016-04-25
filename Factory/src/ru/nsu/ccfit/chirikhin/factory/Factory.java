@@ -13,12 +13,11 @@ public class Factory {
     private final Logger logger = Logger.getLogger(Factory.class.getName());
     private final IDRegisterer idRegisterer = new IDRegisterer();
 
-    private Storage<Engine> engineStorage;
-    private Storage<Accessory> accessoryStorage;
-    private Storage<Car> carStorage;
-    private Storage<CarBody> carBodyStorage;
+    private final Storage<Engine> engineStorage;
+    private final Storage<Accessory> accessoryStorage;
+    private final Storage<Car> carStorage;
+    private final Storage<CarBody> carBodyStorage;
 
-    private int workersCount;
     private int dealersCount;
     private int accessorySupplCount;
     private boolean isLog;
@@ -32,14 +31,14 @@ public class Factory {
     private final Thread[] accessoryProducersThreads;
     private final Thread engineProducerThread;
     private final Thread carBodyProducerThread;
-    private final Thread carStorageCollectorThread;
+    private final Thread carStorageControllerThread;
     private final Thread[] dealersThreads;
 
     private CarCollectors carCollectors;
 
     public Factory(int workersCount, int dealersCount, int accessorySupplCount, int carStorageSize, int engineStorageSize, int accessoryStorageSize, int carBodyStorageSize, boolean isLog, int defaultProducingSpeed) throws InterruptedException, IOException, DeveloperBugException {
         if (workersCount < 0 || dealersCount < 0 || accessorySupplCount < 0 || carStorageSize < 0 || engineStorageSize < 0 || accessoryStorageSize < 0 || carBodyStorageSize < 0 || defaultProducingSpeed < 0) {
-            throw new IllegalArgumentException("One of sizes in constuctor is negative");
+            throw new IllegalArgumentException("One of sizes in constructor is negative");
         }
 
 
@@ -50,18 +49,19 @@ public class Factory {
         carStorage = new Storage<>(carStorageSize);
 
         this.accessorySupplCount = accessorySupplCount;
-        this.workersCount = workersCount;
         this.isLog = isLog;
         this.dealersCount = dealersCount;
 
         engineProducer = new EngineProducer(engineStorage, DEFAULT_PRODUCING_SPEED, idRegisterer);
         engineProducerThread = new Thread(engineProducer);
+        engineProducerThread.setName("Engine Producer Thread");
 
         accessoryProducers = new AccessoryProducer[accessorySupplCount];
         accessoryProducersThreads = new Thread[accessorySupplCount];
         for (int i = 0; i < accessorySupplCount; ++i) {
             accessoryProducers[i] = new AccessoryProducer(accessoryStorage, "Accessory Producer num " + i, DEFAULT_PRODUCING_SPEED, idRegisterer);
             accessoryProducersThreads[i] = new Thread(accessoryProducers[i]);
+            accessoryProducersThreads[i].setName("Accessory Producer Thread " + i);
         }
 
         dealers = new Dealer[dealersCount];
@@ -69,10 +69,12 @@ public class Factory {
         for (int i = 0; i < dealersCount; ++i) {
             dealers[i] = new Dealer(carStorage, "Dealer " + i);
             dealersThreads[i] = new Thread(dealers[i]);
+            dealersThreads[i].setName("Dealer Thread " + i);
         }
 
         carBodyProducer = new CarBodyProducer(carBodyStorage, DEFAULT_PRODUCING_SPEED, idRegisterer);
         carBodyProducerThread = new Thread(carBodyProducer);
+        carBodyProducerThread.setName("Car Body Producer Thread");
 
 
         try {
@@ -83,7 +85,8 @@ public class Factory {
         }
 
         carStorageController = new CarStorageController(carStorage, carCollectors);
-        carStorageCollectorThread = new Thread(carStorageController);
+        carStorageControllerThread = new Thread(carStorageController);
+        carStorageControllerThread.setName("Car Storage Controller");
     }
 
     public void setOnEngineStorageChangedHandler(Handler handler) {
@@ -129,65 +132,83 @@ public class Factory {
     }
 
     public void setOnTaskCompletedHandler(Handler handler) {
+        if (null == handler) {
+            throw new IllegalArgumentException("Handler reference can not be null!");
+        }
         carCollectors.addObserver(handler);
     }
 
     public void setOnAccessoryStorageChangedHandler(Handler handler) {
+        if (null == handler) {
+            throw new IllegalArgumentException("Handler reference can not be null!");
+        }
         accessoryStorage.addObserver(handler);
     }
 
     public void setOnCarBodyStorageChangedHandler(Handler handler) {
+        if (null == handler) {
+            throw new IllegalArgumentException("Handler reference can not be null!");
+        }
         carBodyStorage.addObserver(handler);
     }
 
     public void setOnCarStorageChangedHandler(Handler handler) {
+        if (null == handler) {
+            throw new IllegalArgumentException("Handler reference can not be null!");
+        }
         carStorage.addObserver(handler);
     }
 
     public void setOnNewTaskToMakeCarAppeared(Handler handler) {
+        if (null == handler) {
+            throw new IllegalArgumentException("Handler reference can not be null!");
+        }
         carCollectors.addObserver(handler);
     }
 
-    public void start() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
-        try {
-
+    public void start() throws InterruptedException {
             for (int k = 0; k < accessorySupplCount; ++k) {
                 accessoryProducersThreads[k].start();
             }
 
             engineProducerThread.start();
             carBodyProducerThread.start();
-            carStorageCollectorThread.start();
+            carStorageControllerThread.start();
 
             for (int k = 0; k < dealersCount; ++k) {
                 dealersThreads[k].start();
             }
-        } catch(Exception e) {
-            logger.error(e.toString());
-            throw e;
-        }
-
-
     }
 
     public void stop() {
-        /*for (int k = 0; k < accessorySupplCount; ++k) {
-            accessoryProducers[k].kill();
+        for (int k = 0; k < accessorySupplCount; ++k) {
+            accessoryProducersThreads[k].interrupt();
         }
 
-        engineProducer.kill();
-        carBodyProducer.kill();
-        carStorageController.kill();
+        engineProducerThread.interrupt();
+
+        carBodyProducerThread.interrupt();
+        carStorageControllerThread.interrupt();
 
         for (int k = 0; k < dealersCount; ++k) {
-            dealers[k].kill();
+            dealersThreads[k].interrupt();
+        }
+
+        for (int k = 0; k < accessorySupplCount; ++k) {
+            accessoryProducersThreads[k].interrupt();
         }
 
         try {
-            carCollectors.kill();
+            carCollectors.stop();
+            engineProducerThread.join();
+            engineProducerThread.join();
+            carBodyProducerThread.join();
+            carStorageControllerThread.join();
+            for (int k = 0; k < dealersCount; ++k) {
+                dealersThreads[k].join();
+            }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.fatal("Interrupted exception");
         }
-        */
     }
 }

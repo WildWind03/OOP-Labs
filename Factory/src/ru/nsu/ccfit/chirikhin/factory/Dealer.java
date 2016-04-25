@@ -11,8 +11,6 @@ public class Dealer implements Runnable{
 
     private int timeToSleep = 5000;
 
-    private boolean isRunning;
-
     public void setSellingSpeed(int newSpeed) {
         this.timeToSleep = newSpeed;
     }
@@ -25,14 +23,13 @@ public class Dealer implements Runnable{
         this.carStorage = carStorage;
         this.name = name;
         logger.info("Dealer with name " + name + " has been created!");
-        isRunning = true;
     }
 
     @Override
     public void run() {
         Car car;
         try {
-            while(isRunning) {
+            while(true) {
                 car = carStorage.getNext();
                 logger.info("Car with id " + car.getId() + " has been successfully sold by dealer with name " + name);
                 Thread.sleep(timeToSleep);
@@ -40,10 +37,8 @@ public class Dealer implements Runnable{
         } catch (InterruptedException e) {
             logger.error(name + ": unexpected interrupted error!");
         }
-    }
 
-    public void kill() {
-        isRunning = false;
+        logger.info("Dealer finished successfully!");
     }
 
 }

@@ -2,8 +2,6 @@ package ru.nsu.ccfit.chirikhin.threadpool;
 
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
-import ru.nsu.ccfit.chirikhin.factory.StorageEmptyException;
-import ru.nsu.ccfit.chirikhin.factory.StorageOverflowedException;
 import ru.nsu.ccfit.chirikhin.factory.TaskContext;
 
 import java.util.ArrayList;
@@ -27,14 +25,8 @@ public class ThreadPool {
             try {
                 while (!isInterrupted()) {
                     taskContext = tasks.pop();
-                    try {
-                        taskContext.getTask().run();
-                        taskContext.handle();
-                    } catch (StorageEmptyException e) {
-                        logger.error("Empty storage");
-                    } catch (StorageOverflowedException e) {
-                        logger.error("Overflowed storage");
-                    }
+                    taskContext.getTask().run();
+                    taskContext.handle();
                 }
             } catch(InterruptedException interruptedException) {
                 logger.fatal("Interrupted exception");
