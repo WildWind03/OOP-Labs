@@ -1,14 +1,10 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-import javafx.beans.Observable;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField;
 
@@ -29,11 +25,6 @@ public class FXMLViewController extends java.util.Observable {
     private int totalAccessoriesProducedCounter = 0;
     private int totalCarsProducedCounter = 0;
     private int totalCarBodiesProducedCounter = 0;
-
-    private int maxAccessoryProducingSpeed;
-    private int maxEngineProducingSpeed;
-    private int maxCarBodyProducingSpeed;
-    private int maxDealerSpeed;
 
     private int currentTasksToMakeCars = 0;
 
@@ -67,6 +58,10 @@ public class FXMLViewController extends java.util.Observable {
     }
 
     public void onEngineStorageChanged(StorageEvent e) {
+        if (null == e) {
+            throw new NullPointerException("Event can't be null!");
+        }
+
         switch(e) {
             case PUT :
                 currentEngineCountInStorage++;
@@ -83,6 +78,10 @@ public class FXMLViewController extends java.util.Observable {
     }
 
     public void onCarBodyStorageChanged(StorageEvent e) {
+        if (null == e) {
+            throw new NullPointerException("Event can't be null!");
+        }
+
         switch(e) {
             case PUT :
                 currentCarBodiesCountInStorage++;
@@ -99,6 +98,10 @@ public class FXMLViewController extends java.util.Observable {
     }
 
     public void onAccessoryStorageChanged(StorageEvent e) {
+        if (null == e) {
+            throw new NullPointerException("Event can't be null!");
+        }
+
         switch(e) {
             case PUT :
                 currentAccessoryCountInStorage++;
@@ -115,6 +118,10 @@ public class FXMLViewController extends java.util.Observable {
     }
 
     public void onCarStorageChanged(StorageEvent e) {
+        if (null == e) {
+            throw new NullPointerException("Event can't be null!");
+        }
+
         switch(e) {
             case PUT :
                 currentCarsCountInStorage++;
@@ -132,62 +139,114 @@ public class FXMLViewController extends java.util.Observable {
     }
 
     public void setCountOfAccessoryProducers(int count) {
+        if (count < 0) {
+            throw new IllegalArgumentException("Count of producers can't be negative!");
+        }
+
         countOfAccessoryProducers.setText("AccessoryProducers - " + count);
     }
 
     public void setCountOfWorkers(int count) {
+        if (count < 0) {
+            throw new IllegalArgumentException("Count of workers can't be negative!");
+        }
+
         countOfWorkers.setText("Car collectors - " + count);
     }
 
     public void setCountOfDealers(int count) {
+        if (count < 0) {
+            throw new IllegalArgumentException("Count of dealers can't be negative!");
+        }
+
         countOfDealers.setText("Dealers - " + count);
     }
 
     public void setAccessoryStorageSize(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Storage size can't be negative!");
+        }
+
         this.accessoryStorageSize = size;
     }
 
     public void setEngineStorageSize(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Storage size can't be negative!");
+        }
+
         this.engineStorageSize = size;
     }
 
     public void setCarStorageSize(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Storage size can't be negative!");
+        }
+
         this.carStorageSize = size;
     }
 
     public void setCarBodyStorageSize(int size) {
+        if (size < 0) {
+            throw new IllegalArgumentException("Storage size can't be negative!");
+        }
+
         this.carBodyStorageSize = size;
     }
 
     public void setAccessoryProducingSpeed(int speed, int maxSpeed) {
+        if (speed < 0 || maxSpeed < 0) {
+            throw new IllegalArgumentException("Speed can't be negative!");
+        }
+        if (speed > maxSpeed) {
+            throw new IllegalArgumentException("Speed must be less than maxSpeed!");
+        }
+
         accessoryProducersEdit.setText(String.valueOf(speed));
         accessoryProducersSlider.setMax(maxSpeed);
         accessoryProducersSlider.setValue(speed);
-        this.maxAccessoryProducingSpeed = maxSpeed;
         accessoryProducersEdit.setMaxValue(maxSpeed);
     }
 
     public void setDealerSpeed(int speed, int maxSpeed) {
+        if (speed < 0 || maxSpeed < 0) {
+            throw new IllegalArgumentException("Speed can't be negative!");
+        }
+        if (speed > maxSpeed) {
+            throw new IllegalArgumentException("Speed must be less than maxSpeed!");
+        }
+
         dealersProducingSpeedEdit.setText(String.valueOf(speed));
         dealersProducingSpeedSlider.setMax(maxSpeed);
         dealersProducingSpeedSlider.setValue(speed);
-        this.maxDealerSpeed = maxSpeed;
         dealersProducingSpeedEdit.setMaxValue(maxSpeed);
     }
 
     public void setEngineProducingSpeed(int speed, int maxSpeed) {
+        if (speed < 0 || maxSpeed < 0) {
+            throw new IllegalArgumentException("Speed can't be negative!");
+        }
+        if (speed > maxSpeed) {
+            throw new IllegalArgumentException("Speed must be less than maxSpeed!");
+        }
+
         enginesProducerEdit.setText(String.valueOf(speed));
         enginesProducerSlider.setMax(maxSpeed);
         enginesProducerSlider.setValue(speed);
-        this.maxEngineProducingSpeed = maxSpeed;
         enginesProducerEdit.setMaxValue(maxSpeed);
     }
 
     public void setCarBodyProducingSpeed(int speed, int maxSpeed) {
+        if (speed < 0 || maxSpeed < 0) {
+            throw new IllegalArgumentException("Speed can't be negative!");
+        }
+        if (speed > maxSpeed) {
+            throw new IllegalArgumentException("Speed must be less than maxSpeed!");
+        }
+
         carBodyProducerEdit.setText(String.valueOf(speed));
         carBodyProducerSlider.setMax(maxSpeed);
         carBodyProducerSlider.setValue(speed);
-        this.maxCarBodyProducingSpeed = maxSpeed;
         carBodyProducerEdit.setMaxValue(maxSpeed);
     }
 

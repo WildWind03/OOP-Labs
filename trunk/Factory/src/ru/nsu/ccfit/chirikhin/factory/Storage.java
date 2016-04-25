@@ -9,12 +9,9 @@ public class Storage<T> extends Observable {
 
     Logger logger = Logger.getLogger(Storage.class.getName());
 
-    final private int maxSize;
-
     BlockingQueue<T> items;
 
     public Storage(int maxSize) {
-        this.maxSize = maxSize;
         items = new BlockingQueue<>(maxSize);
     }
 
@@ -40,7 +37,7 @@ public class Storage<T> extends Observable {
     }
 
     public int getMaxSize() {
-        return maxSize;
+        return items.maxSize();
     }
 
     public int size() {return items.size(); }

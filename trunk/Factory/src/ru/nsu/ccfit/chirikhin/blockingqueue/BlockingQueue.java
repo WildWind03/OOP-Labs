@@ -23,16 +23,22 @@ public class BlockingQueue<T> {
     }
 
     public int size() {
-        return insideQueue.size();
+        synchronized (lock) {
+            return insideQueue.size();
+        }
     }
 
     public boolean isEmpty() {
-       return insideQueue.isEmpty();
+        synchronized (lock) {
+            return insideQueue.isEmpty();
+        }
     }
 
     public boolean isFull() {
-        if (maxSize == insideQueue.size()) {
-            return true;
+        synchronized (lock) {
+            if (maxSize >= insideQueue.size()) {
+                return true;
+            }
         }
 
         return false;
@@ -40,13 +46,12 @@ public class BlockingQueue<T> {
 
     public void put(T obj) throws InterruptedException {
         synchronized (lock) {
-            while (insideQueue.size() == maxSize) {
+            while (insideQueue.size() >= maxSize) {
                 lock.wait();
             }
 
-            lock.notify();
-
             insideQueue.add(obj);
+            lock.notifyAll();
         }
     }
 
@@ -56,9 +61,11 @@ public class BlockingQueue<T> {
                lock.wait();
             }
 
-            lock.notify();
+            T current = insideQueue.pop();
 
-            return insideQueue.pop();
+            lock.notifyAll();
+
+            return current;
 
         }
     }

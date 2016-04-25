@@ -11,10 +11,7 @@ public class AccessoryProducer implements Runnable {
     private final Storage<Accessory> storage;
     private int producingSpeed;
 
-    private boolean isRunning;
-
     public AccessoryProducer(Storage<Accessory> storage, String name, int producingSpeed, IDRegisterer idRegisterer) {
-        isRunning = true;
 
         if (null == storage || null == name || null == idRegisterer) {
             String text = name + ": can't create myself because of null reference!";
@@ -48,19 +45,18 @@ public class AccessoryProducer implements Runnable {
 
     @Override
     public void run() {
-        while(isRunning) {
-            try {
+        try {
+            while(true) {
                 Accessory accessory = new Accessory(idRegisterer.getId());
                 storage.add(accessory);
                 logger.info(getName() + ": new accessory has been produced successfully! Its ID is " + accessory.getId());
                 Thread.sleep(producingSpeed);
-            } catch (InterruptedException e) {
-                logger.fatal(getName() + "Can not produce accessory! Interrupt exception!");
-            }
+             }
+        } catch (InterruptedException e) {
+            logger.fatal(getName() + "Can not produce accessory! Interrupt exception!");
         }
-    }
 
-    public void kill() {
-        isRunning = false;
+
+        logger.info("Accessory Producer finished successfully!");
     }
 }

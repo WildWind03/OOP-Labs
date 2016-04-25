@@ -6,23 +6,23 @@ import java.util.Properties;
 
 public class ConfigParser {
 
-    final static String WORKERS_COUNT_STR = "CountOfWorkers";
-    final static String DEALERS_COUNT_STR = "CountOfDealers";
-    final static String ACCESSORY_SUPPLIERS_COUNT_STR = "CountOfAccessorySuppliers";
-    final static String CAR_STORAGE_SIZE_STR = "CarStorageSize";
-    final static String ENGINE_STORAGE_SIZE_STR = "EngineStorageSize";
-    final static String ACCESSORY_STORAGE_SIZE_STR = "AccessoryStorageSize";
-    final static String CAR_BODY_STORAGE_SIZE_STR = "CarBodyStorageSize";
-    final static String LOG_STR = "Logging";
+    private final static String WORKERS_COUNT_STR = "CountOfWorkers";
+    private final static String DEALERS_COUNT_STR = "CountOfDealers";
+    private final static String ACCESSORY_SUPPLIERS_COUNT_STR = "CountOfAccessorySuppliers";
+    private final static String CAR_STORAGE_SIZE_STR = "CarStorageSize";
+    private final static String ENGINE_STORAGE_SIZE_STR = "EngineStorageSize";
+    private final static String ACCESSORY_STORAGE_SIZE_STR = "AccessoryStorageSize";
+    private final static String CAR_BODY_STORAGE_SIZE_STR = "CarBodyStorageSize";
+    private final static String LOG_STR = "Logging";
 
-    private int workersCount;
-    private int dealersCount;
-    private int accessorySupplCount;
-    private int carStorageSize;
-    private int engineStorageSize;
-    private int accessoryStorageSize;
-    private int carBodyStorageSize;
-    private boolean isLog;
+    private final int workersCount;
+    private final int dealersCount;
+    private final int accessorySupplCount;
+    private final int carStorageSize;
+    private final int engineStorageSize;
+    private final int accessoryStorageSize;
+    private final int carBodyStorageSize;
+    private final boolean isLog;
 
     private boolean isNumber(String string) {
         if (null == string) {
@@ -77,7 +77,6 @@ public class ConfigParser {
             accessoryStorageSize = Integer.parseInt(accessoryStorageSizeStr);
             carStorageSize = Integer.parseInt(carStorageSizeStr);
             engineStorageSize = Integer.parseInt(engineStorageSizeStr);
-            accessoryStorageSize = Integer.parseInt(accessoryStorageSizeStr);
             carBodyStorageSize = Integer.parseInt(carBodyStorageSizeStr);
             if (Integer.parseInt(logStr) <= 0) {
                 isLog = false;
