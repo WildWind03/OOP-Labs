@@ -3,7 +3,7 @@ package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
 
-public class AccessoryProducer implements Runnable{
+public class AccessoryProducer implements Runnable {
 
     private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
     private final String name;
@@ -39,7 +39,6 @@ public class AccessoryProducer implements Runnable{
             throw new IllegalArgumentException("Can't change producing speed! It can't be negative!");
         }
 
-        logger.info(getName() + " changed producing speed to " + producingSpeed);
         this.producingSpeed = producingSpeed;
     }
 
@@ -55,8 +54,6 @@ public class AccessoryProducer implements Runnable{
                 storage.add(accessory);
                 logger.info(getName() + ": new accessory has been produced successfully! Its ID is " + accessory.getId());
                 Thread.sleep(producingSpeed);
-            } catch (StorageOverflowedException e) {
-                logger.error(getName() + "Can not produce accessory. Storage is full");
             } catch (InterruptedException e) {
                 logger.fatal(getName() + "Can not produce accessory! Interrupt exception!");
             }

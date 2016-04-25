@@ -28,15 +28,16 @@ public class ThreadPool {
                 while (!isInterrupted()) {
                     taskContext = tasks.pop();
                     try {
-                            taskContext.getTask().run();
-                            taskContext.handle();
-                    } catch (Exception e) {
-                        logger.fatal("Error!");
+                        taskContext.getTask().run();
+                        taskContext.handle();
+                    } catch (StorageEmptyException e) {
+                        logger.error("Empty storage");
+                    } catch (StorageOverflowedException e) {
+                        logger.error("Overflowed storage");
                     }
                 }
             } catch(InterruptedException interruptedException) {
-                logger.fatal(getName() + ": interrupted exception");
-                System.exit(-1);
+                logger.fatal("Interrupted exception");
             }
 
         }
@@ -66,16 +67,8 @@ public class ThreadPool {
     }
 
     public void stop() throws InterruptedException {
-        for (Thread thread: threads) {
-            thread.interrupt();
-        }
+        threads.forEach(Thread::interrupt);
 
-        for (Thread thread: threads) {
-            thread.join();
-        }
-    }
-
-    public void join() throws InterruptedException {
         for (Thread thread: threads) {
             thread.join();
         }

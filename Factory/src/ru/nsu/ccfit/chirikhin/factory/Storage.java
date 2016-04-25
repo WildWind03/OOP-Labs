@@ -18,14 +18,14 @@ public class Storage<T> extends Observable {
         items = new BlockingQueue<>(maxSize);
     }
 
-    public T getNext() throws StorageEmptyException, InterruptedException {
+    public T getNext() throws InterruptedException {
         T tmp = items.pop();
         setChanged();
         notifyObservers(StorageEvent.GET);
         return tmp;
     }
 
-    public void add(T item) throws StorageOverflowedException, InterruptedException {
+    public void add(T item) throws InterruptedException {
         items.put(item);
         setChanged();
         notifyObservers(StorageEvent.PUT);

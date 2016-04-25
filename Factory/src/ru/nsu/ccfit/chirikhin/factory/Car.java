@@ -1,7 +1,5 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Car {
 
     private final Engine engine;
@@ -9,7 +7,7 @@ public class Car {
     private final Accessory accessory;
     private final long id;
 
-    public Car(Engine engine, Accessory accessory, CarBody carBody, long id) {
+    public Car (Engine engine, Accessory accessory, CarBody carBody, long id) {
         if (null == engine || null == accessory || null == carBody) {
             throw new IllegalArgumentException("Can't create myself because of null reference!");
         }

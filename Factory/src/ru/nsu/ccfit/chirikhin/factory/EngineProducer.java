@@ -18,14 +18,26 @@ public class EngineProducer implements Observer, Runnable{
     private boolean isRunning;
 
     public EngineProducer(Storage<Engine> engineCarDetailStorage, int producingSpeed, IDRegisterer idRegisterer) {
+        if (null == engineCarDetailStorage || null == idRegisterer) {
+            throw new IllegalArgumentException("Null references in constructor!");
+        }
+
+        if (producingSpeed < 0) {
+            throw new IllegalArgumentException("Producing speed is negative!");
+        }
+
         isRunning = true;
         this.producingSpeed = producingSpeed;
         this.idRegisterer = idRegisterer;
         this.engineCarDetailStorage = engineCarDetailStorage;
-        logger.info ("Engine producers has been created!");
+        logger.info ("Engine producer has been created!");
     }
 
     public void changeProducingSpeed(int producingSpeed) {
+        if (producingSpeed < 0) {
+            throw new IllegalArgumentException("Producing speed is negative!");
+        }
+
         this.producingSpeed = producingSpeed;
     }
 
@@ -37,8 +49,6 @@ public class EngineProducer implements Observer, Runnable{
                 engineCarDetailStorage.add(engine);
                 logger.info("New engine has been produced successfully! It's ID is " + engine.getId());
                 sleep(producingSpeed);
-            } catch (StorageOverflowedException e) {
-                logger.error("Can not produce new engine. Storage is full");
             } catch (InterruptedException e) {
                 logger.fatal("Can not produce new engine! Interrupt exception!");
             }

@@ -31,11 +31,11 @@ public class CarCollectors extends Observable {
         }
 
         @Override
-        public int run() throws StorageEmptyException, InterruptedException, StorageOverflowedException {
+        public int run() throws InterruptedException {
             Car car = new Car(engineStorage.getNext(), accessoryStorage.getNext(), carBodyStorage.getNext(), idRegisterer.getId());
             carStorage.add(car);
             logger.info("Car ID " + car.getId() + "(" + car.getBodyId() + " " + car.getEngineId() + " " + car.getAccessoryId() + ") has been made and sent to car storage!");
-            return 1;
+            return 0;
         }
 
 
@@ -43,7 +43,18 @@ public class CarCollectors extends Observable {
     private final ThreadPool collectors;
     private final CollectorTask task;
 
-    public CarCollectors(int collectorsCount, Storage<Engine> engineStorage, Storage<CarBody> carBodyStorage, Storage<Accessory> accessoryStorage, Storage<Car> carStorage, IDRegisterer idRegisterer) throws InterruptedException {
+    private final Logger logger = Logger.getLogger(CarCollectors.class.getName());
+
+    public CarCollectors(int collectorsCount, Storage<Engine> engineStorage, Storage<CarBody> carBodyStorage, Storage<Accessory> accessoryStorage,
+                         Storage<Car> carStorage, IDRegisterer idRegisterer) throws InterruptedException {
+        if (collectorsCount < 0) {
+            throw new IllegalArgumentException("Count of workers (collectors) can't be less than zero!");
+        }
+
+        if (null == engineStorage || null == carBodyStorage || null == accessoryStorage || null == carStorage || null == idRegisterer) {
+            throw new IllegalArgumentException("Null references have been found while constructing CarCollectors");
+        }
+
         task = new CollectorTask(engineStorage, carBodyStorage, accessoryStorage, carStorage, idRegisterer);
         collectors = new ThreadPool(collectorsCount);
     }
@@ -61,7 +72,13 @@ public class CarCollectors extends Observable {
         collectors.addTask(taskContext);
     }
 
+    public void makeCars(int count) throws InterruptedException {
+        for (int i = 0; i < count; ++i) {
+            makeCar();
+        }
+    }
+
     public void kill() throws InterruptedException {
-        collectors.stop();
+            collectors.stop();
     }
 }

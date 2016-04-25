@@ -37,7 +37,12 @@ public class Factory {
 
     private CarCollectors carCollectors;
 
-    public Factory(int workersCount, int dealersCount, int accessorySupplCount, int carStorageSize, int engineStorageSize, int accessoryStorageSize, int carBodyStorageSize, boolean isLog, int defaultProducingSpeed) throws InvalidConfigException, IOException, DeveloperBugException {
+    public Factory(int workersCount, int dealersCount, int accessorySupplCount, int carStorageSize, int engineStorageSize, int accessoryStorageSize, int carBodyStorageSize, boolean isLog, int defaultProducingSpeed) throws InterruptedException, IOException, DeveloperBugException {
+        if (workersCount < 0 || dealersCount < 0 || accessorySupplCount < 0 || carStorageSize < 0 || engineStorageSize < 0 || accessoryStorageSize < 0 || carBodyStorageSize < 0 || defaultProducingSpeed < 0) {
+            throw new IllegalArgumentException("One of sizes in constuctor is negative");
+        }
+
+
         DEFAULT_PRODUCING_SPEED = defaultProducingSpeed;
         engineStorage = new Storage<>(engineStorageSize);
         accessoryStorage = new Storage<>(accessoryStorageSize);
@@ -74,6 +79,7 @@ public class Factory {
             carCollectors = new CarCollectors(workersCount, engineStorage, carBodyStorage, accessoryStorage, carStorage, idRegisterer);
         } catch (InterruptedException e) {
             logger.fatal("Interrupt exception");
+            throw e;
         }
 
         carStorageController = new CarStorageController(carStorage, carCollectors);
@@ -81,25 +87,42 @@ public class Factory {
     }
 
     public void setOnEngineStorageChangedHandler(Handler handler) {
+        if (null == handler) {
+            throw new NullPointerException("Handler can't be null reference");
+        }
+
         engineStorage.addObserver(handler);
-        logger.debug("Engine Handler has been successfully added as observer to engine storage!");
     }
 
     public void onEngineProducingSpeedChanged(int newSpeed) {
+        if (newSpeed < 0) {
+            throw new IllegalArgumentException("Engine producing speed can not be negative!");
+        }
         engineProducer.changeProducingSpeed(newSpeed);
     }
 
     public void onAccessoryProducingSpeedChanged(int newSpeed) {
+        if (newSpeed < 0) {
+            throw new IllegalArgumentException("Accessory producing speed can not be negative!");
+        }
+
         for (int i = 0; i < accessorySupplCount; ++i)  {
             accessoryProducers[i].changeProducingSpeed(newSpeed);
         }
     }
 
     public void onCarBodyProducingSpeedChanged(int newSpeed) {
+        if (newSpeed < 0) {
+            throw new IllegalArgumentException("CarBody producing speed can not be negative!");
+        }
         carBodyProducer.changeProducingSpeed(newSpeed);
     }
 
-    public void onDealerSellingSpeedChnaged(int newSpeed) {
+    public void onDealerSellingSpeedChanged(int newSpeed) {
+        if (newSpeed < 0) {
+            throw new IllegalArgumentException("Dealers selling speed can not be negative!");
+        }
+
         for (int k= 0; k < dealersCount; ++k) {
             dealers[k].setSellingSpeed(newSpeed);
         }
