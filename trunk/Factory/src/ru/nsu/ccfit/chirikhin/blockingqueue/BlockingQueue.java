@@ -10,7 +10,7 @@ public class BlockingQueue<T> {
 
     public BlockingQueue(int maxSize) {
         if (maxSize <= 0) {
-            throw new IllegalArgumentException("Blocking queue: can not create BlockingQueue because of invalid max size");
+            throw new IllegalArgumentException("Invalid max size");
         }
 
         this.maxSize = maxSize;
@@ -40,7 +40,7 @@ public class BlockingQueue<T> {
 
     public void put(T obj) throws InterruptedException {
         synchronized (lock) {
-            while (insideQueue.size() == maxSize) { //why not if?
+            while (insideQueue.size() == maxSize) {
                 lock.wait();
             }
 

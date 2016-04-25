@@ -12,6 +12,9 @@ public class CarBodyProducer implements Runnable {
     private boolean isRunning;
 
     public void changeProducingSpeed(int producingSpeed) {
+        if (producingSpeed < 0) {
+            throw new IllegalArgumentException("Producing speed can't be negative");
+        }
         this.producingSpeed = producingSpeed;
     }
 
@@ -40,8 +43,6 @@ public class CarBodyProducer implements Runnable {
                 carBodyCarDetailStorage.add(carBody);
                 Thread.sleep(producingSpeed);
                 logger.info("New car body has been produced successfully! Its ID is " + carBody.getId());
-            } catch (StorageOverflowedException e) {
-                logger.error("Can not produce car body. Storage is full");
             } catch (InterruptedException e) {
                 logger.fatal("Can not produce car body! Interrupt exception!");
             }

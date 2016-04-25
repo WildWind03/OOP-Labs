@@ -1,7 +1,7 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
 public class Engine {
-    private static String description = "Engine";
+    private static final String description = "Engine";
     private final long id;
 
     public Engine(long id) {
