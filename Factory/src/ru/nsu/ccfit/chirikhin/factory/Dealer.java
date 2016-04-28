@@ -15,11 +15,16 @@ public class Dealer implements Runnable{
         this.timeToSleep = newSpeed;
     }
 
-    public Dealer(Storage<Car> carStorage, String name) {
+    public Dealer(Storage<Car> carStorage, String name, int sellingSpeed) {
         if (null == carStorage || null == name) {
             throw new IllegalArgumentException("Null references in constuctor");
         }
 
+        if (sellingSpeed < 0) {
+            throw new IllegalArgumentException("Selling speed can't be negative!");
+        }
+
+        timeToSleep = sellingSpeed;
         this.carStorage = carStorage;
         this.name = name;
         logger.info("Dealer with name " + name + " has been created!");

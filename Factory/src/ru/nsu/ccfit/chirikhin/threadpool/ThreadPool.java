@@ -55,7 +55,13 @@ public class ThreadPool {
     }
 
     public void addTask(TaskContext taskContext) throws InterruptedException {
-        tasks.put(taskContext);
+        new Thread(() -> {
+            try {
+                tasks.put(taskContext);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     public void stop() throws InterruptedException {
