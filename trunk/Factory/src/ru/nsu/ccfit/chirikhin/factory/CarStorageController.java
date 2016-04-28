@@ -4,11 +4,13 @@ import org.apache.log4j.Logger;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CarStorageController implements Runnable, Observer {
     private Storage<Car> carStorage;
     private CarCollectors carCollectors;
     private Logger logger = Logger.getLogger(CarStorageController.class.getName());
+    private AtomicInteger countOfCarsInStorage;
 
     private final Object lock;
 
@@ -16,6 +18,8 @@ public class CarStorageController implements Runnable, Observer {
         if (null == carCollectors || null == carStorage) {
             throw new IllegalArgumentException("Null refrence in constructor");
         }
+
+        countOfCarsInStorage = new AtomicInteger(0);
 
         carStorage.addObserver(this);
         this.carStorage = carStorage;
@@ -29,6 +33,10 @@ public class CarStorageController implements Runnable, Observer {
             while (true) {
                 synchronized (lock) {
 
+                    if (countOfCarsInStorage.get() < carStorage.getMaxSize() / 2) {
+                        carCollectors.makeCars(carStorage.getMaxSize() / 2);
+                    }
+
                     /*logger.debug("Checking car storage size!");
                     System.out.println(currentSize + "/" + (carStorage.getMaxSize() / 2));
                     if (currentSize < carStorage.getMaxSize() / 2) {
@@ -38,7 +46,6 @@ public class CarStorageController implements Runnable, Observer {
                     lock.wait();
                     */
 
-                    carCollectors.makeCars(1);
                     lock.wait();
 
                 }
@@ -52,6 +59,7 @@ public class CarStorageController implements Runnable, Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        countOfCarsInStorage.set(carStorage.size());
         synchronized (lock) {
             lock.notifyAll();
        }

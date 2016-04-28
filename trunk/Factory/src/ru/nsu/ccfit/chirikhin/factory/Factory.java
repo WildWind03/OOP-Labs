@@ -67,7 +67,7 @@ public class Factory {
         dealers = new Dealer[dealersCount];
         dealersThreads = new Thread[dealersCount];
         for (int i = 0; i < dealersCount; ++i) {
-            dealers[i] = new Dealer(carStorage, "Dealer " + i);
+            dealers[i] = new Dealer(carStorage, "Dealer " + i, DEFAULT_PRODUCING_SPEED);
             dealersThreads[i] = new Thread(dealers[i]);
             dealersThreads[i].setName("Dealer Thread " + i);
         }
