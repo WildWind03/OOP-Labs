@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class ThreadPool {
 
-    final private int DEFAULT_SIZE_OF_BLOCKING_QUEUE = 200;
+    final private int DEFAULT_SIZE_OF_BLOCKING_QUEUE = 20;
 
     public class ThreadPoolThread extends Thread {
         final private Logger logger = Logger.getLogger(ThreadPool.class.getName());
@@ -55,13 +55,7 @@ public class ThreadPool {
     }
 
     public void addTask(TaskContext taskContext) throws InterruptedException {
-        new Thread(() -> {
-            try {
-                tasks.put(taskContext);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        tasks.put(taskContext);
     }
 
     public void stop() throws InterruptedException {

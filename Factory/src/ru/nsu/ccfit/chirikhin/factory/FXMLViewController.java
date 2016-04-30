@@ -57,83 +57,59 @@ public class FXMLViewController extends java.util.Observable {
     public FXMLViewController() {
     }
 
-    public void onEngineStorageChanged(StorageEvent e) {
+    public void onEngineStorageChanged(StorageEventContext e) {
         if (null == e) {
             throw new NullPointerException("Event can't be null!");
         }
 
-        switch(e) {
-            case PUT :
-                currentEngineCountInStorage++;
-                totalEnginesProducedCounter++;
-                break;
-            case GET :
-                currentEngineCountInStorage--;
-                break;
+        if (StorageEvent.PUT == e.getStorageEvent()) {
+            totalEnginesProducedCounter++;
         }
 
-        countOfEnginesBar.setProgress(((double) currentEngineCountInStorage) / ((double) engineStorageSize));
-        countOfEngines.setText("Engines - " + currentEngineCountInStorage + "/" + engineStorageSize);
+        countOfEnginesBar.setProgress((double) e.getCurrentFullness() / ((double) engineStorageSize));
+        countOfEngines.setText("Engines - " + e.getCurrentFullness() + "/" + engineStorageSize);
         totalEnginesProduced.setText("Total engines produced - " + totalEnginesProducedCounter);
     }
 
-    public void onCarBodyStorageChanged(StorageEvent e) {
+    public void onCarBodyStorageChanged(StorageEventContext e) {
         if (null == e) {
             throw new NullPointerException("Event can't be null!");
         }
 
-        switch(e) {
-            case PUT :
-                currentCarBodiesCountInStorage++;
-                totalCarBodiesProducedCounter++;
-                break;
-            case GET :
-                currentCarBodiesCountInStorage--;
-                break;
+        if (StorageEvent.PUT == e.getStorageEvent()) {
+            totalCarBodiesProducedCounter++;
         }
 
-        countOfCarBodiesBar.setProgress(((double) currentCarBodiesCountInStorage) / ((double) carBodyStorageSize));
-        countOfCarBodies.setText("Car Bodies - " + currentCarBodiesCountInStorage + "/" + carBodyStorageSize);
+        countOfCarBodiesBar.setProgress(((double) e.getCurrentFullness()) / ((double) carBodyStorageSize));
+        countOfCarBodies.setText("Car Bodies - " + e.getCurrentFullness() + "/" + carBodyStorageSize);
         totalCarBodiesProduced.setText("Total car bodies produced - " + totalCarBodiesProducedCounter);
     }
 
-    public void onAccessoryStorageChanged(StorageEvent e) {
+    public void onAccessoryStorageChanged(StorageEventContext e) {
         if (null == e) {
             throw new NullPointerException("Event can't be null!");
         }
 
-        switch(e) {
-            case PUT :
-                currentAccessoryCountInStorage++;
-                totalAccessoriesProducedCounter++;
-                break;
-            case GET :
-                currentAccessoryCountInStorage--;
-                break;
+        if (StorageEvent.PUT == e.getStorageEvent()) {
+            totalAccessoriesProducedCounter++;
         }
 
-        countOfAccessoriesBar.setProgress(((double) currentAccessoryCountInStorage) / ((double) accessoryStorageSize));
-        countOfAccessories.setText("Accessories - " + currentAccessoryCountInStorage + "/" + accessoryStorageSize);
+        countOfAccessoriesBar.setProgress(((double) e.getCurrentFullness()) / ((double) accessoryStorageSize));
+        countOfAccessories.setText("Accessories - " + e.getCurrentFullness() + "/" + accessoryStorageSize);
         totalAccessoryProduced.setText("Total Accessories produced - " + totalAccessoriesProducedCounter);
     }
 
-    public void onCarStorageChanged(StorageEvent e) {
+    public void onCarStorageChanged(StorageEventContext e) {
         if (null == e) {
             throw new NullPointerException("Event can't be null!");
         }
 
-        switch(e) {
-            case PUT :
-                currentCarsCountInStorage++;
-                totalCarsProducedCounter++;
-                break;
-            case GET :
-                currentCarsCountInStorage--;
-                break;
+        if (StorageEvent.PUT == e.getStorageEvent()) {
+            totalCarsProducedCounter++;
         }
 
-        countOfCarsBar.setProgress(((double) currentCarsCountInStorage) / ((double) carStorageSize));
-        countOfCars.setText("Cars - " + currentCarsCountInStorage + "/" + carStorageSize);
+        countOfCarsBar.setProgress(((double) e.getCurrentFullness()) / ((double) carStorageSize));
+        countOfCars.setText("Cars - " + e.getCurrentFullness() + "/" + carStorageSize);
         totalCarsProduced.setText("Total Cars produced - " + totalCarsProducedCounter);
         countOfSoldCars.setText("Count of sold cars - " + (totalCarsProducedCounter - currentCarsCountInStorage));
     }

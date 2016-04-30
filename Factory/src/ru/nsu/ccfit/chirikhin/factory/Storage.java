@@ -17,17 +17,15 @@ public class Storage<T> extends Observable {
 
     public T getNext() throws InterruptedException {
         T tmp = items.pop();
-        //size();
         setChanged();
-        notifyObservers(new StorageEventContext(StorageEvent.GET, 0));
+        notifyObservers(new StorageEventContext(StorageEvent.GET, size()));
         return tmp;
     }
 
     public void add(T item) throws InterruptedException {
         items.put(item);
-        //size();
         setChanged();
-        notifyObservers(new StorageEventContext(StorageEvent.PUT, 0));
+        notifyObservers(new StorageEventContext(StorageEvent.PUT, size()));
     }
 
     public boolean isEmpty() {
