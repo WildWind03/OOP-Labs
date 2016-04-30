@@ -87,6 +87,8 @@ public class Factory {
         carStorageController = new CarStorageController(carStorage, carCollectors);
         carStorageControllerThread = new Thread(carStorageController);
         carStorageControllerThread.setName("Car Storage Controller");
+
+        carCollectors.addObserver(carStorageController);
     }
 
     public void setOnEngineStorageChangedHandler(Handler handler) {

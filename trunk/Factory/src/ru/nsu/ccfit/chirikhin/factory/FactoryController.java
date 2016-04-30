@@ -31,7 +31,7 @@ public class FactoryController implements Observer {
         factory.setOnEngineStorageChangedHandler(new Handler(fxmlViewController) {
             @Override
             public void update(Observable o, Object arg) {
-                Platform.runLater(() -> fxmlViewController.onEngineStorageChanged(((StorageEventContext) arg).getStorageEvent()));
+                Platform.runLater(() -> fxmlViewController.onEngineStorageChanged((StorageEventContext) arg));
             }
         });
 
@@ -58,21 +58,21 @@ public class FactoryController implements Observer {
         factory.setOnAccessoryStorageChangedHandler(new Handler(fxmlViewController) {
             @Override
             public void update(Observable o, Object arg) {
-                Platform.runLater(() -> fxmlViewController.onAccessoryStorageChanged(((StorageEventContext) arg).getStorageEvent()));
+                Platform.runLater(() -> fxmlViewController.onAccessoryStorageChanged((StorageEventContext) arg));
             }
         });
 
         factory.setOnCarBodyStorageChangedHandler(new Handler(fxmlViewController) {
             @Override
             public void update(Observable o, Object arg) {
-                Platform.runLater(() -> fxmlViewController.onCarBodyStorageChanged(((StorageEventContext) arg).getStorageEvent()));
+                Platform.runLater(() -> fxmlViewController.onCarBodyStorageChanged((StorageEventContext) arg));
             }
         });
 
         factory.setOnCarStorageChangedHandler(new Handler(fxmlViewController) {
             @Override
             public void update(Observable o, Object arg) {
-                Platform.runLater(() -> fxmlViewController.onCarStorageChanged(((StorageEventContext) arg).getStorageEvent()));
+                Platform.runLater(() -> fxmlViewController.onCarStorageChanged((StorageEventContext) arg));
             }
         });
     }

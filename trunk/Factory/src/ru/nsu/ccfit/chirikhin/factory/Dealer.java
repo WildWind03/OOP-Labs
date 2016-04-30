@@ -35,6 +35,7 @@ public class Dealer implements Runnable{
         Car car;
         try {
             while(true) {
+                logger.debug("Car storage: " + carStorage.size());
                 car = carStorage.getNext();
                 logger.info("Car with id " + car.getId() + " has been successfully sold by dealer with name " + name);
                 Thread.sleep(timeToSleep);

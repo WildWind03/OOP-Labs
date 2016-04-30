@@ -4,9 +4,9 @@ import java.util.LinkedList;
 
 public class BlockingQueue<T> {
 
-    private int maxSize = 0;
-    final private Object lock;
-    private LinkedList<T> insideQueue;
+    private final int maxSize;
+    private final Object lock;
+    private final LinkedList<T> insideQueue;
 
     public BlockingQueue(int maxSize) {
         if (maxSize <= 0) {
@@ -62,9 +62,7 @@ public class BlockingQueue<T> {
             }
 
             T current = insideQueue.pop();
-
             lock.notifyAll();
-
             return current;
 
         }
