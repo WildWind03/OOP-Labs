@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 
 public class AccessoryProducer implements Runnable {
 
-    private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
+    private final static Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
     private final String name;
     private final IDRegisterer idRegisterer;
     private final Storage<Accessory> storage;
@@ -53,9 +53,8 @@ public class AccessoryProducer implements Runnable {
                 Thread.sleep(producingSpeed);
              }
         } catch (InterruptedException e) {
-            logger.fatal(getName() + "Can not produce accessory! Interrupt exception!");
+            logger.fatal(getName() + " Interrupt exception!");
         }
-
 
         logger.info("Accessory Producer finished successfully!");
     }

@@ -8,7 +8,7 @@ import java.util.Observer;
 import static java.lang.Thread.sleep;
 
 
-public class EngineProducer implements Observer, Runnable{
+public class EngineProducer implements Observer, Runnable {
 
     private final Storage<Engine> engineCarDetailStorage;
     private final Logger logger = Logger.getLogger(AccessoryProducer.class.getName());
@@ -47,7 +47,7 @@ public class EngineProducer implements Observer, Runnable{
                 sleep(producingSpeed);
             }
         } catch (InterruptedException e) {
-            logger.fatal("Can not produce new engine! Interrupt exception!");
+            logger.debug("Interrupt exception!");
         }
 
         logger.info("Engine Producer finished successfully!");

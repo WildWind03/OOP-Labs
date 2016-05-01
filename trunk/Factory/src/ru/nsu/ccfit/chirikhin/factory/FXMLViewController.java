@@ -9,17 +9,9 @@ import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField;
 
 public class FXMLViewController extends java.util.Observable {
-    private Logger logger = Logger.getLogger(FXMLViewController.class.getName());
+    private final static Logger logger = Logger.getLogger(FXMLViewController.class.getName());
 
-    private  int engineStorageSize = 0;
-    private  int carBodyStorageSize = 0;
-    private  int carStorageSize = 0;
-    private  int accessoryStorageSize = 0;
-
-    private int currentEngineCountInStorage = 0;
-    private int currentCarBodiesCountInStorage = 0;
-    private int currentCarsCountInStorage = 0;
-    private int currentAccessoryCountInStorage = 0;
+    private int countOfSoldCarsInt = 0;
 
     private int totalEnginesProducedCounter = 0;
     private int totalAccessoriesProducedCounter = 0;
@@ -55,6 +47,7 @@ public class FXMLViewController extends java.util.Observable {
     @FXML Label tasksToMakeCars;
 
     public FXMLViewController() {
+
     }
 
     public void onEngineStorageChanged(StorageEventContext e) {
@@ -66,8 +59,8 @@ public class FXMLViewController extends java.util.Observable {
             totalEnginesProducedCounter++;
         }
 
-        countOfEnginesBar.setProgress((double) e.getCurrentFullness() / ((double) engineStorageSize));
-        countOfEngines.setText("Engines - " + e.getCurrentFullness() + "/" + engineStorageSize);
+        countOfEnginesBar.setProgress((double) e.getCurrentFullness() / ((double) e.getMaxSize()));
+        countOfEngines.setText("Engines - " + e.getCurrentFullness() + "/" + e.getMaxSize());
         totalEnginesProduced.setText("Total engines produced - " + totalEnginesProducedCounter);
     }
 
@@ -80,8 +73,8 @@ public class FXMLViewController extends java.util.Observable {
             totalCarBodiesProducedCounter++;
         }
 
-        countOfCarBodiesBar.setProgress(((double) e.getCurrentFullness()) / ((double) carBodyStorageSize));
-        countOfCarBodies.setText("Car Bodies - " + e.getCurrentFullness() + "/" + carBodyStorageSize);
+        countOfCarBodiesBar.setProgress(((double) e.getCurrentFullness()) / ((double) e.getMaxSize()));
+        countOfCarBodies.setText("Car Bodies - " + e.getCurrentFullness() + "/" + e.getMaxSize());
         totalCarBodiesProduced.setText("Total car bodies produced - " + totalCarBodiesProducedCounter);
     }
 
@@ -94,8 +87,8 @@ public class FXMLViewController extends java.util.Observable {
             totalAccessoriesProducedCounter++;
         }
 
-        countOfAccessoriesBar.setProgress(((double) e.getCurrentFullness()) / ((double) accessoryStorageSize));
-        countOfAccessories.setText("Accessories - " + e.getCurrentFullness() + "/" + accessoryStorageSize);
+        countOfAccessoriesBar.setProgress(((double) e.getCurrentFullness()) / ((double) e.getMaxSize()));
+        countOfAccessories.setText("Accessories - " + e.getCurrentFullness() + "/" + e.getMaxSize());
         totalAccessoryProduced.setText("Total Accessories produced - " + totalAccessoriesProducedCounter);
     }
 
@@ -108,10 +101,14 @@ public class FXMLViewController extends java.util.Observable {
             totalCarsProducedCounter++;
         }
 
-        countOfCarsBar.setProgress(((double) e.getCurrentFullness()) / ((double) carStorageSize));
-        countOfCars.setText("Cars - " + e.getCurrentFullness() + "/" + carStorageSize);
+        if (StorageEvent.GET == e.getStorageEvent()) {
+            countOfSoldCarsInt++;
+        }
+
+        countOfCarsBar.setProgress(((double) e.getCurrentFullness()) / ((double) e.getMaxSize()));
+        countOfCars.setText("Cars - " + e.getCurrentFullness() + "/" + e.getMaxSize());
         totalCarsProduced.setText("Total Cars produced - " + totalCarsProducedCounter);
-        countOfSoldCars.setText("Count of sold cars - " + (totalCarsProducedCounter - currentCarsCountInStorage));
+        countOfSoldCars.setText("Count of sold cars - " + countOfSoldCarsInt);
     }
 
     public void setCountOfAccessoryProducers(int count) {
@@ -136,38 +133,6 @@ public class FXMLViewController extends java.util.Observable {
         }
 
         countOfDealers.setText("Dealers - " + count);
-    }
-
-    public void setAccessoryStorageSize(int size) {
-        if (size < 0) {
-            throw new IllegalArgumentException("Storage size can't be negative!");
-        }
-
-        this.accessoryStorageSize = size;
-    }
-
-    public void setEngineStorageSize(int size) {
-        if (size < 0) {
-            throw new IllegalArgumentException("Storage size can't be negative!");
-        }
-
-        this.engineStorageSize = size;
-    }
-
-    public void setCarStorageSize(int size) {
-        if (size < 0) {
-            throw new IllegalArgumentException("Storage size can't be negative!");
-        }
-
-        this.carStorageSize = size;
-    }
-
-    public void setCarBodyStorageSize(int size) {
-        if (size < 0) {
-            throw new IllegalArgumentException("Storage size can't be negative!");
-        }
-
-        this.carBodyStorageSize = size;
     }
 
     public void setAccessoryProducingSpeed(int speed, int maxSpeed) {
@@ -275,12 +240,12 @@ public class FXMLViewController extends java.util.Observable {
         notifyObservers(new ChangedSpeedEvent(SpeedType.ACCESSORY_PRODUCING, (int)accessoryProducersSlider.getValue()));
     }
 
-    @FXML public void onNewTaskToMakeCarAppeared() {
+    @FXML void onNewTaskToMakeCarAppeared() {
         currentTasksToMakeCars++;
         tasksToMakeCars.setText("Tasks to make cars - " + currentTasksToMakeCars);
     }
 
-    @FXML public void onTaskCompleted() {
+    @FXML void onTaskCompleted() {
         currentTasksToMakeCars--;
         tasksToMakeCars.setText("Tasks to make cars - " + currentTasksToMakeCars);
     }

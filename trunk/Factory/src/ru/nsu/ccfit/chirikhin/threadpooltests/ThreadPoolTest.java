@@ -1,12 +1,8 @@
 package ru.nsu.ccfit.chirikhin.threadpooltests;
 
-import org.junit.Assert;
 import org.junit.Test;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 import ru.nsu.ccfit.chirikhin.factory.MyRunnable;
-import ru.nsu.ccfit.chirikhin.factory.OnErrorHandler;
-import ru.nsu.ccfit.chirikhin.factory.OnResultHandler;
-import ru.nsu.ccfit.chirikhin.factory.TaskContext;
 import ru.nsu.ccfit.chirikhin.threadpool.ThreadPool;
 
 
@@ -14,7 +10,7 @@ public class ThreadPoolTest {
     public ThreadPoolTest() {
     }
 
-    class Printer implements MyRunnable {
+    private class Printer implements MyRunnable {
         private BlockingQueue<String> blockingQueue;
         private String str;
 

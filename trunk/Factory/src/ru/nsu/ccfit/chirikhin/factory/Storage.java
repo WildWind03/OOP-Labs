@@ -7,25 +7,29 @@ import java.util.Observable;
 
 public class Storage<T> extends Observable {
 
-    Logger logger = Logger.getLogger(Storage.class.getName());
+    private final static Logger logger = Logger.getLogger(Storage.class.getName());
 
-    BlockingQueue<T> items;
+    private final BlockingQueue<T> items;
 
     public Storage(int maxSize) {
+        if (maxSize <= 0) {
+            throw new IllegalArgumentException("Size can't be negative!");
+        }
+
         items = new BlockingQueue<>(maxSize);
     }
 
     public T getNext() throws InterruptedException {
         T tmp = items.pop();
         setChanged();
-        notifyObservers(new StorageEventContext(StorageEvent.GET, size()));
+        notifyObservers(new StorageEventContext(StorageEvent.GET, size(), getMaxSize()));
         return tmp;
     }
 
     public void add(T item) throws InterruptedException {
         items.put(item);
         setChanged();
-        notifyObservers(new StorageEventContext(StorageEvent.PUT, size()));
+        notifyObservers(new StorageEventContext(StorageEvent.PUT, size(), getMaxSize()));
     }
 
     public boolean isEmpty() {

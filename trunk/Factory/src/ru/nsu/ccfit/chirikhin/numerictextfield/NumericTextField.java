@@ -32,11 +32,8 @@ public class NumericTextField extends TextField
 
     private boolean validate(String text)
     {
-        if (!text.matches("[0-9]*")) {
-            return false;
-        }
+        return text.matches("[0-9]*");
 
-        return true;
     }
 
     private void checkForMaxAndEmptyString() {

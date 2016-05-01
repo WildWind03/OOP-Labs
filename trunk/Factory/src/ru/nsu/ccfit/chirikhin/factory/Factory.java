@@ -1,16 +1,13 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 public class Factory {
     public final int DEFAULT_PRODUCING_SPEED;
 
-    private final Logger logger = Logger.getLogger(Factory.class.getName());
+    private final static Logger logger = Logger.getLogger(Factory.class.getName());
     private final IDRegisterer idRegisterer = new IDRegisterer();
 
     private final Storage<Engine> engineStorage;
@@ -18,9 +15,8 @@ public class Factory {
     private final Storage<Car> carStorage;
     private final Storage<CarBody> carBodyStorage;
 
-    private int dealersCount;
-    private int accessorySupplCount;
-    private boolean isLog;
+    private final int dealersCount;
+    private final int accessorySupplCount;
 
     private final EngineProducer engineProducer;
     private final AccessoryProducer[] accessoryProducers;
@@ -34,9 +30,9 @@ public class Factory {
     private final Thread carStorageControllerThread;
     private final Thread[] dealersThreads;
 
-    private CarCollectors carCollectors;
+    private final CarCollectors carCollectors;
 
-    public Factory(int workersCount, int dealersCount, int accessorySupplCount, int carStorageSize, int engineStorageSize, int accessoryStorageSize, int carBodyStorageSize, boolean isLog, int defaultProducingSpeed) throws InterruptedException, IOException, DeveloperBugException {
+    public Factory(int workersCount, int dealersCount, int accessorySupplCount, int carStorageSize, int engineStorageSize, int accessoryStorageSize, int carBodyStorageSize, int defaultProducingSpeed) throws InterruptedException, IOException {
         if (workersCount < 0 || dealersCount < 0 || accessorySupplCount < 0 || carStorageSize < 0 || engineStorageSize < 0 || accessoryStorageSize < 0 || carBodyStorageSize < 0 || defaultProducingSpeed < 0) {
             throw new IllegalArgumentException("One of sizes in constructor is negative");
         }
@@ -49,7 +45,6 @@ public class Factory {
         carStorage = new Storage<>(carStorageSize);
 
         this.accessorySupplCount = accessorySupplCount;
-        this.isLog = isLog;
         this.dealersCount = dealersCount;
 
         engineProducer = new EngineProducer(engineStorage, DEFAULT_PRODUCING_SPEED, idRegisterer);
@@ -80,15 +75,16 @@ public class Factory {
         try {
             carCollectors = new CarCollectors(workersCount, engineStorage, carBodyStorage, accessoryStorage, carStorage, idRegisterer);
         } catch (InterruptedException e) {
-            logger.fatal("Interrupt exception");
+            logger.debug("Interrupt exception");
             throw e;
         }
 
-        carStorageController = new CarStorageController(carStorage, carCollectors);
+        carStorageController = new CarStorageController(carCollectors);
         carStorageControllerThread = new Thread(carStorageController);
         carStorageControllerThread.setName("Car Storage Controller");
 
         carCollectors.addObserver(carStorageController);
+        carStorage.addObserver(carStorageController);
     }
 
     public void setOnEngineStorageChangedHandler(Handler handler) {
@@ -103,6 +99,7 @@ public class Factory {
         if (newSpeed < 0) {
             throw new IllegalArgumentException("Engine producing speed can not be negative!");
         }
+
         engineProducer.changeProducingSpeed(newSpeed);
     }
 
@@ -120,6 +117,7 @@ public class Factory {
         if (newSpeed < 0) {
             throw new IllegalArgumentException("CarBody producing speed can not be negative!");
         }
+
         carBodyProducer.changeProducingSpeed(newSpeed);
     }
 
@@ -137,6 +135,7 @@ public class Factory {
         if (null == handler) {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
+
         carCollectors.addObserver(handler);
     }
 
@@ -144,6 +143,7 @@ public class Factory {
         if (null == handler) {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
+
         accessoryStorage.addObserver(handler);
     }
 
@@ -151,6 +151,7 @@ public class Factory {
         if (null == handler) {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
+
         carBodyStorage.addObserver(handler);
     }
 
@@ -158,6 +159,7 @@ public class Factory {
         if (null == handler) {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
+
         carStorage.addObserver(handler);
     }
 
@@ -165,6 +167,7 @@ public class Factory {
         if (null == handler) {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
+
         carCollectors.addObserver(handler);
     }
 
