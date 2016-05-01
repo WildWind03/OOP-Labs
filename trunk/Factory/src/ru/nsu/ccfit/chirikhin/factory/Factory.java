@@ -136,7 +136,7 @@ public class Factory {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
 
-        carCollectors.addObserver(handler);
+        carStorage.addObserver(handler);
     }
 
     public void setOnAccessoryStorageChangedHandler(Handler handler) {

@@ -1,8 +1,12 @@
 package ru.nsu.ccfit.chirikhin.blockingqueue;
 
-import java.util.LinkedList;
+import ru.nsu.ccfit.chirikhin.factory.StorageEvent;
+import ru.nsu.ccfit.chirikhin.factory.StorageEventContext;
 
-public class BlockingQueue<T> {
+import java.util.LinkedList;
+import java.util.Observable;
+
+public class BlockingQueue<T> extends Observable {
 
     private final int maxSize;
     private final Object lock;
@@ -51,6 +55,8 @@ public class BlockingQueue<T> {
             }
 
             insideQueue.add(obj);
+            setChanged();
+            notifyObservers(new StorageEventContext(StorageEvent.PUT, insideQueue.size(), maxSize()));
             lock.notifyAll();
         }
     }
@@ -62,6 +68,8 @@ public class BlockingQueue<T> {
             }
 
             T current = insideQueue.pop();
+            setChanged();
+            notifyObservers(new StorageEventContext(StorageEvent.GET, insideQueue.size(), maxSize()));
             lock.notifyAll();
             return current;
 

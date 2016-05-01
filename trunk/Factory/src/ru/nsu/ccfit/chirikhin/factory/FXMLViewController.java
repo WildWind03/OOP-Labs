@@ -11,8 +11,6 @@ import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField;
 public class FXMLViewController extends java.util.Observable {
     private final static Logger logger = Logger.getLogger(FXMLViewController.class.getName());
 
-    private int countOfSoldCarsInt = 0;
-
     private int totalEnginesProducedCounter = 0;
     private int totalAccessoriesProducedCounter = 0;
     private int totalCarsProducedCounter = 0;
@@ -101,14 +99,11 @@ public class FXMLViewController extends java.util.Observable {
             totalCarsProducedCounter++;
         }
 
-        if (StorageEvent.GET == e.getStorageEvent()) {
-            countOfSoldCarsInt++;
-        }
 
         countOfCarsBar.setProgress(((double) e.getCurrentFullness()) / ((double) e.getMaxSize()));
         countOfCars.setText("Cars - " + e.getCurrentFullness() + "/" + e.getMaxSize());
         totalCarsProduced.setText("Total Cars produced - " + totalCarsProducedCounter);
-        countOfSoldCars.setText("Count of sold cars - " + countOfSoldCarsInt);
+        countOfSoldCars.setText("Count of sold cars - " + (totalCarsProducedCounter - e.getCurrentFullness()));
     }
 
     public void setCountOfAccessoryProducers(int count) {
