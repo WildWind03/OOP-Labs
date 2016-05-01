@@ -27,9 +27,9 @@ public class Storage<T> extends Observable {
     }
 
     public void add(T item) throws InterruptedException {
-        items.put(item);
         setChanged();
         notifyObservers(new StorageEventContext(StorageEvent.PUT, size(), getMaxSize()));
+        items.put(item);
     }
 
     public boolean isEmpty() {
