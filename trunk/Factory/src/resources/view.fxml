@@ -1,0 +1,132 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
+
+<?import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<GridPane fx:controller="ru.nsu.ccfit.chirikhin.factory.FXMLViewController"
+          xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="10" vgap="10">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="25"/>
+        <ColumnConstraints percentWidth="20"/>
+        <ColumnConstraints percentWidth="15"/>
+        <ColumnConstraints percentWidth="40"/>
+    </columnConstraints>
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <Label fx:id="countOfAccessories" text="Accessories - "
+           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <ProgressBar fx:id="countOfAccessoriesBar" progress="0"
+                 GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label fx:id="totalAccessoryProduced" text="Total Accessory Produced - "
+           GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="countOfCarBodies" text="Car Bodies - "
+           GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <ProgressBar fx:id="countOfCarBodiesBar" progress="0"
+                 GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label fx:id="totalCarBodiesProduced" text="Total Car Bodies Produced - "
+           GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="countOfEngines" text="Engines - "
+           GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <ProgressBar fx:id="countOfEnginesBar" progress="0"
+                 GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label fx:id="totalEnginesProduced" text="Total Engines Produced - "
+           GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="countOfCars" text="Cars - "
+           GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <ProgressBar fx:id="countOfCarsBar" progress="0"
+                 GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label fx:id="totalCarsProduced" text="Total Cars Produced - "
+           GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="countOfAccessoryProducers" text="Accessory Producers - 20000"
+           GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label text="Producing speed - "
+           GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <NumericTextField fx:id="accessoryProducersEdit" maxWidth="60"
+                      GridPane.columnIndex="2" GridPane.rowIndex="5"
+                      onKeyReleased="#onAccessoryProducerSpeedChanged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Slider fx:id="accessoryProducersSlider" max="100" min="0"
+            GridPane.columnIndex="3" GridPane.rowIndex="5"
+            onMouseDragged="#onAccessoryProducerSliderDragged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="countOfWorkers" text="Car Collectors - 20000"
+           GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="countOfDealers" text="Dealers - 20000"
+           GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label text="Producing speed - "
+           GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Slider fx:id="dealersProducingSpeedSlider" max="100" min="0"
+            GridPane.columnIndex="3" GridPane.rowIndex="6" onMouseDragged="#onDealerSliderDragged"
+            GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <NumericTextField fx:id="dealersProducingSpeedEdit" maxWidth="60"
+                      GridPane.columnIndex="2" GridPane.rowIndex="6"
+                      onKeyReleased="#onDealerSpeedChanged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label text="Engine Producers - 1"
+           GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label text="Producing speed - "
+           GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Slider fx:id="enginesProducerSlider" max="100" min="0"
+            GridPane.columnIndex="3" GridPane.rowIndex="7"
+            onMouseDragged="#onEngineProducerSliderDragged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <NumericTextField fx:id="enginesProducerEdit" maxWidth="60"
+                      GridPane.columnIndex="2" GridPane.rowIndex="7"
+                      onKeyReleased="#onEngineProducingSpeedChanged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label text="Car Body Producers - 1"
+           GridPane.columnIndex="0" GridPane.rowIndex="8" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label text="Producing speed - "
+           GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Slider fx:id="carBodyProducerSlider" max="100" min="0"
+            GridPane.columnIndex="3" GridPane.rowIndex="8"
+            onMouseDragged="#onCarBodyProducerSliderDragged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <NumericTextField fx:id="carBodyProducerEdit" maxWidth="60"
+                      GridPane.columnIndex="2" GridPane.rowIndex="8"
+                      onKeyReleased="#onCarBodyProducingSpeedChanged" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+
+    <Label fx:id="tasksToMakeCars" text="Count of car orders: "
+           GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+
+    <Label fx:id="countOfSoldCars" text="Count of sold cars: "
+           GridPane.columnIndex="0" GridPane.rowIndex="11" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS"/>
+</GridPane>
