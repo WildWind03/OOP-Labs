@@ -6,7 +6,7 @@ import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 import java.util.Observable;
 import java.util.Observer;
 
-public class CarStorageController implements Runnable, Observer {
+public class CarStorageController extends Observable implements Runnable, Observer {
     private enum CarStorageControllerEventType {
         STORAGE_ADD, STORAGE_GET, TASK_ADD, TASK_COMPLETED
     }
@@ -72,7 +72,7 @@ public class CarStorageController implements Runnable, Observer {
             while(true) {
                 CarStorageControllerEvent event = events.pop();
                 switch (event.getEventType()) {
-                    case TASK_COMPLETED:
+                    case STORAGE_ADD:
                         countOfCurrentTasksInQueue--;
                         break;
                     case STORAGE_GET:

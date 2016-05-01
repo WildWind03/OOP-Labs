@@ -54,8 +54,8 @@ public class FactoryController implements Observer {
         factory.setOnTaskCompletedHandler(new Handler(fxmlViewController) {
             @Override
             public void update(Observable o, Object arg) {
-                TaskState taskState = (TaskState) arg;
-                if (TaskState.COMPLETED == taskState) {
+                StorageEventContext storageEventContext = (StorageEventContext) arg;
+                if (StorageEvent.PUT == storageEventContext.getStorageEvent()) {
                     Platform.runLater(fxmlViewController::onTaskCompleted);
                 }
             }

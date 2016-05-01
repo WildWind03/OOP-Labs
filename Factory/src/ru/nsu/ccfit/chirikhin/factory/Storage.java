@@ -4,8 +4,9 @@ import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 
 import java.util.Observable;
+import java.util.Observer;
 
-public class Storage<T> extends Observable {
+public class Storage<T> extends Observable implements Observer{
 
     private final static Logger logger = Logger.getLogger(Storage.class.getName());
 
@@ -17,18 +18,15 @@ public class Storage<T> extends Observable {
         }
 
         items = new BlockingQueue<>(maxSize);
+        items.addObserver(this);
     }
 
     public T getNext() throws InterruptedException {
         T tmp = items.pop();
-        setChanged();
-        notifyObservers(new StorageEventContext(StorageEvent.GET, size(), getMaxSize()));
         return tmp;
     }
 
     public void add(T item) throws InterruptedException {
-        setChanged();
-        notifyObservers(new StorageEventContext(StorageEvent.PUT, size(), getMaxSize()));
         items.put(item);
     }
 
@@ -45,4 +43,10 @@ public class Storage<T> extends Observable {
     }
 
     public int size() {return items.size(); }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        setChanged();
+        notifyObservers(arg);
+    }
 }
