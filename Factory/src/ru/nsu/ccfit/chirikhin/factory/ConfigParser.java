@@ -31,7 +31,7 @@ public class ConfigParser {
         return string.matches("\\d+");
     }
 
-    public ConfigParser(String pathToConfig) throws IOException, InvalidConfigException, DeveloperBugException {
+    public ConfigParser(String pathToConfig) throws IOException, InvalidConfigException {
         if (null == pathToConfig) {
             throw new NullPointerException("Config Parser: can't parse file because null reference has been found!");
         }
@@ -78,12 +78,7 @@ public class ConfigParser {
             carStorageSize = Integer.parseInt(carStorageSizeStr);
             engineStorageSize = Integer.parseInt(engineStorageSizeStr);
             carBodyStorageSize = Integer.parseInt(carBodyStorageSizeStr);
-            if (Integer.parseInt(logStr) <= 0) {
-                isLog = false;
-            }
-            else {
-                isLog = true;
-            }
+            isLog = Integer.parseInt(logStr) > 0;
         }
     }
 

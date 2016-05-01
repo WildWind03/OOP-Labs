@@ -1,21 +1,25 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
 import javafx.application.Platform;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 public class FactoryController implements Observer {
-    private static final int DEFAULT_PRODUCING_SPEED = 0;
+    private static final int DEFAULT_PRODUCING_SPEED = 1000;
     private static final int MAX_PRODUCING_SPEED = 3000;
-    private Logger logger = Logger.getLogger(FactoryController.class.getName());
+    private static final  Logger logger = Logger.getLogger(FactoryController.class.getName());
     private final Factory factory;
-    private FXMLViewController fxmlViewController;
-    private ConfigParser configParser;
+    private final FXMLViewController fxmlViewController;
+    private final ConfigParser configParser;
 
-    public FactoryController(String pathToFile, FXMLViewController fxmlViewController) throws InvalidConfigException, IOException, DeveloperBugException, InterruptedException {
+    public FactoryController(String pathToFile, FXMLViewController fxmlViewController) throws InvalidConfigException, IOException, InterruptedException {
         if (null == pathToFile || null == fxmlViewController) {
             throw new IllegalArgumentException("Null reference in constructor!");
         }
@@ -23,10 +27,22 @@ public class FactoryController implements Observer {
         this.fxmlViewController = fxmlViewController;
 
         fxmlViewController.addObserver(this);
+
         configParser = new ConfigParser(pathToFile);
+
+        if (!configParser.isLog()) {
+            List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+            loggers.add(LogManager.getRootLogger());
+            for ( Logger logger : loggers ) {
+                logger.setLevel(Level.OFF);
+            }
+        }
+
         logger.info("Factory Controller has started!");
+
+
         factory = new Factory(configParser.getWorkersCount(), configParser.getDealersCount(), configParser.getAccessorySupplCount(), configParser.getCarStorageSize(), configParser.getEngineStorageSize(),
-                configParser.getAccessoryStorageSize(), configParser.getCarBodyStorageSize(), configParser.isLog(), DEFAULT_PRODUCING_SPEED);
+                configParser.getAccessoryStorageSize(), configParser.getCarBodyStorageSize(),  DEFAULT_PRODUCING_SPEED);
 
         factory.setOnEngineStorageChangedHandler(new Handler(fxmlViewController) {
             @Override
@@ -40,7 +56,7 @@ public class FactoryController implements Observer {
             public void update(Observable o, Object arg) {
                 TaskState taskState = (TaskState) arg;
                 if (TaskState.COMPLETED == taskState) {
-                    Platform.runLater(() -> fxmlViewController.onTaskCompleted());
+                    Platform.runLater(fxmlViewController::onTaskCompleted);
                 }
             }
         });
@@ -50,7 +66,7 @@ public class FactoryController implements Observer {
             public void update(Observable o, Object arg) {
                 TaskState taskState = (TaskState) arg;
                 if (TaskState.START == taskState) {
-                    Platform.runLater(() -> fxmlViewController.onNewTaskToMakeCarAppeared());
+                    Platform.runLater(fxmlViewController::onNewTaskToMakeCarAppeared);
                 }
             }
         });
@@ -77,7 +93,7 @@ public class FactoryController implements Observer {
         });
     }
 
-    public void startFactory() throws DeveloperBugException, InvalidConfigException, InterruptedException, IOException {
+    public void startFactory() throws InvalidConfigException, InterruptedException, IOException {
         logger.info("Factory has started!");
         initFXMLView();
         factory.start();
@@ -92,10 +108,6 @@ public class FactoryController implements Observer {
             fxmlViewController.setCountOfAccessoryProducers(configParser.getAccessorySupplCount());
             fxmlViewController.setCountOfDealers(configParser.getDealersCount());
             fxmlViewController.setCountOfWorkers(configParser.getWorkersCount());
-            fxmlViewController.setAccessoryStorageSize(configParser.getAccessoryStorageSize());
-            fxmlViewController.setEngineStorageSize(configParser.getEngineStorageSize());
-            fxmlViewController.setCarBodyStorageSize(configParser.getCarBodyStorageSize());
-            fxmlViewController.setCarStorageSize(configParser.getCarStorageSize());
             fxmlViewController.setEngineProducingSpeed(DEFAULT_PRODUCING_SPEED, MAX_PRODUCING_SPEED);
             fxmlViewController.setCarBodyProducingSpeed(DEFAULT_PRODUCING_SPEED, MAX_PRODUCING_SPEED);
             fxmlViewController.setDealerSpeed(DEFAULT_PRODUCING_SPEED, MAX_PRODUCING_SPEED);
@@ -106,6 +118,7 @@ public class FactoryController implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         ChangedSpeedEvent changedSpeedEvent = (ChangedSpeedEvent) arg;
+
         switch (changedSpeedEvent.getSpeedType()) {
             case SELLING_CARS:
                 factory.onDealerSellingSpeedChanged(changedSpeedEvent.getNewSpeed());

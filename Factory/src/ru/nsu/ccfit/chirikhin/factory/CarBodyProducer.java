@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 public class CarBodyProducer implements Runnable {
 
     private final Storage<CarBody> carBodyCarDetailStorage;
-    private final Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
+    private final static Logger logger =  Logger.getLogger(AccessoryProducer.class.getName());
     private final IDRegisterer idRegisterer;
     private int producingSpeed;
 
@@ -41,7 +41,7 @@ public class CarBodyProducer implements Runnable {
                     logger.info("New car body has been produced successfully! Its ID is " + carBody.getId());
             }
         } catch (InterruptedException e) {
-            logger.fatal("Can not produce car body! Interrupt exception!");
+            logger.fatal("Interrupt exception!");
         }
 
         logger.info("Car Body Producer finished successfully!");

@@ -4,14 +4,18 @@ package ru.nsu.ccfit.chirikhin.factory;
 import org.apache.log4j.Logger;
 
 public class Dealer implements Runnable{
-    private Storage<Car> carStorage;
-    private String name;
+    private final Storage<Car> carStorage;
+    private final String name;
 
-    Logger logger = Logger.getLogger(Dealer.class.getName());
+    private final static Logger logger = Logger.getLogger(Dealer.class.getName());
 
     private int timeToSleep = 5000;
 
     public void setSellingSpeed(int newSpeed) {
+        if (newSpeed < 0) {
+            throw new IllegalArgumentException("Speed ca not be negative");
+        }
+
         this.timeToSleep = newSpeed;
     }
 
@@ -35,16 +39,15 @@ public class Dealer implements Runnable{
         Car car;
         try {
             while(true) {
-                logger.debug("Car storage: " + carStorage.size());
                 car = carStorage.getNext();
-                logger.info("Car with id " + car.getId() + " has been successfully sold by dealer with name " + name);
+                logger.info("Car with id " + car.getId() + "(Engine ID: " + car.getEngineId() + " Car Body id: " + car.getBodyId() + " Accessory id: " + car.getAccessoryId() + ") has been successfully sold by dealer with name " + name);
                 Thread.sleep(timeToSleep);
             }
         } catch (InterruptedException e) {
-            logger.error(name + ": unexpected interrupted error!");
+            logger.error(name + " :interrupting");
         }
 
-        logger.info("Dealer finished successfully!");
+        logger.info("Dealer has finished successfully!");
     }
 
 }

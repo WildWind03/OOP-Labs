@@ -4,23 +4,21 @@ import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.threadpool.ThreadPool;
 
 import java.util.Observable;
-import java.util.Observer;
 
 public class CarCollectors extends Observable {
 
 
     public static class CollectorTask implements MyRunnable {
-
         private final Storage<Engine> engineStorage;
         private final Storage<CarBody> carBodyStorage;
         private final Storage<Accessory> accessoryStorage;
         private final Storage<Car> carStorage;
-        private final Logger logger = Logger.getLogger(CollectorTask.class.getName());
+        private final static Logger logger = Logger.getLogger(CollectorTask.class.getName());
         private final IDRegisterer idRegisterer;
 
         public CollectorTask (Storage<Engine> engineStorage, Storage<CarBody> carBodyStorage, Storage<Accessory> accessoryStorage, Storage<Car> carStorage, IDRegisterer idRegisterer) {
             if (null == engineStorage || null == carBodyStorage || null == accessoryStorage || null == carStorage || null == idRegisterer) {
-                throw new IllegalArgumentException("Error! Can't create myself because of null reference!");
+                throw new NullPointerException("Error! Can't create myself because of null reference!");
             }
 
             this.idRegisterer = idRegisterer;
@@ -43,7 +41,7 @@ public class CarCollectors extends Observable {
     private final ThreadPool collectors;
     private final CollectorTask task;
 
-    private final Logger logger = Logger.getLogger(CarCollectors.class.getName());
+    private final static Logger logger = Logger.getLogger(CarCollectors.class.getName());
 
     public CarCollectors(int collectorsCount, Storage<Engine> engineStorage, Storage<CarBody> carBodyStorage, Storage<Accessory> accessoryStorage,
                          Storage<Car> carStorage, IDRegisterer idRegisterer) throws InterruptedException {
@@ -52,7 +50,7 @@ public class CarCollectors extends Observable {
         }
 
         if (null == engineStorage || null == carBodyStorage || null == accessoryStorage || null == carStorage || null == idRegisterer) {
-            throw new IllegalArgumentException("Null references have been found while constructing CarCollectors");
+            throw new NullPointerException("Null references have been found while constructing CarCollectors");
         }
 
         task = new CollectorTask(engineStorage, carBodyStorage, accessoryStorage, carStorage, idRegisterer);

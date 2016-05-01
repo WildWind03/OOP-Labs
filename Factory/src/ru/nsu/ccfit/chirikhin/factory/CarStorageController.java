@@ -5,44 +5,55 @@ import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class CarStorageController implements Runnable, Observer {
     private enum CarStorageControllerEventType {
         STORAGE_ADD, STORAGE_GET, TASK_ADD, TASK_COMPLETED
     }
-    private static class CarStorageControllerEvent {
-        CarStorageControllerEventType eventType;
-        Object object;
 
-        public CarStorageControllerEvent(CarStorageControllerEventType eventType, Object object) {
+    private static class CarStorageControllerEvent {
+        private final CarStorageControllerEventType eventType;
+        private final int curSize;
+        private final int maxSize;
+
+        public CarStorageControllerEvent(CarStorageControllerEventType eventType, int curSize, int maxSize) {
+            if (null == eventType) {
+                throw new NullPointerException("Null references");
+            }
+
+            if (curSize < 0 || maxSize <= 0) {
+                throw new IllegalArgumentException("Invalid sizes");
+            }
+
+            this.curSize = curSize;
+            this.maxSize = maxSize;
+
             this.eventType = eventType;
-            this.object = object;
         }
 
         public CarStorageControllerEventType getEventType() {
             return eventType;
         }
 
-        public Object getObject() {
-            return object;
+        public int getCurSize() {
+            return curSize;
+        }
+
+        public int getMaxSize() {
+            return maxSize;
         }
     }
-    private final static int MAX_EVENT_COUNTS = 40000;
-    private Storage<Car> carStorage;
-    private CarCollectors carCollectors;
-    private Logger logger = Logger.getLogger(CarStorageController.class.getName());
-    private BlockingQueue<CarStorageControllerEvent> events;
+    private final int MAX_EVENT_COUNTS = 40000;
+    private final CarCollectors carCollectors;
+    private final static Logger logger = Logger.getLogger(CarStorageController.class.getName());
+    private final BlockingQueue<CarStorageControllerEvent> events;
 
-    public CarStorageController(Storage<Car> carStorage, CarCollectors carCollectors) {
-        if (null == carCollectors || null == carStorage) {
-            throw new IllegalArgumentException("Null refrence in constructor");
+    public CarStorageController(CarCollectors carCollectors) {
+        if (null == carCollectors) {
+            throw new NullPointerException("Null reference in constructor");
         }
 
         events = new BlockingQueue<>(MAX_EVENT_COUNTS);
-
-        carStorage.addObserver(this);
-        this.carStorage = carStorage;
         this.carCollectors = carCollectors;
     }
 
@@ -54,38 +65,47 @@ public class CarStorageController implements Runnable, Observer {
             carCollectors.makeCar();
             countOfCurrentTasksInQueue++;
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.debug("Interrupt exception");
         }
-        while(true) {
-            try {
+
+        try {
+            while(true) {
                 CarStorageControllerEvent event = events.pop();
-                switch(event.getEventType()) {
+                switch (event.getEventType()) {
                     case TASK_COMPLETED:
                         countOfCurrentTasksInQueue--;
                         break;
                     case STORAGE_GET:
-                        int storageFullness = (int) event.getObject();
-                        if (storageFullness + countOfCurrentTasksInQueue < carStorage.getMaxSize()) {
-                            carCollectors.makeCars(carStorage.getMaxSize() / 2);
-                            countOfCurrentTasksInQueue+=carStorage.getMaxSize() / 2;
+                        int storageFullness = event.getCurSize();
+                        int maxStorageFullness = event.getMaxSize();
+
+                        if (storageFullness + countOfCurrentTasksInQueue < maxStorageFullness / 2) {
+                            carCollectors.makeCars(maxStorageFullness / 2);
+                            countOfCurrentTasksInQueue += maxStorageFullness / 2;
                         }
                         break;
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException e) {
+            logger.debug("Interrupt exception");
         }
     }
 
     @Override
     public void update(Observable o, Object arg) {
+        if (null == o || null == arg) {
+            throw new NullPointerException("Null references");
+        }
+
         CarStorageControllerEventType carStorageControllerEventType = null;
-        Object object = null;
+        int curSize = 1;
+        int maxSize = 1;
 
         if (o.getClass() == Storage.class) {
                 StorageEventContext storageEventContext = (StorageEventContext) arg;
 
-                object = storageEventContext.getCurrentFullness();
+                curSize = storageEventContext.getCurrentFullness();
+                maxSize = storageEventContext.getMaxSize();
 
                 if (storageEventContext.getStorageEvent() == StorageEvent.GET) {
                     carStorageControllerEventType = CarStorageControllerEventType.STORAGE_GET;
@@ -104,15 +124,13 @@ public class CarStorageController implements Runnable, Observer {
                         carStorageControllerEventType = CarStorageControllerEventType.TASK_ADD;
                         break;
                 }
-
-                object = null;
             }
         }
 
         try {
-            events.put(new CarStorageControllerEvent(carStorageControllerEventType, object));
+            events.put(new CarStorageControllerEvent(carStorageControllerEventType, curSize, maxSize));
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.debug("Interrupt exception!");
         }
     }
 }

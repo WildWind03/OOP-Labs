@@ -9,10 +9,10 @@ import java.util.ArrayList;
 
 public class ThreadPool {
 
-    final private int DEFAULT_SIZE_OF_BLOCKING_QUEUE = 20;
+    private final static int DEFAULT_SIZE_OF_BLOCKING_QUEUE = 20000;
 
     public class ThreadPoolThread extends Thread {
-        final private Logger logger = Logger.getLogger(ThreadPool.class.getName());
+        private final Logger logger = Logger.getLogger(ThreadPool.class.getName());
 
         public ThreadPoolThread(String name) {
             super(name);

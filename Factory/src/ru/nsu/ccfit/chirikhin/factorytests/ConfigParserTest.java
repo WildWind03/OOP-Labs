@@ -2,7 +2,6 @@ package ru.nsu.ccfit.chirikhin.factorytests;
 
 import org.junit.Test;
 import ru.nsu.ccfit.chirikhin.factory.ConfigParser;
-import ru.nsu.ccfit.chirikhin.factory.DeveloperBugException;
 import ru.nsu.ccfit.chirikhin.factory.InvalidConfigException;
 
 import java.io.File;
@@ -19,12 +18,12 @@ public class ConfigParserTest {
     }
 
     @Test (expected = NullPointerException.class)
-    public void constructorTestNullReference() throws InvalidConfigException, IOException, DeveloperBugException {
+    public void constructorTestNullReference() throws InvalidConfigException, IOException {
         ConfigParser configParser = new ConfigParser(null);
     }
 
     @Test (expected = FileNotFoundException.class)
-    public void constructorTestFileDoesNotExist() throws InvalidConfigException, IOException, DeveloperBugException {
+    public void constructorTestFileDoesNotExist() throws InvalidConfigException, IOException {
         File file = new File("new");
         if (file.exists()) {
             throw new IOException("ConfigParserTest, constructorTestFileDoesNotExist: there is 'new' file! Can't check by this test");
@@ -34,12 +33,12 @@ public class ConfigParserTest {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void constructorTestFileIsDirectory() throws InvalidConfigException, IOException, DeveloperBugException {
+    public void constructorTestFileIsDirectory() throws InvalidConfigException, IOException {
         ConfigParser configParser = new ConfigParser("./");
     }
 
     @Test (expected = InvalidConfigException.class)
-    public void constructorTestInvalidConfigLittleStrings () throws IOException, InvalidConfigException, DeveloperBugException {
+    public void constructorTestInvalidConfigLittleStrings () throws IOException, InvalidConfigException{
         File file = new File ("./config.txt");
 
         if (file.exists()) {
@@ -56,7 +55,7 @@ public class ConfigParserTest {
     }
 
     @Test
-    public void constructorTestValidConfig () throws IOException, InvalidConfigException, DeveloperBugException {
+    public void constructorTestValidConfig () throws IOException, InvalidConfigException {
         File file = new File ("./config.txt");
 
         if (file.exists()) {
@@ -87,7 +86,7 @@ public class ConfigParserTest {
     }
 
     @Test
-    public void constructorTestInvalidConfigIncorrectLines () throws IOException, InvalidConfigException, DeveloperBugException {
+    public void constructorTestInvalidConfigIncorrectLines () throws IOException, InvalidConfigException {
         File file = new File ("./config.txt");
 
         if (file.exists()) {
@@ -118,7 +117,7 @@ public class ConfigParserTest {
     }
 
     @Test (expected = InvalidConfigException.class)
-    public void constructorTestInvalidConfigIncorrectValues () throws IOException, InvalidConfigException, DeveloperBugException {
+    public void constructorTestInvalidConfigIncorrectValues () throws IOException, InvalidConfigException {
         File file = new File ("./config.txt");
 
         if (file.exists()) {

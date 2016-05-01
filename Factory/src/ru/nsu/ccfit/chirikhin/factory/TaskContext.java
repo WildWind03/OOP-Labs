@@ -5,7 +5,11 @@ import org.apache.log4j.Logger;
 
 public class TaskContext {
 
-    OnResultHandler handler;
+    private final OnResultHandler handler;
+
+    private final static Logger logger = Logger.getLogger(TaskContext.class.getName());
+
+    private final MyRunnable task;
 
     public TaskContext(MyRunnable task, OnResultHandler handler) {
         this.task = task;
@@ -19,8 +23,4 @@ public class TaskContext {
     public MyRunnable getTask() {
         return task;
     }
-
-    private Logger logger = Logger.getLogger(TaskContext.class.getName());
-
-    private final MyRunnable task;
 }
