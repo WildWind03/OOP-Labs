@@ -51,25 +51,13 @@ public class FactoryController implements Observer {
             }
         });
 
-        factory.setOnTaskCompletedHandler(new Handler(fxmlViewController) {
+        factory.setOnCountOfTasksChangedHandler(new Handler(fxmlViewController) {
             @Override
             public void update(Observable o, Object arg) {
-                StorageEventContext storageEventContext = (StorageEventContext) arg;
-                if (StorageEvent.PUT == storageEventContext.getStorageEvent()) {
-                    Platform.runLater(fxmlViewController::onTaskCompleted);
-                }
+                Platform.runLater(() -> fxmlViewController.onCountOfTasksChanged((int) arg));
             }
         });
 
-        factory.setOnNewTaskToMakeCarAppeared(new Handler(fxmlViewController) {
-            @Override
-            public void update(Observable o, Object arg) {
-                TaskState taskState = (TaskState) arg;
-                if (TaskState.START == taskState) {
-                    Platform.runLater(fxmlViewController::onNewTaskToMakeCarAppeared);
-                }
-            }
-        });
 
         factory.setOnAccessoryStorageChangedHandler(new Handler(fxmlViewController) {
             @Override

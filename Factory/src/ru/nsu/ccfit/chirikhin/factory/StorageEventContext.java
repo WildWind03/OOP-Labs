@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.blockingqueue.BlockingQueue;
 
 public class StorageEventContext {
     private final static Logger logger = Logger.getLogger(StorageEventContext.class.getName());
@@ -21,6 +22,18 @@ public class StorageEventContext {
         this.currentFullness = currentFullness;
         this.maxSize = maxSize;
     }
+
+    public StorageEventContext(BlockingQueue.QueueEventContext queueEventContext) {
+        this.currentFullness = queueEventContext.getSize();
+        this.maxSize = queueEventContext.getMaxSize();
+
+        if (BlockingQueue.QueueEvent.PUT == queueEventContext.getQueueEvent()) {
+            this.storageEvent = StorageEvent.PUT;
+        } else {
+            this.storageEvent = StorageEvent.GET;
+        }
+    }
+
 
     public StorageEvent getStorageEvent() {
         return storageEvent;

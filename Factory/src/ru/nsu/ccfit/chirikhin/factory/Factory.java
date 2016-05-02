@@ -131,13 +131,6 @@ public class Factory {
         }
     }
 
-    public void setOnTaskCompletedHandler(Handler handler) {
-        if (null == handler) {
-            throw new IllegalArgumentException("Handler reference can not be null!");
-        }
-
-        carStorage.addObserver(handler);
-    }
 
     public void setOnAccessoryStorageChangedHandler(Handler handler) {
         if (null == handler) {
@@ -163,12 +156,12 @@ public class Factory {
         carStorage.addObserver(handler);
     }
 
-    public void setOnNewTaskToMakeCarAppeared(Handler handler) {
+    public void setOnCountOfTasksChangedHandler (Handler handler) {
         if (null == handler) {
             throw new IllegalArgumentException("Handler reference can not be null!");
         }
 
-        carCollectors.addObserver(handler);
+        carStorageController.addObserver(handler);
     }
 
     public void start() throws InterruptedException {
