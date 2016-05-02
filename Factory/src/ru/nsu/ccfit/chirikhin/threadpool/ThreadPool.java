@@ -54,6 +54,10 @@ public class ThreadPool {
         }
     }
 
+    public int getMaxCountOfTasks() {
+        return tasks.maxSize();
+    }
+
     public void addTask(TaskContext taskContext) throws InterruptedException {
         tasks.put(taskContext);
     }

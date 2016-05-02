@@ -57,6 +57,10 @@ public class CarCollectors extends Observable {
         collectors = new ThreadPool(collectorsCount);
     }
 
+    public int getMaxCountOfTasks() {
+        return collectors.getMaxCountOfTasks();
+    }
+
 
     public void makeCar() throws InterruptedException {
         setChanged();

@@ -1,8 +1,8 @@
-CarBodyStorageSize=11500
-EngineStorageSize=10000
-AccessoryStorageSize=2000
-CarStorageSize=1
+CarBodyStorageSize=100
+EngineStorageSize=100
+AccessoryStorageSize=200
+CarStorageSize=1000
 CountOfAccessorySuppliers=7
 CountOfWorkers=10
-CountOfDealers=1
+CountOfDealers=5
 Logging=1
