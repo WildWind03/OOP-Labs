@@ -86,8 +86,14 @@ public class CarStorageController extends Observable implements Runnable, Observ
                         int maxStorageFullness = event.getMaxSize();
 
                         if (storageFullness + countOfCurrentTasksInQueue < maxStorageFullness / 2) {
-                            carCollectors.makeCars(maxStorageFullness / 2);
-                            countOfCurrentTasksInQueue += maxStorageFullness / 2;
+
+                            if (countOfCurrentTasksInQueue + maxStorageFullness / 2 < carCollectors.getMaxCountOfTasks()) {
+                                carCollectors.makeCars(maxStorageFullness / 2);
+                                countOfCurrentTasksInQueue += maxStorageFullness / 2;
+                            } else {
+                                carCollectors.makeCars(carCollectors.getMaxCountOfTasks() - countOfCurrentTasksInQueue  - 1);
+                                countOfCurrentTasksInQueue+=carCollectors.getMaxCountOfTasks() - countOfCurrentTasksInQueue  - 1;
+                            }
                         } else {
                             if (1 == maxStorageFullness) {
                                 carCollectors.makeCar();
