@@ -12,9 +12,15 @@ public class JavaFXMLView extends Application {
     private FactoryController factoryController;
 
     @Override
-    public void stop() throws Exception {
-        factoryController.stop();
-        super.stop();
+    public void stop() {
+            factoryController.stop();
+        try {
+            super.stop();
+        } catch (Exception e) {
+            System.err.println(e.toString());
+            logger.error(e.toString());
+            System.exit(-1);
+        }
     }
 
     @Override
@@ -34,6 +40,7 @@ public class JavaFXMLView extends Application {
             stage.show();
         } catch (Exception e) {
             System.err.println(e.toString());
+            logger.error(e.toString());
             System.exit(-1);
         }
     }
