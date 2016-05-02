@@ -1,9 +1,13 @@
 package ru.nsu.ccfit.chirikhin.blockingqueue;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.Observable;
 
 public class BlockingQueue<T> extends Observable {
+
+    public static final Logger logger = Logger.getLogger(BlockingQueue.class.getName());
 
     public enum QueueEvent {
         PUT, POP
@@ -16,11 +20,13 @@ public class BlockingQueue<T> extends Observable {
 
         public QueueEventContext(QueueEvent queueEvent, int size, int maxSize) {
             if (null == queueEvent) {
-                throw new NullPointerException("Null reference");
+                logger.error("Null reference");
+                throw new NullPointerException("Blocking queue: Null reference");
             }
 
             if (size > maxSize || size < 0 || maxSize <= 0) {
-                throw new IllegalArgumentException("Invalid sizes");
+                logger.error("Invalid sizes");
+                throw new IllegalArgumentException("Blocking queue: Invalid sizes");
             }
 
             this.maxSize = maxSize;
@@ -47,7 +53,8 @@ public class BlockingQueue<T> extends Observable {
 
     public BlockingQueue(int maxSize) {
         if (maxSize <= 0) {
-            throw new IllegalArgumentException("Invalid max size");
+            logger.error("Invalid max size");
+            throw new IllegalArgumentException("Blocking queue: Invalid max size");
         }
 
         this.maxSize = maxSize;
