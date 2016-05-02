@@ -96,8 +96,6 @@
                classpathref="CLASSPATH">
         </javac>
 
-        <!-- Copy resources to build.classes.dir -->
-
         <copy todir="${build.classes.dir}">
             <fileset dir="src/resources"/>
         </copy>
