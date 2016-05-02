@@ -47,6 +47,6 @@ public class Storage<T> extends Observable implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         setChanged();
-        notifyObservers(arg);
+        notifyObservers(new StorageEventContext((BlockingQueue.QueueEventContext)(arg)));
     }
 }

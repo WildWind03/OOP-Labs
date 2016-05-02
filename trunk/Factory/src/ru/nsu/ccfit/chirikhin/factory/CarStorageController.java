@@ -64,6 +64,9 @@ public class CarStorageController extends Observable implements Runnable, Observ
         try {
             carCollectors.makeCar();
             countOfCurrentTasksInQueue++;
+
+            setChanged();
+            notifyObservers(countOfCurrentTasksInQueue);
         } catch (InterruptedException e) {
             logger.debug("Interrupt exception");
         }
@@ -74,6 +77,9 @@ public class CarStorageController extends Observable implements Runnable, Observ
                 switch (event.getEventType()) {
                     case STORAGE_ADD:
                         countOfCurrentTasksInQueue--;
+
+                        setChanged();
+                        notifyObservers(countOfCurrentTasksInQueue);
                         break;
                     case STORAGE_GET:
                         int storageFullness = event.getCurSize();
@@ -82,6 +88,9 @@ public class CarStorageController extends Observable implements Runnable, Observ
                         if (storageFullness + countOfCurrentTasksInQueue < maxStorageFullness / 2) {
                             carCollectors.makeCars(maxStorageFullness / 2);
                             countOfCurrentTasksInQueue += maxStorageFullness / 2;
+
+                            setChanged();
+                            notifyObservers(countOfCurrentTasksInQueue);
                         }
                         break;
                 }

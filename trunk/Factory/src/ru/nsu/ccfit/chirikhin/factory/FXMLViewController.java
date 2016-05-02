@@ -235,13 +235,10 @@ public class FXMLViewController extends java.util.Observable {
         notifyObservers(new ChangedSpeedEvent(SpeedType.ACCESSORY_PRODUCING, (int)accessoryProducersSlider.getValue()));
     }
 
-    @FXML void onNewTaskToMakeCarAppeared() {
-        currentTasksToMakeCars++;
-        tasksToMakeCars.setText("Tasks to make cars - " + currentTasksToMakeCars);
-    }
-
-    @FXML void onTaskCompleted() {
-        currentTasksToMakeCars--;
-        tasksToMakeCars.setText("Tasks to make cars - " + currentTasksToMakeCars);
+    @FXML public void onCountOfTasksChanged(int newCountOfTasks) {
+        if (newCountOfTasks < 0) {
+            throw new IllegalArgumentException("Count of tasks can not be negative!");
+        }
+        tasksToMakeCars.setText("Tasks to make cars - " + newCountOfTasks);
     }
 }
