@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.factoryview.FXMLViewController;
 
 import java.io.IOException;
 import java.util.Collections;

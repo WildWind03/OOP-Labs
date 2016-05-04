@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.chirikhin.factory;
+package ru.nsu.ccfit.chirikhin.factoryview;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.factory.FactoryController;
 
 public class JavaFXMLView extends Application {
     private final static Logger logger = Logger.getLogger(JavaFXMLView.class.getName());
@@ -35,7 +36,7 @@ public class JavaFXMLView extends Application {
             Scene scene = new Scene(root);
             stage.setTitle("Factory");
             stage.setScene(scene);
-            stage.setResizable(false);
+            //stage.setResizable(false);
             stage.sizeToScene();
             stage.show();
         } catch (Exception e) {

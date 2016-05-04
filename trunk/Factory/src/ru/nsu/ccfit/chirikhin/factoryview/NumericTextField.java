@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.chirikhin.numerictextfield;
+package ru.nsu.ccfit.chirikhin.factoryview;
 
 import javafx.scene.control.TextField;
 

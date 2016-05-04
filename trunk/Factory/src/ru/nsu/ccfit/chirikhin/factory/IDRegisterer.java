@@ -7,9 +7,9 @@ import java.util.concurrent.atomic.AtomicLong;
 public class IDRegisterer {
 
     private final static Logger logger = Logger.getLogger(IDRegisterer.class.getName());
-    private final AtomicLong maxId;
+    private final AtomicLong maxId = new AtomicLong(0);
     public IDRegisterer() {
-        maxId = new AtomicLong(0);
+
     }
 
     public long getId(){

@@ -48,8 +48,8 @@ public class BlockingQueue<T> extends Observable {
     }
 
     private final int maxSize;
-    private final Object lock;
-    private final LinkedList<T> insideQueue;
+    private final Object lock = new Object();
+    private final LinkedList<T> insideQueue = new LinkedList<>();
 
     public BlockingQueue(int maxSize) {
         if (maxSize <= 0) {
@@ -58,8 +58,6 @@ public class BlockingQueue<T> extends Observable {
         }
 
         this.maxSize = maxSize;
-        lock = new Object();
-        insideQueue = new LinkedList<>();
     }
 
     public int maxSize() {

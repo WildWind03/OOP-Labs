@@ -4,9 +4,9 @@
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
 
-<?import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField?>
+<?import ru.nsu.ccfit.chirikhin.factoryview.NumericTextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
-<GridPane fx:controller="ru.nsu.ccfit.chirikhin.factory.FXMLViewController"
+<GridPane fx:controller="ru.nsu.ccfit.chirikhin.factoryview.FXMLViewController"
           xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="10" vgap="10">
 
     <columnConstraints>
