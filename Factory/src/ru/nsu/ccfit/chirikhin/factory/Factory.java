@@ -192,10 +192,6 @@ public class Factory {
             dealersThreads[k].interrupt();
         }
 
-        for (int k = 0; k < accessorySupplCount; ++k) {
-            accessoryProducersThreads[k].interrupt();
-        }
-
         try {
             carCollectors.stop();
             engineProducerThread.join();

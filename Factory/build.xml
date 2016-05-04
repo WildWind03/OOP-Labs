@@ -55,7 +55,7 @@
 
         <fx:application id="FactoryID"
                         name="Factory"
-                        mainClass="ru.nsu.ccfit.chirikhin.factory.JavaFXMLView"/>
+                        mainClass="ru.nsu.ccfit.chirikhin.factoryview.JavaFXMLView"/>
 
         <fx:resources id="appRes">
             <fx:fileset dir="${build.dist.dir}" includes="Factory.jar"/>

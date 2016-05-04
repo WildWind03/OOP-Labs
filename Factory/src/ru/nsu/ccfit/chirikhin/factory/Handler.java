@@ -1,5 +1,7 @@
 package ru.nsu.ccfit.chirikhin.factory;
 
+import ru.nsu.ccfit.chirikhin.factoryview.FXMLViewController;
+
 import java.util.Observer;
 
 public abstract class Handler implements Observer {

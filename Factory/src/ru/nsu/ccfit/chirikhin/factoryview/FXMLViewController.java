@@ -1,13 +1,15 @@
-package ru.nsu.ccfit.chirikhin.factory;
+package ru.nsu.ccfit.chirikhin.factoryview;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.numerictextfield.NumericTextField;
+import ru.nsu.ccfit.chirikhin.factory.ChangedSpeedEvent;
+import ru.nsu.ccfit.chirikhin.factory.SpeedType;
+import ru.nsu.ccfit.chirikhin.factory.StorageEvent;
+import ru.nsu.ccfit.chirikhin.factory.StorageEventContext;
 
 public class FXMLViewController extends java.util.Observable {
     private final static Logger logger = Logger.getLogger(FXMLViewController.class.getName());
