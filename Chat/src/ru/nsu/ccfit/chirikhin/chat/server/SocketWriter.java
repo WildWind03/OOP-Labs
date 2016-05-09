@@ -1,6 +1,5 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
-import com.sun.org.apache.xml.internal.security.algorithms.MessageDigestAlgorithm;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

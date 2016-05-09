@@ -19,14 +19,14 @@ public class User {
 
     public User(ProtocolName protocolName, Socket socket) {
         /*this.protocolName = protocolName;
-        this.socket = socket;
+        //this.socket = socket;
 
-        MessageTransformer messageTransformer;
+        //MessageTransformer messageTransformer;
 
-        switch(protocolName) {
-            case
-        }
-        this.socketWriter = new SocketWriter(messages, socket, )
+        //switch(protocolName) {
+         //   case
+        //}
+        //this.socketWriter = new SocketWriter(messages, socket, )
         */
     }
 }
