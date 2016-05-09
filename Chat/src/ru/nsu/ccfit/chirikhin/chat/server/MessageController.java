@@ -6,8 +6,16 @@ import java.util.concurrent.BlockingQueue;
 
 public class MessageController {
     private static final Logger logger = Logger.getLogger(MessageController.class.getName());
+    private final BlockingQueue<UserMessageStore> userMessageStores;
+    public MessageController(BlockingQueue<UserMessageStore> userMessageStores) {
+        this.userMessageStores = userMessageStores;
+    }
 
     public void takeMessage(Message message) {
         message.process(this);
+    }
+
+    public BlockingQueue<UserMessageStore> getUserMessageStores() {
+        return userMessageStores;
     }
 }
