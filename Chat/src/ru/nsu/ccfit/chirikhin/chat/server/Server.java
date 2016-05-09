@@ -8,17 +8,17 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
-    private final Collection<Socket> sockets = new LinkedList<>();
-    private final Collection<Thread> writeThreads = new LinkedList<>();
-    private final Collection<Thread> readThreads = new LinkedList<>();
+    //private final Collection<Thread> writeThreads = new LinkedList<>();
+    //private final Collection<Thread> readThreads = new LinkedList<>();
 
     private final static Logger logger = Logger.getLogger(Server.class.getName());
 
-    private final LinkedList<PortListener> portListeners = new LinkedList<>();
-
-    private final Thread portListenersThreads[];
+    private final LinkedList <PortListener> portListeners = new LinkedList<>();
+    private final LinkedList <Thread> portListenersThreads = new LinkedList<>();
 
     private final SocketController socketController;
 
@@ -30,13 +30,14 @@ public class Server {
 
         socketController = new SocketController();
 
-        portListenersThreads = new Thread[serverConfig.getCountOfPorts()];
-
         serverConfig
                 .stream()
                 .forEach((socketListenerDescriptor) -> {
                     try {
-                        portListeners.add(new PortListener(socketListenerDescriptor.getPort(), socketListenerDescriptor.getProtocol(), socketController));
+                        PortListener portListener = new PortListener(socketListenerDescriptor.getPort(), socketListenerDescriptor.getProtocol(), socketController);
+                        portListeners.add(portListener);
+                        Thread newPortListenerThread = new Thread(portListener);
+                        portListenersThreads.add(newPortListenerThread);
                     } catch (IOException e) {
                         logger.error("Port num " + socketListenerDescriptor.getPort() + " was ignored because of IO exception");
                     }
@@ -65,7 +66,7 @@ public class Server {
     }
 
     public void start() throws IOException {
-
+       portListenersThreads.forEach(Thread::start);
     }
 
 }
