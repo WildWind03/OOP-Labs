@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
-public interface Message {
-    void process(MessageController messageController);
-    byte[] toBytes();
+import java.io.Serializable;
+
+public abstract class Message implements Serializable {
+    abstract void process(MessageController messageController);
 }

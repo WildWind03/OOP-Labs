@@ -10,16 +10,14 @@ public class ConnectionSetupper implements Runnable {
     private final BlockingQueue<SocketDescriptor> socketDescriptors;
     private final BlockingQueue<Thread> socketReadersThreads;
     private final BlockingQueue<Thread> socketWritersThreads;
-    private final BlockingQueue<UserMessageStore> userMessageStores;
-    private final MessageController messageController;
+    private final BlockingQueue<Message> messages;
 
     public ConnectionSetupper(BlockingQueue<SocketDescriptor> socketDescriptors, BlockingQueue<Thread> socketWritersThreads,
-                              BlockingQueue<Thread> socketReadersThreads, BlockingQueue<UserMessageStore> userMessageStores, MessageController messageController) {
+                              BlockingQueue<Thread> socketReadersThreads, BlockingQueue<Message> messages) {
         this.socketDescriptors = socketDescriptors;
         this.socketReadersThreads = socketReadersThreads;
         this.socketWritersThreads = socketWritersThreads;
-        this.messageController = messageController;
-        this.userMessageStores = userMessageStores;
+        this.messages = messages;
     }
 
 
@@ -43,9 +41,9 @@ public class ConnectionSetupper implements Runnable {
                         messageSerializer = new ObjectSerializer();
                         break;
                 }
-                SocketListener socketListener = new SocketListener(socketDescriptor.getSocket(), messageSerializer, messageController);
+                SocketReader socketReader = new SocketReader(socketDescriptor.getSocket(), messageSerializer, messageController);
                 SocketWriter socketWriter = new SocketWriter(userMessageStore, socketDescriptor.getSocket());
-                Thread socketListenerThread = new Thread(socketListener);
+                Thread socketListenerThread = new Thread(socketReader);
                 Thread socketWriterThread = new Thread(socketWriter);
 
                 socketWritersThreads.add(socketWriterThread);

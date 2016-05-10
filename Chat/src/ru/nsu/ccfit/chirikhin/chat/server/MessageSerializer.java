@@ -1,7 +1,9 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
-import java.io.InputStream;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
 
 public interface MessageSerializer  {
-    Message read(InputStream inputStream);
+    Message read() throws IOException, ClassNotFoundException, SAXException;
 }
