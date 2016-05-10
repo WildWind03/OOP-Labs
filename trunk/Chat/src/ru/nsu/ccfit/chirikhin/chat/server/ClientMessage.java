@@ -4,8 +4,10 @@ import org.apache.log4j.Logger;
 
 import java.util.concurrent.BlockingQueue;
 
-public class ClientMessage implements Message{
+public class ClientMessage extends Message {
     private static final Logger logger = Logger.getLogger(ClientMessage.class.getName());
+
+
 
     @Override
     public void process(MessageController messageController) {
@@ -13,11 +15,5 @@ public class ClientMessage implements Message{
         for (UserMessageStore store : userMessagesStores) {
             store.addMessage(this);
         }
-    }
-
-    @Override
-    public byte[] toBytes() {
-
-        return new byte[0];
     }
 }
