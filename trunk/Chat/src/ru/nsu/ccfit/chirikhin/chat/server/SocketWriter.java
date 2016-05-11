@@ -3,30 +3,29 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 
 public class SocketWriter implements Runnable {
     private static final Logger logger = Logger.getLogger(SocketWriter.class.getName());
-    private final UserMessageStore messages;
-    private final Socket socket;
-    private final OutputStream outputStream;
 
-    public SocketWriter(UserMessageStore messages, Socket socket) throws IOException {
-        this.socket = socket;
+    private final MessageSender messageSender;
+    private final BlockingQueue<Message> messages;
+
+    public SocketWriter(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messages) throws IOException {
+        this.messageSender = MessageSenderFactory.createMessageSender(protocolName, socket.getOutputStream());
         this.messages = messages;
-        outputStream = socket.getOutputStream();
     }
 
     @Override
     public void run() {
         try {
             while (true) {
-                Message message = messages.takeMessage();
-                outputStream.write(message.toBytes());
+                Message message = messages.take();
+                messageSender.send(message);
             }
-        } catch (InterruptedException | IOException e) {
-            e.printStackTrace();
+        } catch (InterruptedException e) {
+            logger.error("Interrupt exception");
         }
     }
 }
