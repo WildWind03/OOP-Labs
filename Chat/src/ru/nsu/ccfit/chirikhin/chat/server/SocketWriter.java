@@ -13,6 +13,10 @@ public class SocketWriter implements Runnable {
     private final BlockingQueue<Message> messages;
 
     public SocketWriter(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messages) throws IOException {
+        if (null == socket || null == protocolName || null == messages) {
+            throw new NullPointerException("Null in constructor");
+        }
+
         this.messageSender = MessageSenderFactory.createMessageSender(protocolName, socket.getOutputStream());
         this.messages = messages;
     }

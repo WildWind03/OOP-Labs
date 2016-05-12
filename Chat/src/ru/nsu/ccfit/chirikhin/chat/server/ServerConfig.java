@@ -14,6 +14,10 @@ public class ServerConfig {
     }
 
     public void addNewSocketListenerDescription(SocketListenerDescriptor socketListenerDescriptor) throws ServerConfigException {
+        if (null == socketListenerDescriptor) {
+            throw new NullPointerException("Null instead of socket listener descriptor");
+        }
+
         if (!socketListenerDescriptors.add(socketListenerDescriptor)) {
             logger.error("Can't add new listener");
             throw new ServerConfigException("Can't add new listener");

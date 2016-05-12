@@ -7,13 +7,16 @@ import java.util.concurrent.BlockingQueue;
 public class ClientMessage extends Message {
     private static final Logger logger = Logger.getLogger(ClientMessage.class.getName());
 
-
-
     @Override
     public void process(MessageController messageController) {
-        BlockingQueue<UserMessageStore> userMessagesStores = messageController.getUserMessageStores();
-        for (UserMessageStore store : userMessagesStores) {
-            store.addMessage(this);
+        if (null == messageController) {
+            throw new NullPointerException("Null reference instead of Message Controller");
+        }
+
+        BlockingQueue<Client> clients = messageController.getClients();
+
+        for(Client client : clients) {
+            client.receiveMessage(this);
         }
     }
 }

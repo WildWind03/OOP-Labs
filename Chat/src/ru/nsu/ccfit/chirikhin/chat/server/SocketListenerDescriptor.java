@@ -8,6 +8,14 @@ public class SocketListenerDescriptor {
     private final ProtocolName protocolName;
 
     public SocketListenerDescriptor(int port, ProtocolName protocolName) {
+        if (port < 0) {
+            throw new IllegalArgumentException("Port can not be negative");
+        }
+
+        if (null == protocolName) {
+            throw new NullPointerException("Null instead of protocol name");
+        }
+
         this.port = port;
         this.protocolName = protocolName;
     }

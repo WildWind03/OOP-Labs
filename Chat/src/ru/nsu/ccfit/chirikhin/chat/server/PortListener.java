@@ -26,6 +26,10 @@ public class PortListener implements Runnable{
             throw new NullPointerException("Protocol name is null");
         }
 
+        if (null == socketDescriptors) {
+            throw new NullPointerException("Null instead of socketDescriptors");
+        }
+
         this.socketDescriptors = socketDescriptors;
         this.protocolName = protocolName;
 

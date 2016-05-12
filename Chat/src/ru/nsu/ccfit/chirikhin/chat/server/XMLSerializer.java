@@ -16,6 +16,9 @@ public class XMLSerializer implements MessageSerializer {
     private final DocumentBuilder documentBuilder;
 
     public XMLSerializer(InputStream inputStream) throws ParserConfigurationException {
+        if (null  == inputStream) {
+            throw new NullPointerException("Null instead of input stream");
+        }
         this.inputStream = inputStream;
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

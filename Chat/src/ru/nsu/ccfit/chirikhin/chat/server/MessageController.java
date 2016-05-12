@@ -11,12 +11,27 @@ public class MessageController implements Runnable {
     private final BlockingQueue<Message> messages;
 
     public MessageController(BlockingQueue<Message> messages, BlockingQueue<Client> clients) {
+        if (null == messages || null == clients) {
+            throw new NullPointerException("Null reference in constructor");
+        }
+
         this.messages = messages;
         this.clients = clients;
     }
 
+    public BlockingQueue<Client> getClients() {
+        return clients;
+    }
+
     @Override
     public void run() {
-
+        try {
+            while(true) {
+                Message message = messages.take();
+                message.process(this);
+            }
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        }
     }
 }

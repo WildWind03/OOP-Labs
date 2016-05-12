@@ -20,6 +20,11 @@ public class Client {
     private final BlockingQueue<Message> clientMessages = new LinkedBlockingQueue<>();
 
     public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messages) throws IOException, ParserConfigurationException {
+        if (null == socket || null == protocolName || null == messages) {
+            logger.error("Null reference in constructor");
+            throw new NullPointerException("Null reference in constructor");
+        }
+
         socketReader = new SocketReader(socket, protocolName, messages);
         socketWriter = new SocketWriter(socket, protocolName, clientMessages);
 
@@ -30,6 +35,14 @@ public class Client {
         readerThread.start();
 
         logger.info("New client has been connected");
+    }
+
+    public void receiveMessage(Message message) {
+        if (null == message) {
+            throw new NullPointerException("Message can not be null");
+        }
+
+        clientMessages.add(message);
     }
 
     public void delete() throws InterruptedException {

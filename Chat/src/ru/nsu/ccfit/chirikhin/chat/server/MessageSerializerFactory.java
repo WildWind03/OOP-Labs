@@ -16,13 +16,19 @@ public class MessageSerializerFactory {
     public static MessageSerializer createSerializer(ProtocolName protocolName, InputStream inputStream)
             throws ParserConfigurationException, IOException {
 
+        if (null == protocolName || null == inputStream) {
+            throw new NullPointerException("Null reference in constructor");
+        }
+
         MessageSerializer messageSerializer = null;
 
         switch(protocolName) {
             case XML:
                 messageSerializer = new XMLSerializer(inputStream);
+                break;
             case SERIALIZE:
-                messageSerializer = new ObjectSerializer(inputStream);
+                messageSerializer = new ObjectMessageSerializer(inputStream);
+                break;
         }
 
         return messageSerializer;
