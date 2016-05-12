@@ -53,6 +53,6 @@ public class Client {
         writerThread.join();
         readerThread.join();
 
-        logger.info("Client has been deleted!");
+        logger.info("ClientView has been deleted!");
     }
 }

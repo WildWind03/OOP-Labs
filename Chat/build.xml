@@ -1,56 +1,98 @@
-<project name = "Chat" default = "run">
+<project xmlns:fx="javafx:com.sun.javafx.tools.ant" name = "Chat" default = "runclient">
+
+	<property environment="env"/>
+
+	<property name="JAVA_HOME" value="${env.JAVA_HOME}"/>
+
+	<property name="lib.dir" value="./src/lib"/>
+	<property name="build.src.dir" value="./src"/>
+	<property name="build.classes.dir" value="./classes"/>
+	<property name="build.dist.dir" value="./"/>
+	<property name="test.dir" value="./testReports"/>
+
+	<path id="CLASSPATH">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+	</path>
 
 	<target name="clean">
-		<delete dir="testReports/"/>
-		<delete dir="classes"/>
+		<delete dir="build.classes.dir"/>
+		<delete dir="build.test.dir"/>
 	</target>
 
 	<target name="compile" depends="clean">
-		<mkdir dir="classes"/>
-			<javac srcdir = "src" destdir = "classes">
-			<classpath>
-				<pathelement location="./junit-4.12.jar"/>
-                <pathelement location="./log4j-1.2.17.jar"/>
-				<pathelement location="./hamcrest-core-1.3.jar"/>
-			</classpath>
+		<mkdir dir="${build.classes.dir}"/>
+		<mkdir dir="${build.dist.dir}"/>
+
+		<javac includeantruntime="false"
+			   srcdir="${build.src.dir}"
+			   destdir="${build.classes.dir}"
+			   fork="yes"
+			   executable="${JAVA_HOME}/bin/javac"
+			   source="1.8"
+			   debug="on"
+			   classpathref="CLASSPATH">
 		</javac>
+
+		<copy todir="${build.classes.dir}">
+			<fileset dir="./src/resources"/>
+		</copy>
 	</target>
 
-	<target name="jar" depends="compile">
-		<jar destfile="Chat.jar" basedir="classes" excludes="**/*Test*.class">
+	<target name="jarserver" depends="clean, compile">
+		<jar destfile="./Server.jar" basedir="./classes" excludes="**/*Test*.class">
 			<manifest>
 				<attribute name="Main-Class" value="ru/nsu/ccfit/chirikhin/chat/server/Main"/>
 			</manifest>
 		</jar>
 	</target>
 
-	<target name="run" depends="jar">
-		<java jar="Chat.jar" fork = "true">
-		<arg value="./config.txt"/>
+	<target name="runserver" depends="jarserver">
+		<java classname="ru/nsu/ccfit/chirikhin/chat/server/Main" fork = "true">
+
+			<classpath>
+				<path refid="CLASSPATH"/>
+                <path location="Server.jar"/>
+			</classpath>
+
 		</java>
 	</target>
 
+    <target name="runclient" depends="jarclient">
+        <java jar="ChatClient.jar" fork="yes"/>
+    </target>
+
+    <target name="jarclient" depends="clean, compile">
+        <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${JAVA_HOME}/lib/ant-javafx.jar"/>
+        <fx:application id="ChatClientID" name="Chat Client" mainClass="ru.nsu.ccfit.chirikhin.chat.client.ClientView"/>
+        <fx:resources id="appRes">
+            <fx:fileset dir="${build.dist.dir}" includes="ChatClient.jar"/>
+            <fx:fileset dir="./"/>
+            <fx:fileset dir="${build.classes.dir}"/>
+        </fx:resources>
+        <fx:jar destfile="${build.dist.dir}/ChatClient.jar">
+            <fx:application refid="ChatClientID"/>
+            <fx:resources refid="appRes"/>
+            <fileset dir="${build.classes.dir}"/>
+        </fx:jar>
+    </target>
+
 		<target name="test" depends = "compile">
-		<mkdir dir="./testReports"/>
+		<mkdir dir="build.test.dir"/>
+
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
-				<pathelement location="./classes"/>
-				<pathelement location="./junit-4.12.jar"/>
-				<pathelement location="./hamcrest-core-1.3.jar"/>
-				<pathelement location="./testReports"/>
+				<pathelement location="CLASSPATH"/>
 			</classpath>
 
 			<formatter type="plain"/>
 			<formatter type="xml"/>
 
-			<batchtest fork="yes" todir="./testReports">
+			<batchtest fork="yes" todir="test.dir">
 				<fileset dir="src/">
 					<include name="**/*Test*.java"/>
 				</fileset>
 			</batchtest>
-
 		</junit>
-
 	</target>
 
 </project>
