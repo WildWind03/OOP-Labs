@@ -17,6 +17,10 @@ public class XMLParser {
 
 
     public Message getMessage(Document document) throws InvalidXMLException {
+        if (null == document) {
+            throw new NullPointerException("Document can not be null");
+        }
+
         String commandName;
         NodeList cmdParams = document.getElementsByTagName("command name");
 
@@ -55,5 +59,7 @@ public class XMLParser {
 
                 break;
         }
+
+        return null;
     }
 }

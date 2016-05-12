@@ -12,6 +12,10 @@ public class MessageSenderFactory {
     }
 
     public static MessageSender createMessageSender(ProtocolName protocolName, OutputStream outputStream) {
+        if (null == protocolName || null == outputStream) {
+            throw new NullPointerException("Null reference in constructor");
+        }
+
         MessageSender messageSender = null;
 
         switch(protocolName) {

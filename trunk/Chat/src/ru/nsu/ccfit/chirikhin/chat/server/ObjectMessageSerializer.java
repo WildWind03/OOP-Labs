@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 
-public class ObjectSerializer implements MessageSerializer {
-    private static final Logger logger = Logger.getLogger(ObjectSerializer.class.getName());
+public class ObjectMessageSerializer implements MessageSerializer {
+    private static final Logger logger = Logger.getLogger(ObjectMessageSerializer.class.getName());
     private final ObjectInputStream objectInputStream;
 
-    public ObjectSerializer(InputStream inputStream) throws IOException {
+    public ObjectMessageSerializer(InputStream inputStream) throws IOException {
         if (null == inputStream) {
             throw new NullPointerException("Input stream is null");
         }
@@ -27,7 +27,6 @@ public class ObjectSerializer implements MessageSerializer {
             throw new ClassCastException("Can not read! Object is not a message!");
         }
 
-        Message message= (Message) objectInputStream.readObject();
-        return message;
+        return (Message) objectInputStream.readObject();
     }
 }

@@ -8,11 +8,16 @@ import java.util.concurrent.BlockingQueue;
 
 public class ClientCreator implements Runnable {
     private static final Logger logger = Logger.getLogger(ClientCreator.class.getName());
+
     private final BlockingQueue<SocketDescriptor> socketDescriptors;
     private final BlockingQueue<Message> messages;
     private final BlockingQueue<Client> clients;
 
     public ClientCreator(BlockingQueue<SocketDescriptor> socketDescriptors, BlockingQueue<Message> messages, BlockingQueue<Client> clients) {
+        if (null == socketDescriptors || null == messages || null == clients) {
+            throw new NullPointerException("Null reference");
+        }
+
         this.socketDescriptors = socketDescriptors;
         this.clients = clients;
         this.messages = messages;

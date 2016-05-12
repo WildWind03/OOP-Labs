@@ -15,6 +15,10 @@ public class SocketReader implements Runnable {
     private final BlockingQueue<Message> messages;
 
     public SocketReader(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messages) throws IOException, ParserConfigurationException {
+        if (null == socket || null == protocolName || null == messages) {
+            throw new NullPointerException("Null in constructor");
+        }
+        
         this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, socket.getInputStream());
         this.messages = messages;
     }
