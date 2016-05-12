@@ -47,4 +47,8 @@ public class PortListener implements Runnable{
             logger.error("Interrupt");
         }
     }
+
+    public void closeConnection() throws IOException {
+        serverSocket.close();
+    }
 }

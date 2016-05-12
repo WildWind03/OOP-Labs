@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 public class ServerConfig {
     private static final Logger logger = Logger.getLogger(ServerConfig.class.getName());
+
     private final LinkedList<SocketListenerDescriptor> socketListenerDescriptors = new LinkedList<>();
 
     public ServerConfig() {

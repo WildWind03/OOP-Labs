@@ -40,6 +40,7 @@ public class Server {
 
                         Thread newPortListenerThread = new Thread(portListener);
                         portListenersThreads.add(newPortListenerThread);
+                        newPortListenerThread.setName("Port Listener Thread");
 
 
                     } catch (IOException e) {
@@ -55,7 +56,13 @@ public class Server {
     }
 
     public void stop() throws InterruptedException {
-        portListenersThreads.forEach(Thread::interrupt);
+        for (PortListener portListener : portListeners) {
+            try {
+                portListener.closeConnection();
+            } catch (IOException e) {
+                logger.error("IO exception while closing port listener");
+            }
+        }
         messageControllerThread.interrupt();
         clientCreatorThread.interrupt();
 
