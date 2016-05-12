@@ -7,18 +7,12 @@ import java.util.concurrent.BlockingQueue;
 public class MessageController implements Runnable {
     private static final Logger logger = Logger.getLogger(MessageController.class.getName());
 
-    private final BlockingQueue<UserMessageStore> userMessageStores;
+    private final BlockingQueue<Client> clients;
+    private final BlockingQueue<Message> messages;
 
-    public MessageController(BlockingQueue<UserMessageStore> userMessageStores) {
-        this.userMessageStores = userMessageStores;
-    }
-
-    public void takeMessage(Message message) {
-        message.process(this);
-    }
-
-    public BlockingQueue<UserMessageStore> getUserMessageStores() {
-        return userMessageStores;
+    public MessageController(BlockingQueue<Message> messages, BlockingQueue<Client> clients) {
+        this.messages = messages;
+        this.clients = clients;
     }
 
     @Override

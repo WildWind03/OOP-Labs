@@ -23,7 +23,7 @@ public class ObjectSerializer implements MessageSerializer {
     public Message read() throws IOException, ClassNotFoundException {
         Object object = objectInputStream.readObject();
 
-        if (! (object instanceof Message)) {
+        if (!(object instanceof Message)) {
             throw new ClassCastException("Can not read! Object is not a message!");
         }
 

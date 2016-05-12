@@ -15,32 +15,21 @@ public class Server {
     private final LinkedList <PortListener> portListeners = new LinkedList<>();
     private final LinkedList <Thread> portListenersThreads = new LinkedList<>();
 
-    private final Thread connectionSetupperThread;
-    private final ConnectionSetupper connectionSetupper;
-
     private final BlockingQueue<Message> messages = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Client> clients = new LinkedBlockingQueue<>();
+    private final BlockingQueue<SocketDescriptor> socketDescriptors = new LinkedBlockingQueue<>();
 
-    //private final BlockingQueue<UserMessageStore> userMessageStores = new LinkedBlockingQueue<>();
-
-    //private final BlockingQueue<Thread> socketWritersThreads = new LinkedBlockingQueue<>();
-    //private final BlockingQueue<Thread> socketListenersThreads = new LinkedBlockingQueue<>();
-
-    private final MessageController messageController = new MessageController(messages, userMessageStores);
+    private final MessageController messageController = new MessageController(messages, clients);
     private final Thread messageControllerThread = new Thread(messageController);
 
-    private final BlockingQueue<SocketDescriptor> socketDescriptors = new LinkedBlockingQueue<>();
+    private final ClientCreator clientCreator = new ClientCreator(socketDescriptors, messages, clients);
+    private final Thread clientCreatorThread = new Thread(clientCreator);
 
     public Server(ServerConfig serverConfig) throws SocketException {
         if (null == serverConfig) {
             logger.error("Null pointer exception");
             throw new NullPointerException("Null pointer in constructor");
         }
-
-
-
-        connectionSetupper = new ConnectionSetupper(socketDescriptors, socketListenersThreads, socketWritersThreads, messages);
-        connectionSetupperThread = new Thread(connectionSetupper);
-        connectionSetupperThread.start();
 
         serverConfig
                 .stream()
@@ -60,14 +49,17 @@ public class Server {
     }
 
     public void start() throws IOException {
-       portListenersThreads.forEach(Thread::start);
+        portListenersThreads.forEach(Thread::start);
         messageControllerThread.start();
+        clientCreatorThread.start();
     }
 
     public void stop() throws InterruptedException {
         portListenersThreads.forEach(Thread::interrupt);
         messageControllerThread.interrupt();
+        clientCreatorThread.interrupt();
 
+        clientCreatorThread.join();
         messageControllerThread.join();
         for (Thread thread : portListenersThreads) {
             thread.join();
