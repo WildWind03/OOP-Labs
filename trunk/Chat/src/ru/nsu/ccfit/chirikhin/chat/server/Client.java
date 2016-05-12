@@ -28,5 +28,18 @@ public class Client {
 
         writerThread.start();
         readerThread.start();
+
+        logger.info("New client has been connected");
+    }
+
+    public void delete() throws InterruptedException {
+
+        writerThread.interrupt();
+        readerThread.interrupt();
+
+        writerThread.join();
+        readerThread.join();
+
+        logger.info("Client has been deleted!");
     }
 }
