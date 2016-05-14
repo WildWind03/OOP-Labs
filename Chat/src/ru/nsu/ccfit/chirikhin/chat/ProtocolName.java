@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.chirikhin.chat.server;
+package ru.nsu.ccfit.chirikhin.chat;
 
 public enum ProtocolName {
     XML, SERIALIZE

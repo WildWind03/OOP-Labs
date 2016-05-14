@@ -2,9 +2,6 @@ package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 

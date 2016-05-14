@@ -1,8 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.server.ProtocolName;
-import ru.nsu.ccfit.chirikhin.chat.server.XMLSerializer;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -22,6 +20,8 @@ public class MessageSerializerFactory {
             throw new NullPointerException("Null reference in constructor");
         }
 
+        logger.info("After checking for null");
+
         MessageSerializer messageSerializer = null;
 
         switch(protocolName) {
@@ -33,6 +33,8 @@ public class MessageSerializerFactory {
                 break;
         }
 
+
+        logger.error("After switch");
         return messageSerializer;
     }
 }

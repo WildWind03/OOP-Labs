@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 
 public class SocketListenerDescriptor {
     private static final Logger logger = Logger.getLogger(SocketListenerDescriptor.class.getName());

@@ -1,5 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
