@@ -1,7 +1,9 @@
-package ru.nsu.ccfit.chirikhin.chat.server;
+package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
+import ru.nsu.ccfit.chirikhin.chat.server.ProtocolName;
+
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.Socket;
@@ -18,6 +20,8 @@ public class SocketReader implements Runnable {
         if (null == socket || null == protocolName || null == messages) {
             throw new NullPointerException("Null in constructor");
         }
+
+        logger.info("In Socket reader");
         
         this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, socket.getInputStream());
         this.messages = messages;

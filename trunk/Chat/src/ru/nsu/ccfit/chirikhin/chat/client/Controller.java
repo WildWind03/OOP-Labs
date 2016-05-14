@@ -2,6 +2,9 @@ package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
@@ -17,12 +20,14 @@ public class Controller {
             switch(infoFromView.getInfo()) {
                 case LOGIN:
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
+
                     try {
                         user.connect(clientProperties);
                         clientViewController.onLoggedInSuccessfully();
-                    } catch (ConnectionFailedException e) {
+                    } catch (Exception e) {
                         clientViewController.onLoggedInFailed();
                     }
+
                     break;
                 case TYPED_MESSAGE:
                     String message = (String) ((InfoFromView) arg).getObject();
