@@ -1,7 +1,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.geometry.Insets?>
 
-<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TextArea?>
 <GridPane fx:controller="ru.nsu.ccfit.chirikhin.chat.client.ClientViewController"
@@ -11,7 +10,7 @@
         <Insets top="25" right="25" bottom="25" left="25"/>
     </padding>
 
-    <TextField fx:id="inputField" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="inputField" GridPane.columnIndex="0" GridPane.rowIndex="1" onKeyPressed="#onKeyPressed"/>
 
     <TextArea fx:id="chatText" GridPane.columnIndex="0" GridPane.rowIndex="0" editable="false" mouseTransparent="true" focusTraversable="false"/>
 
