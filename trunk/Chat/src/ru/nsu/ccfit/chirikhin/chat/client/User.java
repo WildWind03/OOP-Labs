@@ -2,9 +2,9 @@ package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.Message;
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 import ru.nsu.ccfit.chirikhin.chat.SocketReader;
 import ru.nsu.ccfit.chirikhin.chat.SocketWriter;
-import ru.nsu.ccfit.chirikhin.chat.server.ProtocolName;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -19,6 +19,7 @@ public class User implements Observer{
 
     private Thread readThread;
     private Thread writeThread;
+
     private SocketReader socketReader;
     private SocketWriter socketWriter;
 
@@ -43,13 +44,13 @@ public class User implements Observer{
 
         logger.info("Before Socket Reader");
         socketReader = new SocketReader(socket, ProtocolName.SERIALIZE, readMessages);
-        //socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeMessages);
+        socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeMessages);
 
-        //readThread = new Thread(socketReader);
-        //writeThread = new Thread(socketWriter);
+        readThread = new Thread(socketReader);
+        writeThread = new Thread(socketWriter);
 
-        //readThread.start();
-        //writeThread.start();
+        readThread.start();
+        writeThread.start();
     }
 
     public void sendMessage(String message) {

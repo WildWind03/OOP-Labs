@@ -2,7 +2,6 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
-import ru.nsu.ccfit.chirikhin.chat.server.ProtocolName;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -24,6 +23,8 @@ public class SocketReader implements Runnable {
         logger.info("In Socket reader");
         
         this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, socket.getInputStream());
+
+        logger.info("After ser");
         this.messages = messages;
     }
 
@@ -32,9 +33,11 @@ public class SocketReader implements Runnable {
         while(true) {
             try {
                 Message message = messageSerializer.read();
-                messages.add(message);
+                messages.put(message);
             } catch (IOException | ClassNotFoundException | SAXException e) {
                 logger.error("Error while reading message!");
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
             }
         }
     }
