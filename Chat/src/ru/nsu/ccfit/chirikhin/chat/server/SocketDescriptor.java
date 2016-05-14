@@ -21,6 +21,7 @@ public class SocketDescriptor {
         if (null == protocolName || null == socket) {
             throw new NullPointerException("Null in constructor");
         }
+
         this.protocolName = protocolName;
         this.socket = socket;
     }

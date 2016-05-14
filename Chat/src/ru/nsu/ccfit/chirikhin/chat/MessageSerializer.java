@@ -1,6 +1,7 @@
-package ru.nsu.ccfit.chirikhin.chat.server;
+package ru.nsu.ccfit.chirikhin.chat;
 
 import org.xml.sax.SAXException;
+import ru.nsu.ccfit.chirikhin.chat.Message;
 
 import java.io.IOException;
 
