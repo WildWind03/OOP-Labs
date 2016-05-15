@@ -2,7 +2,7 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.server.Client;
-import ru.nsu.ccfit.chirikhin.chat.server.MessageController;
+import ru.nsu.ccfit.chirikhin.chat.server.ServerMessageController;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -17,12 +17,14 @@ public class ClientMessage extends Message {
     }
 
     @Override
-    public void process(MessageController messageController) {
-        if (null == messageController) {
+    public void process(ServerMessageController serverMessageController) {
+        if (null == serverMessageController) {
             throw new NullPointerException("Null reference instead of Message Controller");
         }
 
-        BlockingQueue<Client> clients = messageController.getClients();
+        logger.info("Process");
+
+        BlockingQueue<Client> clients = serverMessageController.getClients();
 
         for(Client client : clients) {
             client.receiveMessage(this);

@@ -1,12 +1,17 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 
 import java.util.Optional;
 
@@ -37,12 +42,18 @@ public class LoginView {
         TextField portTextField = new TextField();
         portTextField.setPromptText("Port");
 
+        ChoiceBox<String> protocolType = new ChoiceBox<>();
+        protocolType.setItems(FXCollections.observableArrayList("SERIALIZE", "XML"));
+        protocolType.getSelectionModel().selectFirst();
+
         grid.add(new Label("Username:"), 0, 0);
         grid.add(username, 1, 0);
         grid.add(new Label("IP:"), 0, 1);
         grid.add(ipTextField, 1, 1);
         grid.add(new Label("Port:"), 0, 2);
         grid.add(portTextField, 1, 2);
+        grid.add(new Label("Protocol:"), 0, 3);
+        grid.add(protocolType, 1, 3);
 
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
@@ -76,14 +87,13 @@ public class LoginView {
                 int port = Integer.parseInt(portTextField.getText());
                 String ipString = ipTextField.getText();
                 String usernameString = username.getText();
-                return new ClientProperties(port, ipString, usernameString);
+                ProtocolName protocolName =  ProtocolParser.getProtocol(protocolType.getValue());
+                return new ClientProperties(port, ipString, usernameString, protocolName);
             }
 
             return null;
         });
 
-        Optional<ClientProperties> result = dialog.showAndWait();
-
-        return result;
+        return dialog.showAndWait();
     }
 }

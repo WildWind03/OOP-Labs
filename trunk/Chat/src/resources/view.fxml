@@ -12,6 +12,6 @@
 
     <TextField fx:id="inputField" GridPane.columnIndex="0" GridPane.rowIndex="1" onKeyPressed="#onKeyPressed"/>
 
-    <TextArea fx:id="chatText" GridPane.columnIndex="0" GridPane.rowIndex="0" editable="false" mouseTransparent="true" focusTraversable="false"/>
+    <TextArea fx:id="chatText" GridPane.columnIndex="0" GridPane.rowIndex="0" editable="false"/>
 
 </GridPane>

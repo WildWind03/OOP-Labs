@@ -5,8 +5,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class ClientView extends Application {
@@ -16,6 +20,13 @@ public class ClientView extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+
+        List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+        loggers.add(LogManager.getRootLogger());
+        for ( Logger logger : loggers ) {
+            logger.setLevel(Level.OFF);
+        }
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
         Parent root = loader.load();
 
@@ -48,6 +59,12 @@ public class ClientView extends Application {
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        controller.disconnectUser();
+        super.stop();
     }
 
     public static void main(String[] args) {

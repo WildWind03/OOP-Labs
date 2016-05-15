@@ -27,10 +27,17 @@ public class Controller {
 
                     break;
                 case TYPED_MESSAGE:
+                    logger.info("Controller. Send message");
                     String message = (String) ((InfoFromView) arg).getObject();
                     user.sendMessage(message);
                     break;
             }
         });
+
+        user.setOnNewMessageReceivedHandler(clientViewController);
+    }
+
+    public void disconnectUser() {
+        user.disconnect();
     }
 }

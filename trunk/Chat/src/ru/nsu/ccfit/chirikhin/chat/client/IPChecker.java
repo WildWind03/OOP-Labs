@@ -25,7 +25,7 @@ public class IPChecker {
 
     public static boolean isIp(String ipString) {
         if (null == ipString) {
-            throw new IllegalArgumentException("Null reference insead of IP string");
+            throw new IllegalArgumentException("Null reference instead of IP string");
         }
 
         Matcher matcher = ipPattern.matcher(ipString);

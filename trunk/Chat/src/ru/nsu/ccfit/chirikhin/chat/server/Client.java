@@ -29,8 +29,8 @@ public class Client {
             throw new NullPointerException("Null reference in constructor");
         }
 
-        socketReader = new SocketReader(socket, protocolName, messages);
         socketWriter = new SocketWriter(socket, protocolName, clientMessages);
+        socketReader = new SocketReader(socket, protocolName, messages);
 
         writerThread = new Thread(socketWriter);
         readerThread = new Thread(socketReader);

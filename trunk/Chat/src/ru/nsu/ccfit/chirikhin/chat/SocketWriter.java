@@ -26,6 +26,7 @@ public class SocketWriter implements Runnable {
         try {
             while (true) {
                 Message message = messages.take();
+                logger.info ("Ne message has been taken");
                 messageSender.send(message);
             }
         } catch (InterruptedException e) {
