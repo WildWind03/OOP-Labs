@@ -2,6 +2,7 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class MessageSenderFactory {
@@ -11,7 +12,7 @@ public class MessageSenderFactory {
 
     }
 
-    public static MessageSender createMessageSender(ProtocolName protocolName, OutputStream outputStream) {
+    public static MessageSender createMessageSender(ProtocolName protocolName, OutputStream outputStream) throws IOException {
         if (null == protocolName || null == outputStream) {
             throw new NullPointerException("Null reference in constructor");
         }

@@ -8,6 +8,14 @@ public class InfoFromView {
     private final Object object;
 
     public InfoFromView(Info info, Object object) {
+        if (null == info) {
+            throw new NullPointerException("Null pointer exception instead of Info");
+        }
+
+        if (null == object) {
+            throw new NullPointerException("Null pointer exception instead of object");
+        }
+
         this.info = info;
         this.object = object;
     }

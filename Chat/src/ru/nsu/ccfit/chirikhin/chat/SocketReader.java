@@ -20,11 +20,8 @@ public class SocketReader implements Runnable {
             throw new NullPointerException("Null in constructor");
         }
 
-        logger.info("In Socket reader");
         
         this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, socket.getInputStream());
-
-        logger.info("After ser");
         this.messages = messages;
     }
 
@@ -33,6 +30,7 @@ public class SocketReader implements Runnable {
         while(true) {
             try {
                 Message message = messageSerializer.read();
+                logger.info("New message has been read");
                 messages.put(message);
             } catch (IOException | ClassNotFoundException | SAXException e) {
                 logger.error("Error while reading message!");

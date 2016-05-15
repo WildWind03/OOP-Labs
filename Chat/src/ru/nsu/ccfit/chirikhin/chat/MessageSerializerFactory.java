@@ -29,7 +29,11 @@ public class MessageSerializerFactory {
                 messageSerializer = new XMLSerializer(inputStream);
                 break;
             case SERIALIZE:
+                logger.info("SERIALIZE");
                 messageSerializer = new ObjectMessageSerializer(inputStream);
+                break;
+            default:
+                logger.info("DEFAULT");
                 break;
         }
 

@@ -20,8 +20,8 @@ public class Server {
     private final BlockingQueue<Client> clients = new LinkedBlockingQueue<>();
     private final BlockingQueue<SocketDescriptor> socketDescriptors = new LinkedBlockingQueue<>();
 
-    private final MessageController messageController = new MessageController(messages, clients);
-    private final Thread messageControllerThread = new Thread(messageController);
+    private final ServerMessageController serverMessageController = new ServerMessageController(messages, clients);
+    private final Thread messageControllerThread = new Thread(serverMessageController);
 
     private final ClientCreator clientCreator = new ClientCreator(socketDescriptors, messages, clients);
     private final Thread clientCreatorThread = new Thread(clientCreator);

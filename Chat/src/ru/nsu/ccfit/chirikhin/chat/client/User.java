@@ -1,10 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.Message;
-import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
-import ru.nsu.ccfit.chirikhin.chat.SocketReader;
-import ru.nsu.ccfit.chirikhin.chat.SocketWriter;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -14,7 +11,7 @@ import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class User implements Observer{
+public class User implements Observer {
     private static final Logger logger = Logger.getLogger(User.class.getName());
 
     private Thread readThread;
@@ -26,10 +23,17 @@ public class User implements Observer{
     private final BlockingQueue<Message> readMessages = new LinkedBlockingQueue<>();
     private final BlockingQueue<Message> writeMessages = new LinkedBlockingQueue<>();
 
+    private final ClientMessageController clientMessageController = new ClientMessageController(readMessages);
+    private final Thread clientMessageControllerThread = new Thread(clientMessageController);
+
     private String username;
 
     public User() {
 
+    }
+
+    public void setOnNewMessageReceivedHandler(Observer o) {
+        clientMessageController.addObserver(o);
     }
 
     public void connect(ClientProperties clientProperties) throws ConnectionFailedException, IOException, ParserConfigurationException {
@@ -42,19 +46,21 @@ public class User implements Observer{
 
         username = clientProperties.getUsername();
 
-        logger.info("Before Socket Reader");
-        socketReader = new SocketReader(socket, ProtocolName.SERIALIZE, readMessages);
         socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeMessages);
+        socketReader = new SocketReader(socket, ProtocolName.SERIALIZE, readMessages);
 
-        readThread = new Thread(socketReader);
         writeThread = new Thread(socketWriter);
+        readThread = new Thread(socketReader);
 
-        readThread.start();
         writeThread.start();
+        readThread.start();
+
+        clientMessageControllerThread.start();
     }
 
     public void sendMessage(String message) {
-
+        logger.info("Send message");
+        writeMessages.add(new ClientMessage(message, username));
     }
 
     public void disconnect() {
