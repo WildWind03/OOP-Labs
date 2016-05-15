@@ -3,6 +3,7 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.autoqueue.Autoqueue;
 import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
+import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
 import ru.nsu.ccfit.chirikhin.chat.Message;
 import ru.nsu.ccfit.chirikhin.chat.MessageController;
 
@@ -13,14 +14,16 @@ public class ServerMessageController implements MessageController {
 
     private final BlockingQueue<Client> clients;
     private final Autoqueue<Message> messages;
+    private final Client client;
 
-    public ServerMessageController(Autoqueue<Message> messages, BlockingQueue<Client> clients) {
-        if (null == clients || null == messages) {
+    public ServerMessageController(Autoqueue<Message> messages, BlockingQueue<Client> clients, Client client) {
+        if (null == clients || null == messages || null == client) {
             throw new NullPointerException("Null reference in constructor");
         }
 
         this.clients = clients;
         this.messages = messages;
+        this.client = client;
     }
 
     public BlockingQueue<Client> getClients() {
@@ -38,6 +41,10 @@ public class ServerMessageController implements MessageController {
             } catch (InterruptedException e) {
                 logger.error("Interrupt exception");
             }
+        }
+
+        if (message instanceof LoginMessage) {
+            client.setUsermame(((LoginMessage) message).getUsername());
         }
     }
 }

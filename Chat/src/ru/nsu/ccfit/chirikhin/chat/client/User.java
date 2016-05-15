@@ -17,11 +17,9 @@ public class User {
 
     private final BlockingQueue<Message> writeMessages = new LinkedBlockingQueue<>();
 
-    private final ClientMessageController clientMessageController = new ClientMessageController();
-
     private final SocketReader socketReader;
 
-    private String username;
+    private final String username;
 
     public User(ClientProperties clientProperties, ClientMessageController clientMessageController) throws ConnectionFailedException, IOException, ParserConfigurationException {
         Socket socket;
@@ -32,8 +30,11 @@ public class User {
         logger.info("Connect success");
 
         username = clientProperties.getUsername();
-        SocketWriter socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeMessages);;
+        SocketWriter socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeMessages);
+
         socketReader = new SocketReader(socket, ProtocolName.SERIALIZE, clientMessageController);
+
+        writeMessages.add(new LoginMessage(username, ""));
 
         writeThread = new Thread(socketWriter);
         readThread = new Thread(socketReader);

@@ -1,6 +1,8 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.autoqueue.Autoqueue;
+import ru.nsu.ccfit.chirikhin.chat.Message;
 import ru.nsu.ccfit.chirikhin.chat.MessageController;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,14 +14,14 @@ public class ClientCreator {
 
     private final BlockingQueue<Client> clients;
 
-    private final MessageController messageController;
+    private final Autoqueue<Message> messages;
 
-    public ClientCreator(BlockingQueue<Client> clients, MessageController messageController) {
-        if (null == clients || null == messageController) {
+    public ClientCreator(BlockingQueue<Client> clients, Autoqueue<Message> messages) {
+        if (null == clients || null == messages) {
             throw new NullPointerException("Null reference");
         }
 
-        this.messageController = messageController;
+        this.messages = messages;
         this.clients = clients;
     }
 
@@ -28,7 +30,7 @@ public class ClientCreator {
             throw new NullPointerException("Null instead of socketDescriptor");
         }
 
-        Client client = new Client(socketDescriptor.getSocket(), socketDescriptor.getProtocolName(), messageController);
+        Client client = new Client(socketDescriptor.getSocket(), socketDescriptor.getProtocolName(), messages, clients);
         clients.add(client);
     }
 }

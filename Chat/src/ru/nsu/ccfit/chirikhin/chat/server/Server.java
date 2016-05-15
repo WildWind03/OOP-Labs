@@ -21,9 +21,9 @@ public class Server {
     private final Autoqueue<Message> messages = new Autoqueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE);
     private final BlockingQueue<Client> clients = new LinkedBlockingQueue<>();
 
-    private final ServerMessageController serverMessageController = new ServerMessageController(messages, clients);
+    //private final ServerMessageController serverMessageController = new ServerMessageController(messages, clients);
 
-    private final ClientCreator clientCreator = new ClientCreator(clients, serverMessageController);
+    private final ClientCreator clientCreator = new ClientCreator(clients, messages);
 
     public Server(ServerConfig serverConfig) throws SocketException {
         if (null == serverConfig) {
