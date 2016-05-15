@@ -6,10 +6,13 @@ public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
     private final ClientViewController clientViewController;
-    private final User user = new User();
+    private User user;
 
     public Controller(ClientViewController clientViewController) {
         this.clientViewController = clientViewController;
+
+        ClientMessageController clientMessageController = new ClientMessageController();
+        clientMessageController.addObserver(clientViewController);
 
         clientViewController.addObserver((o, arg) -> {
             InfoFromView infoFromView = (InfoFromView) arg;
@@ -19,7 +22,7 @@ public class Controller {
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
 
                     try {
-                        user.connect(clientProperties);
+                        user = new User(clientProperties, clientMessageController);
                         clientViewController.onLoggedInSuccessfully();
                     } catch (Exception e) {
                         clientViewController.onLoggedInFailed();
@@ -33,11 +36,11 @@ public class Controller {
                     break;
             }
         });
-
-        user.setOnNewMessageReceivedHandler(clientViewController);
     }
 
     public void disconnectUser() {
-        user.disconnect();
+        if (null != user) {
+            user.disconnect();
+        }
     }
 }

@@ -7,6 +7,7 @@ import java.net.Socket;
 
 public class SocketDescriptor {
     private static final Logger logger = Logger.getLogger(SocketDescriptor.class.getName());
+
     private final ProtocolName protocolName;
     private final Socket socket;
 

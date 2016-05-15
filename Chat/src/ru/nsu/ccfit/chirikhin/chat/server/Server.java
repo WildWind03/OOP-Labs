@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.autoqueue.Autoqueue;
 import ru.nsu.ccfit.chirikhin.chat.Message;
 
 import java.io.IOException;
@@ -12,19 +13,17 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Server {
 
     private final static Logger logger = Logger.getLogger(Server.class.getName());
+    private final static int COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE = 10;
 
     private final LinkedList <PortListener> portListeners = new LinkedList<>();
     private final LinkedList <Thread> portListenersThreads = new LinkedList<>();
 
-    private final BlockingQueue<Message> messages = new LinkedBlockingQueue<>();
+    private final Autoqueue<Message> messages = new Autoqueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE);
     private final BlockingQueue<Client> clients = new LinkedBlockingQueue<>();
-    private final BlockingQueue<SocketDescriptor> socketDescriptors = new LinkedBlockingQueue<>();
 
     private final ServerMessageController serverMessageController = new ServerMessageController(messages, clients);
-    private final Thread messageControllerThread = new Thread(serverMessageController);
 
-    private final ClientCreator clientCreator = new ClientCreator(socketDescriptors, messages, clients);
-    private final Thread clientCreatorThread = new Thread(clientCreator);
+    private final ClientCreator clientCreator = new ClientCreator(clients, serverMessageController);
 
     public Server(ServerConfig serverConfig) throws SocketException {
         if (null == serverConfig) {
@@ -36,7 +35,7 @@ public class Server {
                 .stream()
                 .forEach((socketListenerDescriptor) -> {
                     try {
-                        PortListener portListener = new PortListener(socketListenerDescriptor.getPort(), socketListenerDescriptor.getProtocol(), socketDescriptors);
+                        PortListener portListener = new PortListener(socketListenerDescriptor.getPort(), socketListenerDescriptor.getProtocol(), clientCreator);
                         portListeners.add(portListener);
 
                         Thread newPortListenerThread = new Thread(portListener);
@@ -52,8 +51,6 @@ public class Server {
 
     public void start() throws IOException {
         portListenersThreads.forEach(Thread::start);
-        messageControllerThread.start();
-        clientCreatorThread.start();
     }
 
     public void stop() throws InterruptedException {
@@ -64,13 +61,14 @@ public class Server {
                 logger.error("IO exception while closing port listener");
             }
         }
-        messageControllerThread.interrupt();
-        clientCreatorThread.interrupt();
 
-        clientCreatorThread.join();
-        messageControllerThread.join();
         for (Thread thread : portListenersThreads) {
+            thread.interrupt();
             thread.join();
+        }
+
+        for(Client client: clients) {
+            client.delete();
         }
     }
 
