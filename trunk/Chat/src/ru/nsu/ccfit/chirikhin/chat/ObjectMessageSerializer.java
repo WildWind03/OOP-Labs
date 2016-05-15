@@ -30,4 +30,13 @@ public class ObjectMessageSerializer implements MessageSerializer {
 
         return (Message) object;
     }
+
+    @Override
+    public void stop() {
+        try {
+            objectInputStream.close();
+        } catch (IOException e) {
+            logger.error("Closing connection");
+        }
+    }
 }

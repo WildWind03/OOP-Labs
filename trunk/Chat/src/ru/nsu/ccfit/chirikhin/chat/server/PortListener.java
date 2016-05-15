@@ -3,20 +3,19 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.BlockingQueue;
 
-public class PortListener implements Runnable{
+public class PortListener implements Runnable {
     private static final Logger logger = Logger.getLogger(PortListener.class.getName());
+
     private final ProtocolName protocolName;
-
     private final ServerSocket serverSocket;
+    private final ClientCreator clientCreator;
 
-    private final BlockingQueue<SocketDescriptor> socketDescriptors;
-
-    public PortListener(int port, ProtocolName protocolName, BlockingQueue<SocketDescriptor> socketDescriptors) throws IOException {
+    public PortListener(int port, ProtocolName protocolName, ClientCreator clientCreator) throws IOException {
         if (port < 0) {
             logger.error("Port can not be negative");
             throw new IllegalArgumentException("Port can not be negative!");
@@ -27,11 +26,11 @@ public class PortListener implements Runnable{
             throw new NullPointerException("Protocol name is null");
         }
 
-        if (null == socketDescriptors) {
-            throw new NullPointerException("Null instead of socketDescriptors");
+        if (null == clientCreator) {
+            throw new NullPointerException("Null instead of client creator");
         }
 
-        this.socketDescriptors = socketDescriptors;
+        this.clientCreator = clientCreator;
         this.protocolName = protocolName;
 
         serverSocket = new ServerSocket(port);
@@ -42,10 +41,12 @@ public class PortListener implements Runnable{
         try {
             while(true) {
                 Socket newSocket = serverSocket.accept();
-                socketDescriptors.add(new SocketDescriptor(protocolName, newSocket));
+                clientCreator.createClient(new SocketDescriptor(protocolName, newSocket));
             }
         } catch (IOException e) {
             logger.error("Interrupt");
+        } catch (ParserConfigurationException e) {
+            logger.error("Error while parsing xml");
         }
     }
 

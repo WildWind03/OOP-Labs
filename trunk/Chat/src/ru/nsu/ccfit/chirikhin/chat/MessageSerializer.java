@@ -6,4 +6,5 @@ import java.io.IOException;
 
 public interface MessageSerializer  {
     Message read() throws IOException, ClassNotFoundException, SAXException;
+    void stop();
 }

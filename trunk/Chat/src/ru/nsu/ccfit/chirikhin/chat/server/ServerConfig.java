@@ -10,10 +10,6 @@ public class ServerConfig {
 
     private final LinkedList<SocketListenerDescriptor> socketListenerDescriptors = new LinkedList<>();
 
-    public ServerConfig() {
-
-    }
-
     public void addNewSocketListenerDescription(SocketListenerDescriptor socketListenerDescriptor) throws ServerConfigException {
         if (null == socketListenerDescriptor) {
             throw new NullPointerException("Null instead of socket listener descriptor");

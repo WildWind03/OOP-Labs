@@ -2,9 +2,10 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.Message;
+import ru.nsu.ccfit.chirikhin.chat.MessageController;
 import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
-import ru.nsu.ccfit.chirikhin.chat.SocketReader;
 import ru.nsu.ccfit.chirikhin.chat.SocketWriter;
+import ru.nsu.ccfit.chirikhin.chat.SocketReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -18,19 +19,18 @@ public class Client {
     private final Thread writerThread;
     private final Thread readerThread;
 
-    private final SocketWriter socketWriter;
     private final SocketReader socketReader;
 
     private final BlockingQueue<Message> clientMessages = new LinkedBlockingQueue<>();
 
-    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messages) throws IOException, ParserConfigurationException {
-        if (null == socket || null == protocolName || null == messages) {
+    public Client(Socket socket, ProtocolName protocolName, MessageController messageController) throws IOException, ParserConfigurationException {
+        if (null == socket || null == protocolName || null == messageController) {
             logger.error("Null reference in constructor");
             throw new NullPointerException("Null reference in constructor");
         }
 
-        socketWriter = new SocketWriter(socket, protocolName, clientMessages);
-        socketReader = new SocketReader(socket, protocolName, messages);
+        SocketWriter socketWriter = new SocketWriter(socket, protocolName, clientMessages);;
+        socketReader = new SocketReader(socket, protocolName, messageController);
 
         writerThread = new Thread(socketWriter);
         readerThread = new Thread(socketReader);
@@ -50,6 +50,8 @@ public class Client {
     }
 
     public void delete() throws InterruptedException {
+
+        socketReader.stop();
 
         writerThread.interrupt();
         readerThread.interrupt();
