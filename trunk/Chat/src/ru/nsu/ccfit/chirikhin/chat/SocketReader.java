@@ -5,7 +5,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.net.Socket;
+import java.io.InputStream;
 
 public class SocketReader implements Runnable {
 
@@ -14,12 +14,12 @@ public class SocketReader implements Runnable {
     private final MessageSerializer messageSerializer;
     private final MessageController messageController;
 
-    public SocketReader(Socket socket, ProtocolName protocolName, MessageController messageController) throws IOException, ParserConfigurationException {
-        if (null == socket || null == protocolName || null == messageController) {
+    public SocketReader(InputStream inputStream, ProtocolName protocolName, MessageController messageController) throws IOException, ParserConfigurationException {
+        if (null == inputStream || null == protocolName || null == messageController) {
             throw new NullPointerException("Null in constructor");
         }
-        
-        this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, socket.getInputStream());
+
+        this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, inputStream);
         this.messageController = messageController;
     }
 
@@ -27,9 +27,10 @@ public class SocketReader implements Runnable {
     public void run() {
         try {
             while (true) {
-                ClientMessage clientMessage = messageSerializer.read();
+                logger.info("Read messsage");
+                Message message = messageSerializer.read();
                 logger.info("New message has been read");
-                messageController.acceptMessage(clientMessage);
+                messageController.acceptMessage(message);
             }
         } catch (IOException | ClassNotFoundException | SAXException e) {
             logger.error("Error while reading message!");

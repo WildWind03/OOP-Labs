@@ -14,8 +14,8 @@ public class XMLMessageSender implements MessageSender {
     }
 
     @Override
-    public void send(ClientMessage clientMessage) {
-        if (null == clientMessage) {
+    public void send(Message message) {
+        if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
     }

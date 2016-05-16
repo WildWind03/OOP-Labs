@@ -55,7 +55,7 @@ public class LoginView {
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
-            ///////////////FOR TEST
+        ///////////////FOR TEST
         portTextField.setText("3000");
         ipTextField.setText("127.0.0.1");
         username.setText("Wind");
@@ -84,7 +84,7 @@ public class LoginView {
                 int port = Integer.parseInt(portTextField.getText());
                 String ipString = ipTextField.getText();
                 String usernameString = username.getText();
-                ProtocolName protocolName =  ProtocolParser.getProtocol(protocolType.getValue());
+                ProtocolName protocolName = ProtocolParser.getProtocol(protocolType.getValue());
                 return new ClientProperties(port, ipString, usernameString, protocolName);
             }
 

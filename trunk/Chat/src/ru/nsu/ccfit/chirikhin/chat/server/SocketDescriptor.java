@@ -11,14 +11,6 @@ public class SocketDescriptor {
     private final ProtocolName protocolName;
     private final Socket socket;
 
-    public ProtocolName getProtocolName() {
-        return protocolName;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
     public SocketDescriptor(ProtocolName protocolName, Socket socket) {
         if (null == protocolName || null == socket) {
             throw new NullPointerException("Null in constructor");
@@ -26,5 +18,13 @@ public class SocketDescriptor {
 
         this.protocolName = protocolName;
         this.socket = socket;
+    }
+
+    public ProtocolName getProtocolName() {
+        return protocolName;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 }

@@ -6,6 +6,7 @@ import ru.nsu.ccfit.chirikhin.chat.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -19,9 +20,14 @@ public class User {
 
     private final SocketReader socketReader;
 
+    private long sessionId;
+
     private final String username;
 
-    public User(ClientProperties clientProperties, ClientMessageController clientMessageController) throws ConnectionFailedException, IOException, ParserConfigurationException {
+    private final ClientMessageController clientMessageController = new ClientMessageController(this);
+
+    public User(ClientProperties clientProperties) throws ConnectionFailedException, IOException, ParserConfigurationException {
+
         Socket socket;
         logger.info("Connect");
         ConnectorToServer connectorToServer = new ConnectorToServer();
@@ -30,17 +36,25 @@ public class User {
         logger.info("Connect success");
 
         username = clientProperties.getUsername();
-        SocketWriter socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeClientMessages);
+        SocketWriter socketWriter = new SocketWriter(socket.getOutputStream(), ProtocolName.SERIALIZE, writeClientMessages);
 
-        socketReader = new SocketReader(socket, ProtocolName.SERIALIZE, clientMessageController);
+        socketReader = new SocketReader(socket.getInputStream(), ProtocolName.SERIALIZE, clientMessageController);
 
-        writeClientMessages.add(new LoginMessage(username, ""));
+        writeClientMessages.add(new LoginMessage(username, "Main client"));
 
         writeThread = new Thread(socketWriter);
         readThread = new Thread(socketReader);
 
         writeThread.start();
         readThread.start();
+    }
+
+    public void setSessionId(long sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public void addEventObserver(Observer o) {
+        clientMessageController.addObserver(o);
     }
 
     public void sendMessage(String message) {

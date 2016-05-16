@@ -24,6 +24,6 @@ public class ServerTextMessage implements ServerMessage {
 
     @Override
     public void process(ClientMessageController clientMessageController) {
-
+        clientMessageController.handleTextMessage(this);
     }
 }

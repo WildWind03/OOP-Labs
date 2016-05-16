@@ -19,14 +19,14 @@ public class ObjectMessageSender implements MessageSender {
     }
 
     @Override
-    public void send(ClientMessage clientMessage) {
-        if (null == clientMessage) {
+    public void send(Message message) {
+        if (null == message) {
             throw new NullPointerException("Null reference instead of message");
         }
 
         try {
             logger.info("Sending");
-            objectOutputStream.writeObject(clientMessage);
+            objectOutputStream.writeObject(message);
         } catch (IOException e) {
             logger.error("IO error");
         }

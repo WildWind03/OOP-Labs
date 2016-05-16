@@ -1,8 +1,17 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.NewClientServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
+import ru.nsu.ccfit.chirikhin.chat.MessageController;
+import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.ServerSuccessMessage;
+import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
+import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
+import ru.nsu.ccfit.chirikhin.chat.ServerTextMessage;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
+import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
+import ru.nsu.ccfit.chirikhin.chat.Message;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -66,7 +75,7 @@ public class ServerMessageController implements MessageController {
             throw new NullPointerException("Can't send message. ServerMessage is null");
         }
 
-        for(Client client : clients) {
+        for (Client client : clients) {
             client.receiveMessage(serverMessage);
         }
     }
@@ -124,12 +133,17 @@ public class ServerMessageController implements MessageController {
 
 
     @Override
-    public void acceptMessage(ClientMessage clientMessage)  {
-        if (null == clientMessage) {
+    public void acceptMessage(Message message) {
+        if (null == message) {
             throw new NullPointerException("Null instead of client Message");
         }
 
+        if (!(message instanceof ClientMessage)) {
+            throw new ClassCastException("Message is not a client message");
+        }
+
         logger.info("Message has been taken by controller");
+        ClientMessage clientMessage = (ClientMessage) message;
         clientMessage.process(this);
     }
 }

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 
 public class ClientProperties {
+    private static final Logger logger = Logger.getLogger(ClientProperties.class.getName());
     private final int port;
     private final String ip;
     private final String username;
@@ -39,6 +40,4 @@ public class ClientProperties {
     public ProtocolName getProtocolName() {
         return protocolName;
     }
-
-    private static final Logger logger = Logger.getLogger(ClientProperties.class.getName());
 }

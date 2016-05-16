@@ -7,23 +7,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
-import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
+import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.server.Server;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class ClientViewController extends Observable implements Observer {
     private static final Logger logger = Logger.getLogger(ClientViewController.class.getName());
-
-    private boolean isLoggedIn;
-
     @FXML
     TextField inputField;
-
     @FXML
     TextArea chatText;
+    private boolean isLoggedIn;
 
     public boolean tryLogin(ClientProperties clientProperties) {
         setChanged();
@@ -63,14 +59,18 @@ public class ClientViewController extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        ClientMessage clientMessage = (ClientMessage) arg;
+        ServerMessage message = (ServerMessage) arg;
 
-        if (clientMessage instanceof ClientTextMessage) {
-            chatText.appendText(((ClientTextMessage) clientMessage).getAuthor() + ": " + ((ClientTextMessage) clientMessage).getText() + "\n");
+        if (message instanceof ServerTextMessage) {
+            chatText.appendText(((ServerTextMessage) message).getAuthor() + ": " + ((ServerTextMessage) message).getText() + "\n");
         }
 
-        if (clientMessage instanceof ServerErrorMessage) {
-            chatText.appendText(((ServerErrorMessage) clientMessage).getErrorReason());
+        if (message instanceof ServerErrorMessage) {
+            chatText.appendText(((ServerErrorMessage) message).getErrorReason());
+        }
+
+        if (message instanceof NewClientServerMessage) {
+            chatText.appendText(((NewClientServerMessage) message).getUsername() + " joined\n");
         }
     }
 }

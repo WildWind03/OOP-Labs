@@ -1,8 +1,8 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -15,10 +15,10 @@ public class Server {
     private final static Logger logger = Logger.getLogger(Server.class.getName());
     private final static int COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE = 10;
 
-    private final LinkedList <PortListener> portListeners = new LinkedList<>();
-    private final LinkedList <Thread> portListenersThreads = new LinkedList<>();
+    private final LinkedList<PortListener> portListeners = new LinkedList<>();
+    private final LinkedList<Thread> portListenersThreads = new LinkedList<>();
 
-    private final CycleQueue<ClientMessage> messages = new CycleQueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE);
+    private final CycleQueue<ServerMessage> messages = new CycleQueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE);
     private final BlockingQueue<Client> clients = new LinkedBlockingQueue<>();
 
     private final ClientCreator clientCreator = new ClientCreator(clients, messages);
@@ -65,7 +65,7 @@ public class Server {
             thread.join();
         }
 
-        for(Client client: clients) {
+        for (Client client : clients) {
             client.delete();
         }
     }
