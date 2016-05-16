@@ -1,7 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.server.NicknameBusyException;
 import ru.nsu.ccfit.chirikhin.chat.server.ServerMessageController;
 
 public class LoginMessage implements ClientMessage {

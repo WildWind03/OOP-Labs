@@ -15,19 +15,19 @@ public class XMLSerializer implements MessageSerializer {
     private final InputStream inputStream;
     private final DocumentBuilder documentBuilder;
 
-    @Override
-    public void stop() {
-
-    }
-
     public XMLSerializer(InputStream inputStream) throws ParserConfigurationException {
-        if (null  == inputStream) {
+        if (null == inputStream) {
             throw new NullPointerException("Null instead of input stream");
         }
         this.inputStream = inputStream;
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
+    }
+
+    @Override
+    public void stop() {
+
     }
 
     @Override

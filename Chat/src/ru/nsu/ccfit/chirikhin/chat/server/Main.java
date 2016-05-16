@@ -24,7 +24,7 @@ public class Main {
                     break;
                 }
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e.toString());
         }
 

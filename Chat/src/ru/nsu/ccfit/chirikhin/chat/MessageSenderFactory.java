@@ -19,7 +19,7 @@ public class MessageSenderFactory {
 
         MessageSender messageSender = null;
 
-        switch(protocolName) {
+        switch (protocolName) {
             case XML:
                 messageSender = new XMLMessageSender(outputStream);
                 break;

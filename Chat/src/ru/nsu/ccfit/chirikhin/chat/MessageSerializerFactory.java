@@ -24,7 +24,7 @@ public class MessageSerializerFactory {
 
         MessageSerializer messageSerializer = null;
 
-        switch(protocolName) {
+        switch (protocolName) {
             case XML:
                 messageSerializer = new XMLSerializer(inputStream);
                 break;

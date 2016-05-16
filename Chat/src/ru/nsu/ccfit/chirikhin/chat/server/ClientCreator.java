@@ -3,7 +3,6 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;

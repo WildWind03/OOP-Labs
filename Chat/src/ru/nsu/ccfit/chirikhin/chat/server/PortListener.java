@@ -39,7 +39,7 @@ public class PortListener implements Runnable {
     @Override
     public void run() {
         try {
-            while(true) {
+            while (true) {
                 Socket newSocket = serverSocket.accept();
                 clientCreator.createClient(new SocketDescriptor(protocolName, newSocket));
             }

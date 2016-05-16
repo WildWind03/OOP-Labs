@@ -17,11 +17,11 @@ public class ProtocolParser {
 
         ProtocolName protocolName;
 
-        switch(protocolString) {
-            case "XML" :
+        switch (protocolString) {
+            case "XML":
                 protocolName = ProtocolName.XML;
                 break;
-            case "SERIALIZE" :
+            case "SERIALIZE":
                 protocolName = ProtocolName.SERIALIZE;
                 break;
             default:

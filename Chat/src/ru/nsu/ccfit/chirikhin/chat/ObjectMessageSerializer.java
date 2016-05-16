@@ -19,16 +19,17 @@ public class ObjectMessageSerializer implements MessageSerializer {
     }
 
     @Override
-    public ClientMessage read() throws IOException, ClassNotFoundException {
+    public Message read() throws IOException, ClassNotFoundException {
+        //logger.info("Staring read");
         Object object = objectInputStream.readObject();
 
         logger.info("Read message");
 
-        if (!(object instanceof ClientMessage)) {
+        if (!(object instanceof Message)) {
             throw new ClassCastException("Can not read! Object is not a message!");
         }
 
-        return (ClientMessage) object;
+        return (Message) object;
     }
 
     @Override

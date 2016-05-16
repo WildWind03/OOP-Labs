@@ -11,18 +11,16 @@ public class Controller {
     public Controller(ClientViewController clientViewController) {
         this.clientViewController = clientViewController;
 
-        ClientMessageController clientMessageController = new ClientMessageController();
-        clientMessageController.addObserver(clientViewController);
-
         clientViewController.addObserver((o, arg) -> {
             InfoFromView infoFromView = (InfoFromView) arg;
 
-            switch(infoFromView.getInfo()) {
+            switch (infoFromView.getInfo()) {
                 case LOGIN:
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
 
                     try {
-                        user = new User(clientProperties, clientMessageController);
+                        user = new User(clientProperties);
+                        user.addEventObserver(clientViewController);
                         clientViewController.onLoggedInSuccessfully();
                     } catch (Exception e) {
                         clientViewController.onLoggedInFailed();

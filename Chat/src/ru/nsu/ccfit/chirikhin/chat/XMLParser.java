@@ -39,23 +39,23 @@ public class XMLParser {
         String cmdString = cmd.getAttribute("command name");
 
         switch (cmdString) {
-            case "login" :
+            case "login":
                 String name = cmd.getElementsByTagName("name").item(0).getTextContent();
                 String type = cmd.getElementsByTagName("type").item(0).getTextContent();
                 break;
-            case "list" :
+            case "list":
 
                 break;
-            case "message" :
+            case "message":
 
                 break;
-            case "logout" :
+            case "logout":
 
                 break;
-            case "userlogin" :
+            case "userlogin":
 
                 break;
-            case "userlogout" :
+            case "userlogout":
 
                 break;
         }

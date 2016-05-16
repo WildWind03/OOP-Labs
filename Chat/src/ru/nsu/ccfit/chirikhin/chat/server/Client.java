@@ -1,7 +1,11 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.MessageController;
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.SocketReader;
+import ru.nsu.ccfit.chirikhin.chat.SocketWriter;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,18 +19,13 @@ public class Client {
 
     private final Thread writerThread;
     private final Thread readerThread;
-
+    private final long uniqueSessionId;
+    private final SocketReader socketReader;
+    private final BlockingQueue<ServerMessage> clientClientMessages = new LinkedBlockingQueue<>();
+    private final MessageController messageController;
     private String username = "NONAME";
     private String chatClientName = "UNKNOWN_CLIENT";
     private boolean isRegistered;
-
-    private final long uniqueSessionId;
-
-    private final SocketReader socketReader;
-
-    private final BlockingQueue<ServerMessage> clientClientMessages = new LinkedBlockingQueue<>();
-
-    private final MessageController messageController;
 
     public Client(Socket socket, ProtocolName protocolName, CycleQueue<ServerMessage> messages, BlockingQueue<Client> clients, long uniqueSessionId) throws IOException, ParserConfigurationException {
         if (null == socket || null == protocolName || null == messages || null == clients) {
@@ -38,8 +37,8 @@ public class Client {
 
         this.messageController = new ServerMessageController(messages, clients, this);
 
-        SocketWriter socketWriter = new SocketWriter(socket, protocolName, clientClientMessages);;
-        socketReader = new SocketReader(socket, protocolName, messageController);
+        SocketWriter socketWriter = new SocketWriter(socket.getOutputStream(), protocolName, clientClientMessages);
+        socketReader = new SocketReader(socket.getInputStream(), protocolName, messageController);
 
         writerThread = new Thread(socketWriter);
         writerThread.setName("Client Writer Thread");
@@ -74,9 +73,7 @@ public class Client {
             throw new NullPointerException("Message can not be null");
         }
 
-        if (isRegistered) {
-            clientClientMessages.add(clientMessage);
-        }
+        clientClientMessages.add(clientMessage);
     }
 
     public boolean isRegistered() {

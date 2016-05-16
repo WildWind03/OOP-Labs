@@ -18,12 +18,16 @@ public class ClientView extends Application {
 
     private Controller controller;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
 
         List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
         loggers.add(LogManager.getRootLogger());
-        for ( Logger logger : loggers ) {
+        for (Logger logger : loggers) {
             logger.setLevel(Level.OFF);
         }
 
@@ -40,7 +44,7 @@ public class ClientView extends Application {
             LoginView loginView = new LoginView();
             Optional<ClientProperties> result = loginView.show();
 
-            if (!result.isPresent()){
+            if (!result.isPresent()) {
                 logger.error("Exit");
                 return;
             }
@@ -49,7 +53,7 @@ public class ClientView extends Application {
 
             logger.info("Trying to log");
 
-        } while(!clientViewController.tryLogin(clientProperties));
+        } while (!clientViewController.tryLogin(clientProperties));
 
         logger.info("Logged in successfully!");
 
@@ -65,9 +69,5 @@ public class ClientView extends Application {
     public void stop() throws Exception {
         controller.disconnectUser();
         super.stop();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
