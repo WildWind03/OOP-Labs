@@ -15,7 +15,7 @@ public class User {
     private final Thread readThread;
     private final Thread writeThread;
 
-    private final BlockingQueue<Message> writeMessages = new LinkedBlockingQueue<>();
+    private final BlockingQueue<ClientMessage> writeClientMessages = new LinkedBlockingQueue<>();
 
     private final SocketReader socketReader;
 
@@ -30,11 +30,11 @@ public class User {
         logger.info("Connect success");
 
         username = clientProperties.getUsername();
-        SocketWriter socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeMessages);
+        SocketWriter socketWriter = new SocketWriter(socket, ProtocolName.SERIALIZE, writeClientMessages);
 
         socketReader = new SocketReader(socket, ProtocolName.SERIALIZE, clientMessageController);
 
-        writeMessages.add(new LoginMessage(username, ""));
+        writeClientMessages.add(new LoginMessage(username, ""));
 
         writeThread = new Thread(socketWriter);
         readThread = new Thread(socketReader);
@@ -45,7 +45,7 @@ public class User {
 
     public void sendMessage(String message) {
         logger.info("Send message");
-        writeMessages.add(new ClientMessage(message, username));
+        writeClientMessages.add(new ClientTextMessage(message, username));
     }
 
     public void disconnect() {

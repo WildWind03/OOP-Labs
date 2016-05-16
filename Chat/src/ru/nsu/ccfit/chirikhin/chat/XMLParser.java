@@ -16,7 +16,7 @@ public class XMLParser {
     private final static String USER_LOGOUT_STR = "userlogout";
 
 
-    public Message getMessage(Document document) throws InvalidXMLException {
+    public ClientMessage getMessage(Document document) throws InvalidXMLException {
         if (null == document) {
             throw new NullPointerException("Document can not be null");
         }

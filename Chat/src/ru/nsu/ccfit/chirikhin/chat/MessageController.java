@@ -1,5 +1,5 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 public interface MessageController {
-    void acceptMessage(Message message) throws InterruptedException;
+    void acceptMessage(ClientMessage clientMessage) throws InterruptedException;
 }

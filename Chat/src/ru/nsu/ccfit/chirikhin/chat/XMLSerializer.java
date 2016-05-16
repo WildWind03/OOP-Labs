@@ -31,10 +31,10 @@ public class XMLSerializer implements MessageSerializer {
     }
 
     @Override
-    public Message read() throws IOException, SAXException {
+    public ClientMessage read() throws IOException, SAXException {
         Document document = documentBuilder.parse(inputStream);
-        Message message = null;
+        ClientMessage clientMessage = null;
 
-        return message;
+        return clientMessage;
     }
 }
