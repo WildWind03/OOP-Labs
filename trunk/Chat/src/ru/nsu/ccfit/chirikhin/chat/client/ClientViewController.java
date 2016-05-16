@@ -7,8 +7,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
+import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
 import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
-import ru.nsu.ccfit.chirikhin.chat.Message;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -62,10 +63,14 @@ public class ClientViewController extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        Message message = (Message) arg;
+        ClientMessage clientMessage = (ClientMessage) arg;
 
-        if (message instanceof ClientMessage) {
-            chatText.appendText(((ClientMessage) message).getAuthor() + ": " + ((ClientMessage) message).getText() + "\n");
+        if (clientMessage instanceof ClientTextMessage) {
+            chatText.appendText(((ClientTextMessage) clientMessage).getAuthor() + ": " + ((ClientTextMessage) clientMessage).getText() + "\n");
+        }
+
+        if (clientMessage instanceof ServerErrorMessage) {
+            chatText.appendText(((ServerErrorMessage) clientMessage).getErrorReason());
         }
     }
 }

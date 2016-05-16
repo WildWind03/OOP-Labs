@@ -27,9 +27,9 @@ public class SocketReader implements Runnable {
     public void run() {
         try {
             while (true) {
-                Message message = messageSerializer.read();
+                ClientMessage clientMessage = messageSerializer.read();
                 logger.info("New message has been read");
-                messageController.acceptMessage(message);
+                messageController.acceptMessage(clientMessage);
             }
         } catch (IOException | ClassNotFoundException | SAXException e) {
             logger.error("Error while reading message!");

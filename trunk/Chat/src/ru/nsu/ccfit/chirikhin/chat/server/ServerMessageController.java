@@ -1,11 +1,8 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.autoqueue.Autoqueue;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
-import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
-import ru.nsu.ccfit.chirikhin.chat.Message;
-import ru.nsu.ccfit.chirikhin.chat.MessageController;
+import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -13,10 +10,10 @@ public class ServerMessageController implements MessageController {
     private static final Logger logger = Logger.getLogger(ServerMessageController.class.getName());
 
     private final BlockingQueue<Client> clients;
-    private final Autoqueue<Message> messages;
+    private final CycleQueue<ServerMessage> messages;
     private final Client client;
 
-    public ServerMessageController(Autoqueue<Message> messages, BlockingQueue<Client> clients, Client client) {
+    public ServerMessageController(CycleQueue<ServerMessage> messages, BlockingQueue<Client> clients, Client client) {
         if (null == clients || null == messages || null == client) {
             throw new NullPointerException("Null reference in constructor");
         }
@@ -26,25 +23,113 @@ public class ServerMessageController implements MessageController {
         this.client = client;
     }
 
-    public BlockingQueue<Client> getClients() {
-        return clients;
+    public void handleLoginMessage(LoginMessage message) {
+        if (null == message) {
+            throw new NullPointerException("Null instead of message");
+        }
+
+        if (!client.isRegistered()) {
+            try {
+                setUsername(message.getUsername());
+                client.setChatClientName(message.getChatClientName());
+                client.register();
+
+                sendMessageToTheClient(new ServerSuccessMessage(getClientId()));
+                sendMessageToAllClients(new NewClientServerMessage(message.getUsername()));
+            } catch (NicknameBusyException e) {
+                sendMessageToTheClient(new ServerErrorMessage(e.getMessage()));
+            }
+        } else {
+            sendMessageToTheClient(new ServerErrorMessage("The client have already been registered!"));
+        }
     }
 
-    @Override
-    public void acceptMessage(Message message)  {
-        logger.info("Message has been taken by controller");
-        message.process(this);
+    public void handleTextMessage(ClientTextMessage message) {
+        if (null == message) {
+            throw new NullPointerException("Null instead of message");
+        }
 
-        if (message instanceof ClientMessage) {
-            try {
-                messages.put(message);
-            } catch (InterruptedException e) {
-                logger.error("Interrupt exception");
+        if (client.isRegistered()) {
+            ServerTextMessage serverTextMessage = new ServerTextMessage(message.getAuthor(), message.getText());
+
+            sendMessageToAllClients(serverTextMessage);
+            addMessageToServerStorage(serverTextMessage);
+        }
+    }
+
+    public void handleExitMessage(ClientMessage message) {
+
+    }
+
+    public void sendMessageToAllClients(ServerMessage serverMessage) {
+        if (null == serverMessage) {
+            throw new NullPointerException("Can't send message. ServerMessage is null");
+        }
+
+        for(Client client : clients) {
+            client.receiveMessage(serverMessage);
+        }
+    }
+
+    private boolean isUsernameBusy(String username) {
+        if (null == username) {
+            throw new NullPointerException("Usename ca not be null");
+        }
+
+        for (Client client : clients) {
+            if (client.getUsername().equals(username)) {
+                return true;
             }
         }
 
-        if (message instanceof LoginMessage) {
-            client.setUsermame(((LoginMessage) message).getUsername());
+        return false;
+    }
+
+
+    private void setUsername(String newUsername) throws NicknameBusyException {
+        if (null == newUsername) {
+            throw new NullPointerException("Username can not be null");
         }
+
+        if ((!isUsernameBusy(newUsername))) {
+            client.setUsermame(newUsername);
+        } else {
+            throw new NicknameBusyException("The nickname " + newUsername + " is busy!");
+        }
+    }
+
+    private void sendMessageToTheClient(ServerMessage serverMessage) {
+        if (null == serverMessage) {
+            throw new NullPointerException("Null instead of clientMessage");
+        }
+
+        client.receiveMessage(serverMessage);
+    }
+
+
+    public void addMessageToServerStorage(ServerMessage serverMessage) {
+        if (null == serverMessage) {
+            throw new NullPointerException("Null instead of server Message");
+        }
+        try {
+            messages.put(serverMessage);
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        }
+    }
+
+    public long getClientId() {
+        return client.getId();
+    }
+
+
+    @Override
+    public void acceptMessage(ClientMessage clientMessage)  {
+        if (null == clientMessage) {
+            throw new NullPointerException("Null instead of client Message");
+        }
+
+        logger.info("Message has been taken by controller");
+        clientMessage.process(this);
     }
 }
