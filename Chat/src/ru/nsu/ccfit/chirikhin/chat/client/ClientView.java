@@ -18,6 +18,7 @@ public class ClientView extends Application {
     private static final int TIMEOUT_TO_LOGIN = 3000;
 
     private Controller controller;
+    private ClientViewController clientViewController;
 
     public static void main(String[] args) {
         launch(args);
@@ -37,7 +38,7 @@ public class ClientView extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
         Parent root = loader.load();
 
-        ClientViewController clientViewController = loader.getController();
+        clientViewController = loader.getController();
 
         controller = new Controller(clientViewController);
 
@@ -80,6 +81,7 @@ public class ClientView extends Application {
 
     @Override
     public void stop() throws Exception {
+        clientViewController.onStop();
         controller.disconnectUser();
         super.stop();
     }

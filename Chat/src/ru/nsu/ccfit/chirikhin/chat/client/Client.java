@@ -1,13 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessageController;
-import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
-import ru.nsu.ccfit.chirikhin.chat.InputStreamReader;
-import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
-import ru.nsu.ccfit.chirikhin.chat.Message;
-import ru.nsu.ccfit.chirikhin.chat.OutputStreamWriter;
-import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -55,6 +49,12 @@ public class Client {
             } catch (InterruptedException e) {
                 logger.error("Interrupt");
             }
+        }, () -> {
+            try {
+                messagesFromServer.put(new ConnectionFailedMessage());
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
         });
 
         messagesForServer.add(new LoginMessage(username, "Windagram"));
@@ -78,6 +78,10 @@ public class Client {
     public void sendMessage(String message) {
         logger.info("Send message");
         messagesForServer.add(new ClientTextMessage(message, username, sessionId));
+    }
+
+    public void onStop() {
+
     }
 
     public void disconnect() {

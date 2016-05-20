@@ -66,6 +66,11 @@ public class ClientViewController extends Observable implements Observer {
         notifyObservers(new InfoFromView(Info.TYPED_MESSAGE, str));
     }
 
+    public void onStop() {
+        setChanged();
+        notifyObservers(new InfoFromView(Info.LOGOUT, null));
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         ServerMessage message = (ServerMessage) arg;
@@ -76,6 +81,8 @@ public class ClientViewController extends Observable implements Observer {
 
         if (message instanceof ServerErrorMessage) {
             isLoggedIn = false;
+            setChanged();
+            notifyObservers(new InfoFromView(Info.DISCONNECT, null));
             synchronized (lock) {
                 lock.notify();
             }
@@ -91,6 +98,10 @@ public class ClientViewController extends Observable implements Observer {
             synchronized (lock) {
                 lock.notify();
             }
+        }
+
+        if (message instanceof UserLogoutMessage) {
+            chatText.appendText(((UserLogoutMessage) message).getUserName() + " left the chat room");
         }
     }
 

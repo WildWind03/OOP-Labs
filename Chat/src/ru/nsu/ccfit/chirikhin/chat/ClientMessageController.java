@@ -39,6 +39,11 @@ public class ClientMessageController extends Observable implements Runnable {
         notifyObservers(serverSuccessMessage);
     }
 
+    public void handleUserLogoutMessage(UserLogoutMessage message) {
+        setChanged();
+        notifyObservers(message);
+    }
+
     @Override
     public void run() {
         try {

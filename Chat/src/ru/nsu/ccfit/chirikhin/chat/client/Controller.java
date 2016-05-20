@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
-    private Client client;
+    private Client client = null;
 
     public Controller(ClientViewController clientViewController) {
         clientViewController.addObserver((o, arg) -> {
@@ -28,6 +28,14 @@ public class Controller {
                     logger.info("Controller. Send message");
                     String message = (String) ((InfoFromView) arg).getObject();
                     client.sendMessage(message);
+                    break;
+                case DISCONNECT:
+                    if (null != client) {
+                        client.disconnect();
+                    }
+                    break;
+                case LOGOUT:
+                    client.onStop();
                     break;
             }
         });
