@@ -1,13 +1,14 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.Message;
+import ru.nsu.ccfit.chirikhin.chat.ServerMessageController;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,19 +16,16 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class Server {
 
     private final static Logger logger = Logger.getLogger(Server.class.getName());
-    private final static int COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE = 10;
+    private final static int COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTHORIZE = 10;
 
     private final LinkedList<PortListener> portListeners = new LinkedList<>();
     private final LinkedList<Thread> portListenersThreads = new LinkedList<>();
 
-    private final CycleQueue<ServerMessage> messagesForNewCleints = new CycleQueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTORIZE);
+    private final CycleQueue<Message> messagesForNewClients = new CycleQueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTHORIZE);
     private final ConcurrentHashMap<Long, Client> clients = new ConcurrentHashMap<>();
+    private final BlockingQueue<Message> messagesFromClients = new LinkedBlockingQueue<>();
 
-    private final ClientCreator clientCreator = new ClientCreator(clients, messagesForNewCleints);
-
-    private final BlockingQueue<ClientMessage> messagesFromClients = new LinkedBlockingQueue<>();
-
-    private final ServerMessageController messageController = new ServerMessageController(messagesForNewCleints, clients, messagesFromClients);
+    private final ServerMessageController messageController = new ServerMessageController(messagesForNewClients, clients, messagesFromClients);
     private final Thread messageControllerThread = new Thread(messageController, "Message Controller Thread");
 
     public Server(ServerConfig serverConfig) throws SocketException {
@@ -40,13 +38,11 @@ public class Server {
                 .stream()
                 .forEach((socketListenerDescriptor) -> {
                     try {
-                        PortListener portListener = new PortListener(socketListenerDescriptor.getPort(), socketListenerDescriptor.getProtocol(), clientCreator);
+                        PortListener portListener = new PortListener(socketListenerDescriptor.getPort(), socketListenerDescriptor.getProtocol(), clients, messagesFromClients);
                         portListeners.add(portListener);
 
-                        Thread newPortListenerThread = new Thread(portListener);
+                        Thread newPortListenerThread = new Thread(portListener, "Port " + socketListenerDescriptor.getPort() + " Listener Thread");
                         portListenersThreads.add(newPortListenerThread);
-                        newPortListenerThread.setName("Port Listener Thread");
-
 
                     } catch (IOException e) {
                         logger.error("Port num " + socketListenerDescriptor.getPort() + " was ignored because of IO exception");
@@ -62,7 +58,7 @@ public class Server {
     public void stop() throws InterruptedException {
         for (PortListener portListener : portListeners) {
             try {
-                portListener.closeConnection();
+                portListener.close();
             } catch (IOException e) {
                 logger.error("IO exception while closing port listener");
             }
@@ -76,8 +72,8 @@ public class Server {
             thread.join();
         }
 
-        for (Client client : clients) {
-            client.delete();
+        for (Map.Entry<Long, Client> client : clients.entrySet()) {
+            client.getValue().delete();
         }
     }
 

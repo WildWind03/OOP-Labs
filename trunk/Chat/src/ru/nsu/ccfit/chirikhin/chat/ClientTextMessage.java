@@ -1,16 +1,17 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.server.ServerMessageController;
 
 public class ClientTextMessage implements ClientMessage {
     private static final Logger logger = Logger.getLogger(ClientTextMessage.class.getName());
     private final String text;
     private final String author;
+    private final long sessionID;
 
-    public ClientTextMessage(String text, String author) {
+    public ClientTextMessage(String text, String author, long sessionID) {
         this.text = text;
         this.author = author;
+        this.sessionID = sessionID;
     }
 
     @Override
@@ -20,7 +21,7 @@ public class ClientTextMessage implements ClientMessage {
         }
 
         logger.info("Process");
-        serverMessageController.handleTextMessage(this);
+        serverMessageController.handleTextMessage(this, sessionID);
     }
 
     public String getAuthor() {

@@ -11,7 +11,7 @@ public class Main {
         try {
 
             ServerConfig serverConfig = new ServerConfig();
-            serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(3000, ProtocolName.SERIALIZE));
+            serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(3001, ProtocolName.SERIALIZE));
             Server server = new Server(serverConfig);
             server.start();
 

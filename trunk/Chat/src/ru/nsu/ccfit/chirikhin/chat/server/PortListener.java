@@ -1,26 +1,30 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
+import ru.nsu.ccfit.chirikhin.chat.Message;
 import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.Closeable;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PortListener implements Runnable {
+public class PortListener implements Runnable, Closeable {
     private static final Logger logger = Logger.getLogger(PortListener.class.getName());
 
     private final ProtocolName protocolName;
     private final ServerSocket serverSocket;
-    private final ConcurrentHashMap<Long, Client> clients;
-    private final IdRegisterer idRegisterer = IdRegistererSingleton.getInstance();
-    private final BlockingQueue<ClientMessage> messages;
 
-    public PortListener(int port, ProtocolName protocolName, ConcurrentHashMap<Long, Client> clients, BlockingQueue<ClientMessage> messages) throws IOException {
+    private final ConcurrentHashMap<Long, Client> clients;
+
+    private final IdRegisterer idRegisterer = IdRegistererSingleton.getInstance();
+
+    private final BlockingQueue<Message> messages;
+
+    public PortListener(int port, ProtocolName protocolName, ConcurrentHashMap<Long, Client> clients, BlockingQueue<Message> messages) throws IOException {
         if (port < 0) {
             logger.error("Port can not be negative");
             throw new IllegalArgumentException("Port can not be negative!");
@@ -36,7 +40,7 @@ public class PortListener implements Runnable {
         }
 
         if (null == messages) {
-            throw new NullPointerException("Null reference isntead of messages");
+            throw new NullPointerException("Null reference instead of messages");
         }
 
         this.protocolName = protocolName;
@@ -61,7 +65,8 @@ public class PortListener implements Runnable {
         }
     }
 
-    public void closeConnection() throws IOException {
+    @Override
+    public void close() throws IOException {
         serverSocket.close();
     }
 }

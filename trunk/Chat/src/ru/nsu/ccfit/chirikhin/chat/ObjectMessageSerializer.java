@@ -20,7 +20,6 @@ public class ObjectMessageSerializer implements MessageSerializer {
 
     @Override
     public Message read() throws IOException, ClassNotFoundException {
-        //logger.info("Staring read");
         Object object = objectInputStream.readObject();
 
         logger.info("Read message");

@@ -7,8 +7,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
-import ru.nsu.ccfit.chirikhin.chat.server.Server;
+import ru.nsu.ccfit.chirikhin.chat.NewClientServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
+import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.ServerTextMessage;
 
 import java.util.Observable;
 import java.util.Observer;
