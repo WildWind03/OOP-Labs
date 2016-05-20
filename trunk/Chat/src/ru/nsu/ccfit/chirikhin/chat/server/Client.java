@@ -14,33 +14,30 @@ public class Client {
 
     private final Thread writerThread;
     private final Thread readerThread;
-    private final long uniqueSessionId;
     private final SocketReader socketReader;
-    private final BlockingQueue<ServerMessage> clientMessages = new LinkedBlockingQueue<>();
+
+    private final long uniqueSessionId;
+
+    private final BlockingQueue<ServerMessage> messagesForClient = new LinkedBlockingQueue<>();
+
     private String username = "NONAME";
     private String chatClientName = "UNKNOWN_CLIENT";
-    private boolean isRegistered;
-    private final BlockingQueue<ClientMessage> messages;
+    private boolean isLoggedIn;
 
-    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<ClientMessage> messages, long uniqueSessionId) throws IOException, ParserConfigurationException {
-        if (null == socket || null == protocolName || null == messages) {
+
+    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<ClientMessage> messagesForServer, long uniqueSessionId) throws IOException, ParserConfigurationException {
+        if (null == socket || null == protocolName || null == messagesForServer) {
             logger.error("Null reference in constructor");
             throw new NullPointerException("Null reference in constructor");
         }
 
-        this.messages = messages;
-
         this.uniqueSessionId = uniqueSessionId;
 
-        SocketWriter socketWriter = new SocketWriter(socket.getOutputStream(), protocolName, clientMessages);
-        socketReader = new SocketReader(socket.getInputStream(), protocolName, messages);
+        SocketWriter socketWriter = new SocketWriter(socket.getOutputStream(), protocolName, messagesForClient);
+        socketReader = new SocketReader(socket.getInputStream(), protocolName, messagesForServer);
 
-        writerThread = new Thread(socketWriter);
-        writerThread.setName("Client Writer Thread");
-
-        readerThread = new Thread(socketReader);
-        readerThread.setName("Client Reader Thread");
-
+        writerThread = new Thread(socketWriter, "Client Writer Thread");
+        readerThread = new Thread(socketReader, "Client Reader Thread");
         writerThread.start();
         readerThread.start();
 
@@ -51,7 +48,7 @@ public class Client {
         return username;
     }
 
-    public void setUsermame(String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -59,8 +56,8 @@ public class Client {
         this.chatClientName = chatClientName;
     }
 
-    public void register() {
-        isRegistered = true;
+    public void login() {
+        isLoggedIn = true;
     }
 
     public void receiveMessage(ServerMessage clientMessage) {
@@ -68,15 +65,19 @@ public class Client {
             throw new NullPointerException("Message can not be null");
         }
 
-        clientMessages.add(clientMessage);
+        messagesForClient.add(clientMessage);
     }
 
-    public boolean isRegistered() {
-        return isRegistered;
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
-    public long getId() {
+    public long getUniqueSessionId() {
         return uniqueSessionId;
+    }
+
+    public String getChatClientName() {
+        return chatClientName;
     }
 
     public void delete() throws InterruptedException {
