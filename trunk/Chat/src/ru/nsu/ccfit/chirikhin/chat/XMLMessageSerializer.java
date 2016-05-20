@@ -10,12 +10,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class XMLSerializer implements MessageSerializer {
-    private static final Logger logger = Logger.getLogger(XMLSerializer.class.getName());
+public class XMLMessageSerializer implements MessageSerializer {
+    private static final Logger logger = Logger.getLogger(XMLMessageSerializer.class.getName());
     private final InputStream inputStream;
     private final DocumentBuilder documentBuilder;
 
-    public XMLSerializer(InputStream inputStream) throws ParserConfigurationException {
+    public XMLMessageSerializer(InputStream inputStream) throws ParserConfigurationException {
         if (null == inputStream) {
             throw new NullPointerException("Null instead of input stream");
         }
@@ -25,16 +25,17 @@ public class XMLSerializer implements MessageSerializer {
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
     }
 
-    @Override
-    public void stop() {
-
-    }
 
     @Override
-    public ClientMessage read() throws IOException, SAXException {
+    public Message serialize() throws IOException, ClassNotFoundException, SAXException {
         Document document = documentBuilder.parse(inputStream);
         ClientMessage clientMessage = null;
 
         return clientMessage;
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 }

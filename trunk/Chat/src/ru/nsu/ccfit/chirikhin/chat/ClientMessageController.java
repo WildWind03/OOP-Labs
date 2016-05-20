@@ -35,12 +35,14 @@ public class ClientMessageController extends Observable implements Runnable {
 
     public void handleSuccessServerMessage(ServerSuccessMessage serverSuccessMessage) {
         client.setSessionId(serverSuccessMessage.getSessionId());
+        setChanged();
+        notifyObservers(serverSuccessMessage);
     }
 
     @Override
     public void run() {
         try {
-            while(true) {
+            while(!Thread.currentThread().isInterrupted()) {
                 Message message = messages.take();
 
                 logger.info("New message has been received!");

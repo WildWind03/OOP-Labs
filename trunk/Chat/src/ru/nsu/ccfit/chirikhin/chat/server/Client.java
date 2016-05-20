@@ -17,6 +17,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     private static final Logger logger = Logger.getLogger(Client.class.getName());
+    private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
 
     private final Thread writerThread;
     private final Thread readerThread;
@@ -27,6 +28,23 @@ public class Client {
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
     private String username = "NONAME";
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Client client = (Client) o;
+
+        return uniqueSessionId == client.uniqueSessionId;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (uniqueSessionId ^ (uniqueSessionId >>> 32));
+    }
+
     private String chatClientName = "UNKNOWN_CLIENT";
     private boolean isLoggedIn;
 
@@ -38,6 +56,8 @@ public class Client {
         }
 
         this.uniqueSessionId = uniqueSessionId;
+
+        socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
 
@@ -58,7 +78,7 @@ public class Client {
         writerThread.start();
         readerThread.start();
 
-        logger.info("New client has been connected");
+        logger.info("New client has been created");
     }
 
     public String getUsername() {
@@ -82,7 +102,15 @@ public class Client {
             throw new NullPointerException("Message can not be null");
         }
 
-        messagesForClient.add(clientMessage);
+        logger.info("User " + getUsername() + " received new message");
+
+        try {
+            messagesForClient.put(clientMessage);
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        }
+
+        logger.info("PUT");
     }
 
     public boolean isLoggedIn() {

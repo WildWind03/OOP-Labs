@@ -15,6 +15,7 @@ import java.util.Optional;
 
 public class ClientView extends Application {
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
+    private static final int TIMEOUT_TO_LOGIN = 3000;
 
     private Controller controller;
 
@@ -25,12 +26,13 @@ public class ClientView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        /*List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+       List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
         loggers.add(LogManager.getRootLogger());
         for (Logger logger : loggers) {
             logger.setLevel(Level.OFF);
         }
-        */
+
+
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
         Parent root = loader.load();
@@ -54,9 +56,17 @@ public class ClientView extends Application {
 
             logger.info("Trying to log");
 
-        } while (!clientViewController.tryLogin(clientProperties));
+            if (!clientViewController.tryLogin(clientProperties)) {
+                continue;
+            }
 
-        logger.info("Logged in successfully!");
+            clientViewController.waitLogin(TIMEOUT_TO_LOGIN);
+
+            if(clientViewController.isLoggedIn()) {
+                break;
+            }
+
+        } while (true);
 
         Scene scene = new Scene(root);
         stage.setTitle("Chat Client");
@@ -64,6 +74,8 @@ public class ClientView extends Application {
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
+
+        logger.info("Logged in successfully!");
     }
 
     @Override

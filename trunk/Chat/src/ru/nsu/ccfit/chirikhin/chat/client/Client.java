@@ -17,6 +17,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
+    private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
+
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
     private final Thread readThread;
@@ -41,6 +43,7 @@ public class Client {
         ConnectorToServer connectorToServer = new ConnectorToServer();
 
         socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp());
+        socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
         logger.info("Connect success");
 
         username = clientProperties.getUsername();

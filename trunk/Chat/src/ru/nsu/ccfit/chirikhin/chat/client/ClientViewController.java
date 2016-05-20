@@ -7,39 +7,46 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.NewClientServerMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerTextMessage;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
 import java.util.Observable;
 import java.util.Observer;
 
 public class ClientViewController extends Observable implements Observer {
+    private final static String CLIENT_NAME = "Windogram";
+
+    private final Object lock = new Object();
+
     private static final Logger logger = Logger.getLogger(ClientViewController.class.getName());
     @FXML
     TextField inputField;
     @FXML
     TextArea chatText;
+
+    private boolean isConnectionSet;
     private boolean isLoggedIn;
 
     public boolean tryLogin(ClientProperties clientProperties) {
         setChanged();
         notifyObservers(new InfoFromView(Info.LOGIN, clientProperties));
 
-        return isLoggedIn();
+        return isConnectionSet();
+    }
+
+    public boolean isConnectionSet() {
+        return isConnectionSet;
+    }
+
+    public void onLoggedInSuccessfully() {
+        isConnectionSet = true;
+    }
+
+    public void onLoggedInFailed() {
+        isConnectionSet = false;
     }
 
     public boolean isLoggedIn() {
         return isLoggedIn;
-    }
-
-    public void onLoggedInSuccessfully() {
-        isLoggedIn = true;
-    }
-
-    public void onLoggedInFailed() {
-        isLoggedIn = false;
     }
 
     @FXML
@@ -68,11 +75,32 @@ public class ClientViewController extends Observable implements Observer {
         }
 
         if (message instanceof ServerErrorMessage) {
-            chatText.appendText(((ServerErrorMessage) message).getErrorReason());
+            isLoggedIn = false;
+            synchronized (lock) {
+                lock.notify();
+            }
         }
 
         if (message instanceof NewClientServerMessage) {
             chatText.appendText(((NewClientServerMessage) message).getUsername() + " joined\n");
+        }
+
+        if (message instanceof ServerSuccessMessage) {
+            logger.info("Server Success Message");
+            isLoggedIn = true;
+            synchronized (lock) {
+                lock.notify();
+            }
+        }
+    }
+
+    public void waitLogin(int timeout) {
+        synchronized (lock) {
+            try {
+                lock.wait(timeout);
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
         }
     }
 }

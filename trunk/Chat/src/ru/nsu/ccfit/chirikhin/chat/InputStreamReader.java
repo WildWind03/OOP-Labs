@@ -7,6 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.BlockingQueue;
 
 public class InputStreamReader implements Runnable, Closeable{
@@ -28,9 +29,16 @@ public class InputStreamReader implements Runnable, Closeable{
     @Override
     public void run() {
         try {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 logger.info("Read messsage");
-                Message message = messageSerializer.read();
+                Message message = null;
+
+                try {
+                    message = messageSerializer.serialize();
+                } catch (SocketTimeoutException e) {
+                    continue;
+                }
+
                 logger.info("New message has been read");
                 messageHandler.handle(message);
             }
@@ -41,6 +49,6 @@ public class InputStreamReader implements Runnable, Closeable{
 
     @Override
     public void close() throws IOException {
-        messageSerializer.stop();
+        messageSerializer.close();
     }
 }

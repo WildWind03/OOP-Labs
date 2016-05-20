@@ -57,6 +57,7 @@ public class PortListener implements Runnable, Closeable {
                 Socket newSocket = serverSocket.accept();
                 long sessionId = idRegisterer.getNewId();
                 clients.put(sessionId, new Client(newSocket, protocolName, messages, sessionId));
+                logger.info("New client has been connected");
             }
         } catch (IOException e) {
             logger.error("Interrupt");
