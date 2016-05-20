@@ -1,15 +1,9 @@
-package ru.nsu.ccfit.chirikhin.chat.server;
+package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.NewClientServerMessage;
-import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerSuccessMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
-import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
-import ru.nsu.ccfit.chirikhin.chat.ServerTextMessage;
+import ru.nsu.ccfit.chirikhin.chat.server.Client;
+import ru.nsu.ccfit.chirikhin.chat.server.NicknameBusyException;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -19,11 +13,11 @@ public class ServerMessageController implements Runnable {
     private static final Logger logger = Logger.getLogger(ServerMessageController.class.getName());
 
     private final ConcurrentHashMap<Long, Client> clients;
-    private final CycleQueue<ServerMessage> messagesForNewClients;
-    private final BlockingQueue<ClientMessage> messagesFromClients;
+    private final CycleQueue<Message> messagesForNewClients;
+    private final BlockingQueue<Message> messagesFromClients;
 
-    public ServerMessageController(CycleQueue<ServerMessage> messagesForNewClients, ConcurrentHashMap<Long, Client> clients,
-                                   BlockingQueue<ClientMessage> messagesFromClients) {
+    public ServerMessageController(CycleQueue<Message> messagesForNewClients, ConcurrentHashMap<Long, Client> clients,
+                                   BlockingQueue<Message> messagesFromClients) {
         if (null == clients || null == messagesForNewClients || null == messagesFromClients) {
             throw new NullPointerException("Null reference in constructor");
         }
@@ -34,6 +28,8 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleLoginMessage(LoginMessage message, long sessionId) {
+        logger.info("Login");
+
         if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
@@ -64,6 +60,8 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleTextMessage(ClientTextMessage message, long sessionId) {
+        logger.info("Text");
+
         if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
@@ -123,7 +121,7 @@ public class ServerMessageController implements Runnable {
         }
 
         if ((!isUsernameBusy(newUsername))) {
-            client.setUsermame(newUsername);
+            client.setUsername(newUsername);
         } else {
             throw new NicknameBusyException("The nickname " + newUsername + " is busy!");
         }
@@ -154,11 +152,17 @@ public class ServerMessageController implements Runnable {
     public void run() {
         try {
             while(true) {
-                ClientMessage clientMessage = messagesFromClients.take();
+                Message message = messagesFromClients.take();
+                if (!(message instanceof ClientMessage)) {
+                    throw new ClassCastException("Can not cast a message to a client message");
+                }
+                ClientMessage clientMessage = (ClientMessage) message;
                 clientMessage.process(this);
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("Interrupt");
+        } catch (MessageProcessException e) {
+            logger.error(e.toString());
         }
     }
 }

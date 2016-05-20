@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.BlockingQueue;
 
-public class SocketWriter implements Runnable {
-    private static final Logger logger = Logger.getLogger(SocketWriter.class.getName());
+public class OutputStreamWriter implements Runnable {
+    private static final Logger logger = Logger.getLogger(OutputStreamWriter.class.getName());
 
     private final MessageSender messageSender;
-    private final BlockingQueue <? extends Message> clientMessages;
+    private final BlockingQueue <Message> clientMessages;
 
-    public SocketWriter(OutputStream outputStream, ProtocolName protocolName, BlockingQueue<? extends Message> clientMessages) throws IOException {
+    public OutputStreamWriter(OutputStream outputStream, ProtocolName protocolName, BlockingQueue<Message> clientMessages) throws IOException {
         if (null == outputStream || null == protocolName || null == clientMessages) {
             throw new NullPointerException("Null in constructor");
         }

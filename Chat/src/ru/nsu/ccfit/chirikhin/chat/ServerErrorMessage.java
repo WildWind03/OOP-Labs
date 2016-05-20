@@ -1,7 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.client.ClientMessageController;
 
 public class ServerErrorMessage implements ServerMessage {
     private static final Logger logger = Logger.getLogger(ServerErrorMessage.class.getName());

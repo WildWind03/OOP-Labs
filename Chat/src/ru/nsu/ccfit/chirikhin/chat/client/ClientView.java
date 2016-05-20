@@ -25,11 +25,12 @@ public class ClientView extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+        /*List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
         loggers.add(LogManager.getRootLogger());
         for (Logger logger : loggers) {
             logger.setLevel(Level.OFF);
         }
+        */
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
         Parent root = loader.load();

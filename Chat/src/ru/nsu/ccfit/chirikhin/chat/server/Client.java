@@ -1,7 +1,13 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.InputStreamReader;
+import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
+import ru.nsu.ccfit.chirikhin.chat.Message;
+import ru.nsu.ccfit.chirikhin.chat.OutputStreamWriter;
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
+import ru.nsu.ccfit.chirikhin.chat.SignedLoginMessage;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -14,18 +20,18 @@ public class Client {
 
     private final Thread writerThread;
     private final Thread readerThread;
-    private final SocketReader socketReader;
+    private final InputStreamReader inputStreamReader;
 
     private final long uniqueSessionId;
 
-    private final BlockingQueue<ServerMessage> messagesForClient = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
     private String username = "NONAME";
     private String chatClientName = "UNKNOWN_CLIENT";
     private boolean isLoggedIn;
 
 
-    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<ClientMessage> messagesForServer, long uniqueSessionId) throws IOException, ParserConfigurationException {
+    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messagesForServer, long uniqueSessionId) throws IOException, ParserConfigurationException {
         if (null == socket || null == protocolName || null == messagesForServer) {
             logger.error("Null reference in constructor");
             throw new NullPointerException("Null reference in constructor");
@@ -33,11 +39,22 @@ public class Client {
 
         this.uniqueSessionId = uniqueSessionId;
 
-        SocketWriter socketWriter = new SocketWriter(socket.getOutputStream(), protocolName, messagesForClient);
-        socketReader = new SocketReader(socket.getInputStream(), protocolName, messagesForServer);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
 
-        writerThread = new Thread(socketWriter, "Client Writer Thread");
-        readerThread = new Thread(socketReader, "Client Reader Thread");
+        inputStreamReader = new InputStreamReader(socket.getInputStream(), protocolName, message -> {
+            if (message instanceof LoginMessage) {
+                message = new SignedLoginMessage((LoginMessage) message, uniqueSessionId);
+            }
+
+            try {
+                messagesForServer.put(message);
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
+        });
+
+        writerThread = new Thread(outputStreamWriter, "Client Writer Thread");
+        readerThread = new Thread(inputStreamReader, "Client Reader Thread");
         writerThread.start();
         readerThread.start();
 
@@ -82,7 +99,11 @@ public class Client {
 
     public void delete() throws InterruptedException {
 
-        socketReader.stop();
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            logger.error("Error while closing input stream reader");
+        }
 
         writerThread.interrupt();
         readerThread.interrupt();

@@ -6,7 +6,7 @@ public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
     private final ClientViewController clientViewController;
-    private User user;
+    private Client client;
 
     public Controller(ClientViewController clientViewController) {
         this.clientViewController = clientViewController;
@@ -19,8 +19,8 @@ public class Controller {
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
 
                     try {
-                        user = new User(clientProperties);
-                        user.addEventObserver(clientViewController);
+                        client = new Client(clientProperties);
+                        client.addMessageControllerObserver(clientViewController);
                         clientViewController.onLoggedInSuccessfully();
                     } catch (Exception e) {
                         clientViewController.onLoggedInFailed();
@@ -30,15 +30,15 @@ public class Controller {
                 case TYPED_MESSAGE:
                     logger.info("Controller. Send message");
                     String message = (String) ((InfoFromView) arg).getObject();
-                    user.sendMessage(message);
+                    client.sendMessage(message);
                     break;
             }
         });
     }
 
     public void disconnectUser() {
-        if (null != user) {
-            user.disconnect();
+        if (null != client) {
+            client.disconnect();
         }
     }
 }
