@@ -26,7 +26,7 @@ public class MessageSerializerFactory {
 
         switch (protocolName) {
             case XML:
-                messageSerializer = new XMLSerializer(inputStream);
+                messageSerializer = new XMLMessageSerializer(inputStream);
                 break;
             case SERIALIZE:
                 logger.info("SERIALIZE");

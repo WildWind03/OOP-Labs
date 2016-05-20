@@ -24,7 +24,7 @@ public class OutputStreamWriter implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 logger.info("Trying to take message");
                 Message message = clientMessages.take();
                 logger.info("New message has been taken");

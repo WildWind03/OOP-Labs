@@ -34,6 +34,8 @@ public class Server {
             throw new NullPointerException("Null pointer in constructor");
         }
 
+        logger.info("Server created");
+
         serverConfig
                 .stream()
                 .forEach((socketListenerDescriptor) -> {
@@ -53,6 +55,8 @@ public class Server {
     public void start() throws IOException {
         portListenersThreads.forEach(Thread::start);
         messageControllerThread.start();
+
+        logger.info("Server started");
     }
 
     public void stop() throws InterruptedException {

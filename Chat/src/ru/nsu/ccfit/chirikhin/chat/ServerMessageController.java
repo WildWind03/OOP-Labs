@@ -28,6 +28,8 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleLoginMessage(LoginMessage message, long sessionId) {
+        System.out.println("LOGIN");
+        System.out.flush();
         logger.info("Login");
 
         if (null == message) {
@@ -60,7 +62,6 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleTextMessage(ClientTextMessage message, long sessionId) {
-        logger.info("Text");
 
         if (null == message) {
             throw new NullPointerException("Null instead of message");
@@ -73,10 +74,13 @@ public class ServerMessageController implements Runnable {
         }
 
         if (client.isLoggedIn()) {
+            logger.info("Message from logged in user");
             ServerTextMessage serverTextMessage = new ServerTextMessage(message.getAuthor(), message.getText());
 
             sendMessageToAllClients(serverTextMessage);
             addMessageToServerStorage(serverTextMessage);
+        } else {
+            logger.info("Client is not logged in");
         }
     }
 
@@ -90,6 +94,8 @@ public class ServerMessageController implements Runnable {
         }
 
         for (Map.Entry<Long, Client> client : clients.entrySet()) {
+            //System.out.println("hey");
+            logger.info("Client " + client.getValue().getUsername() + " is ready to get new server message");
             client.getValue().receiveMessage(serverMessage);
         }
     }
@@ -132,6 +138,8 @@ public class ServerMessageController implements Runnable {
             throw new NullPointerException("Null instead of clientMessage");
         }
 
+        //System.out.println("ONE");
+
         Client client = clients.get(sessionId);
         client.receiveMessage(serverMessage);
     }
@@ -151,13 +159,15 @@ public class ServerMessageController implements Runnable {
     @Override
     public void run() {
         try {
-            while(true) {
+            while(!Thread.currentThread().isInterrupted()) {
                 Message message = messagesFromClients.take();
+                logger.info("New message has been taken");
                 if (!(message instanceof ClientMessage)) {
                     throw new ClassCastException("Can not cast a message to a client message");
                 }
                 ClientMessage clientMessage = (ClientMessage) message;
                 clientMessage.process(this);
+                logger.info("New message has been processed");
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt");

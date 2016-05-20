@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +20,24 @@ public class ObjectMessageSerializer implements MessageSerializer {
     }
 
     @Override
-    public Message read() throws IOException, ClassNotFoundException {
-        Object object = objectInputStream.readObject();
+    public void close() throws IOException {
+        try {
+            objectInputStream.close();
+        } catch (IOException e) {
+            logger.error("Closing connection");
+        }
+    }
+
+    @Override
+    public Message serialize() throws ClassNotFoundException, SAXException, IOException {
+        Object object = null;
+        try {
+            object = objectInputStream.readObject();
+        } catch (IOException e) {
+            logger.error("IO while reading object");
+            throw e;
+
+        }
 
         logger.info("Read message");
 
@@ -29,14 +46,5 @@ public class ObjectMessageSerializer implements MessageSerializer {
         }
 
         return (Message) object;
-    }
-
-    @Override
-    public void stop() {
-        try {
-            objectInputStream.close();
-        } catch (IOException e) {
-            logger.error("Closing connection");
-        }
     }
 }

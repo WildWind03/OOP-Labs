@@ -5,12 +5,9 @@ import org.apache.log4j.Logger;
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
-    private final ClientViewController clientViewController;
     private Client client;
 
     public Controller(ClientViewController clientViewController) {
-        this.clientViewController = clientViewController;
-
         clientViewController.addObserver((o, arg) -> {
             InfoFromView infoFromView = (InfoFromView) arg;
 
