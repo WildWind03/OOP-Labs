@@ -88,13 +88,26 @@ public class ServerMessageController implements Runnable {
 
     }
 
+    public void handleConnectionFailedMessage(ClientMessage message, long sessionId) {
+        Client client = clients.get(sessionId);
+
+        try {
+            client.delete();
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        }
+
+        clients.remove(sessionId);
+
+        sendMessageToAllClients(new UserLogoutMessage(client.getUsername()));
+    }
+
     private void sendMessageToAllClients(ServerMessage serverMessage) {
         if (null == serverMessage) {
             throw new NullPointerException("Can't send message. ServerMessage is null");
         }
 
         for (Map.Entry<Long, Client> client : clients.entrySet()) {
-            //System.out.println("hey");
             logger.info("Client " + client.getValue().getUsername() + " is ready to get new server message");
             client.getValue().receiveMessage(serverMessage);
         }

@@ -16,14 +16,16 @@ public class InputStreamReader implements Runnable, Closeable{
 
     private final MessageSerializer messageSerializer;
     private final MessageHandler messageHandler;
+    private final OnResultHandler onResultHandler;
 
-    public InputStreamReader(InputStream inputStream, ProtocolName protocolName, MessageHandler messageHandler) throws IOException, ParserConfigurationException {
-        if (null == inputStream || null == protocolName || null == messageHandler) {
+    public InputStreamReader(InputStream inputStream, ProtocolName protocolName, MessageHandler messageHandler, OnResultHandler onResultHandler) throws IOException, ParserConfigurationException {
+        if (null == inputStream || null == protocolName || null == messageHandler || null == onResultHandler) {
             throw new NullPointerException("Null in constructor");
         }
 
         this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, inputStream);
         this.messageHandler = messageHandler;
+        this.onResultHandler = onResultHandler;
     }
 
     @Override
@@ -44,6 +46,7 @@ public class InputStreamReader implements Runnable, Closeable{
             }
         } catch (IOException | ClassNotFoundException | SAXException e) {
             logger.error("Error while reading message!");
+            onResultHandler.handle();
         }
     }
 
