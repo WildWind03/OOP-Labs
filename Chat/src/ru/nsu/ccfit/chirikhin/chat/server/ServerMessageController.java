@@ -3,7 +3,6 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.NewClientServerMessage;
 import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
-import ru.nsu.ccfit.chirikhin.chat.MessageController;
 import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
 import ru.nsu.ccfit.chirikhin.chat.ServerSuccessMessage;
 import ru.nsu.ccfit.chirikhin.chat.ServerErrorMessage;
@@ -11,7 +10,6 @@ import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
 import ru.nsu.ccfit.chirikhin.chat.ServerTextMessage;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
-import ru.nsu.ccfit.chirikhin.chat.Message;
 
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
@@ -46,11 +44,11 @@ public class ServerMessageController implements Runnable {
             throw new NullPointerException("There is no client with such sessionId: " + sessionId);
         }
 
-        if (!client.isRegistered()) {
+        if (!client.isLoggedIn()) {
             try {
                 setUsername(message.getUsername(), sessionId);
                 client.setChatClientName(message.getChatClientName());
-                client.register();
+                client.login();
 
                 NewClientServerMessage newClientServerMessage = new NewClientServerMessage(message.getUsername());
 
@@ -76,7 +74,7 @@ public class ServerMessageController implements Runnable {
             throw new NullPointerException("There is no client with such sessionId: " + sessionId);
         }
 
-        if (client.isRegistered()) {
+        if (client.isLoggedIn()) {
             ServerTextMessage serverTextMessage = new ServerTextMessage(message.getAuthor(), message.getText());
 
             sendMessageToAllClients(serverTextMessage);
