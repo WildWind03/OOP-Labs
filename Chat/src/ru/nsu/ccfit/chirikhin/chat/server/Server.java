@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.MessageController;
 import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 
@@ -22,6 +23,9 @@ public class Server {
     private final BlockingQueue<Client> clients = new LinkedBlockingQueue<>();
 
     private final ClientCreator clientCreator = new ClientCreator(clients, messages);
+
+    private final MessageController messageController;
+    private final Thread thread;
 
     public Server(ServerConfig serverConfig) throws SocketException {
         if (null == serverConfig) {

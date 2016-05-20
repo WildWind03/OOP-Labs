@@ -13,49 +13,67 @@ import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 import ru.nsu.ccfit.chirikhin.chat.ClientMessage;
 import ru.nsu.ccfit.chirikhin.chat.Message;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class ServerMessageController implements MessageController {
+public class ServerMessageController implements Runnable {
     private static final Logger logger = Logger.getLogger(ServerMessageController.class.getName());
 
-    private final BlockingQueue<Client> clients;
-    private final CycleQueue<ServerMessage> messages;
-    private final Client client;
+    private final ConcurrentHashMap<Long, Client> clients;
+    private final CycleQueue<ServerMessage> messagesForNewClients;
+    private final BlockingQueue<ClientMessage> messagesFromClients;
 
-    public ServerMessageController(CycleQueue<ServerMessage> messages, BlockingQueue<Client> clients, Client client) {
-        if (null == clients || null == messages || null == client) {
+    public ServerMessageController(CycleQueue<ServerMessage> messagesForNewClients, ConcurrentHashMap<Long, Client> clients,
+                                   BlockingQueue<ClientMessage> messagesFromClients) {
+        if (null == clients || null == messagesForNewClients || null == messagesFromClients) {
             throw new NullPointerException("Null reference in constructor");
         }
 
         this.clients = clients;
-        this.messages = messages;
-        this.client = client;
+        this.messagesFromClients = messagesFromClients;
+        this.messagesForNewClients = messagesForNewClients;
     }
 
-    public void handleLoginMessage(LoginMessage message) {
+    public void handleLoginMessage(LoginMessage message, long sessionId) {
         if (null == message) {
             throw new NullPointerException("Null instead of message");
+        }
+
+        Client client = clients.get(sessionId);
+
+        if (null == client) {
+            throw new NullPointerException("There is no client with such sessionId: " + sessionId);
         }
 
         if (!client.isRegistered()) {
             try {
-                setUsername(message.getUsername());
+                setUsername(message.getUsername(), sessionId);
                 client.setChatClientName(message.getChatClientName());
                 client.register();
 
-                sendMessageToTheClient(new ServerSuccessMessage(getClientId()));
-                sendMessageToAllClients(new NewClientServerMessage(message.getUsername()));
+                NewClientServerMessage newClientServerMessage = new NewClientServerMessage(message.getUsername());
+
+                sendMessageToTheClient(new ServerSuccessMessage(sessionId), sessionId);
+                sendMessageToAllClients(newClientServerMessage);
+                addMessageToServerStorage(newClientServerMessage);
             } catch (NicknameBusyException e) {
-                sendMessageToTheClient(new ServerErrorMessage(e.getMessage()));
+                sendMessageToTheClient(new ServerErrorMessage(e.getMessage()), sessionId);
             }
         } else {
-            sendMessageToTheClient(new ServerErrorMessage("The client have already been registered!"));
+            sendMessageToTheClient(new ServerErrorMessage("The client have already been registered!"), sessionId);
         }
     }
 
-    public void handleTextMessage(ClientTextMessage message) {
+    public void handleTextMessage(ClientTextMessage message, long sessionId) {
         if (null == message) {
             throw new NullPointerException("Null instead of message");
+        }
+
+        Client client = clients.get(sessionId);
+
+        if (null == client) {
+            throw new NullPointerException("There is no client with such sessionId: " + sessionId);
         }
 
         if (client.isRegistered()) {
@@ -66,17 +84,17 @@ public class ServerMessageController implements MessageController {
         }
     }
 
-    public void handleExitMessage(ClientMessage message) {
+    public void handleExitMessage(ClientMessage message, long sessionId) {
 
     }
 
-    public void sendMessageToAllClients(ServerMessage serverMessage) {
+    private void sendMessageToAllClients(ServerMessage serverMessage) {
         if (null == serverMessage) {
             throw new NullPointerException("Can't send message. ServerMessage is null");
         }
 
-        for (Client client : clients) {
-            client.receiveMessage(serverMessage);
+        for (Map.Entry<Long, Client> client : clients.entrySet()) {
+            client.getValue().receiveMessage(serverMessage);
         }
     }
 
@@ -85,8 +103,8 @@ public class ServerMessageController implements MessageController {
             throw new NullPointerException("Usename ca not be null");
         }
 
-        for (Client client : clients) {
-            if (client.getUsername().equals(username)) {
+        for (Map.Entry<Long, Client> client : clients.entrySet()) {
+            if (client.getValue().getUsername().equals(username)) {
                 return true;
             }
         }
@@ -95,9 +113,15 @@ public class ServerMessageController implements MessageController {
     }
 
 
-    private void setUsername(String newUsername) throws NicknameBusyException {
+    private void setUsername(String newUsername, long sessionId) throws NicknameBusyException {
         if (null == newUsername) {
             throw new NullPointerException("Username can not be null");
+        }
+
+        Client client = clients.get(sessionId);
+
+        if (null == client) {
+            throw new NullPointerException("There is no client with such session id " + sessionId);
         }
 
         if ((!isUsernameBusy(newUsername))) {
@@ -107,43 +131,36 @@ public class ServerMessageController implements MessageController {
         }
     }
 
-    private void sendMessageToTheClient(ServerMessage serverMessage) {
+    private void sendMessageToTheClient(ServerMessage serverMessage, long sessionId) {
         if (null == serverMessage) {
             throw new NullPointerException("Null instead of clientMessage");
         }
 
+        Client client = clients.get(sessionId);
         client.receiveMessage(serverMessage);
     }
 
 
-    public void addMessageToServerStorage(ServerMessage serverMessage) {
+    private void addMessageToServerStorage(ServerMessage serverMessage) {
         if (null == serverMessage) {
             throw new NullPointerException("Null instead of server Message");
         }
         try {
-            messages.put(serverMessage);
+            messagesForNewClients.put(serverMessage);
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }
     }
 
-    public long getClientId() {
-        return client.getId();
-    }
-
-
     @Override
-    public void acceptMessage(Message message) {
-        if (null == message) {
-            throw new NullPointerException("Null instead of client Message");
+    public void run() {
+        try {
+            while(true) {
+                ClientMessage clientMessage = messagesFromClients.take();
+                clientMessage.process(this);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-        if (!(message instanceof ClientMessage)) {
-            throw new ClassCastException("Message is not a client message");
-        }
-
-        logger.info("Message has been taken by controller");
-        ClientMessage clientMessage = (ClientMessage) message;
-        clientMessage.process(this);
     }
 }
