@@ -9,14 +9,16 @@
 	<property name="build.classes.dir" value="./classes"/>
 	<property name="build.dist.dir" value="./"/>
 	<property name="test.dir" value="./testReports"/>
+	<property name="server.resources" value="./src/resources/server"/>
+	<property name="client.resources" value="./src/resources/client"/>
 
 	<path id="CLASSPATH">
 		<fileset dir="${lib.dir}" includes="**/*.jar"/>
 	</path>
 
 	<target name="clean">
-		<delete dir="build.classes.dir"/>
-		<delete dir="build.test.dir"/>
+		<delete dir="${build.classes.dir}"/>
+		<delete dir="${test.dir}"/>
 	</target>
 
 	<target name="compile" depends="clean">
@@ -31,6 +33,16 @@
 			   source="1.8"
 			   debug="on"
 			   classpathref="CLASSPATH">
+
+			<classpath>
+				<fileset dir="${client.resources}">
+					<include name="**/*.*"/>
+				</fileset>
+
+				<fileset dir="${server.resources}">
+					<include name="**/*.*"/>
+				</fileset>
+			</classpath>
 		</javac>
 
 		<copy todir="${build.classes.dir}">
@@ -43,11 +55,13 @@
 			<manifest>
 				<attribute name="Main-Class" value="ru/nsu/ccfit/chirikhin/chat/server/Main"/>
 			</manifest>
+
+			<fileset dir="${server.resources}" includes="log4j.properties"/>
 		</jar>
 	</target>
 
 	<target name="runserver" depends="jarserver">
-		<java classname="ru/nsu/ccfit/chirikhin/chat/server/Main" fork = "true">
+		<java classname="ru/nsu/ccfit/chirikhin/chat/server/Main" fork = "true" args="./serverConfig.txt">
 
 			<classpath>
 				<path refid="CLASSPATH"/>
@@ -58,7 +72,7 @@
 	</target>
 
     <target name="runclient" depends="jarclient">
-        <java jar="ChatClient.jar" fork="yes"/>
+        <java jar="ChatClient.jar" fork="yes" args="./clientConfig.txt"/>
     </target>
 
     <target name="jarclient" depends="clean, compile">
@@ -73,6 +87,7 @@
             <fx:application refid="ChatClientID"/>
             <fx:resources refid="appRes"/>
             <fileset dir="${build.classes.dir}"/>
+			<fileset dir="${client.resources}" includes="**/*.*"/>
         </fx:jar>
     </target>
 
