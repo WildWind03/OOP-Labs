@@ -5,6 +5,8 @@ import ru.nsu.ccfit.chirikhin.chat.server.Client;
 import ru.nsu.ccfit.chirikhin.chat.server.NicknameBusyException;
 import ru.nsu.ccfit.chirikhin.cyclequeue.CycleQueue;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,6 +85,17 @@ public class ServerMessageController implements Runnable {
             logger.info("Client is not logged in");
         }
     }
+    public void handleClientListMessage(ClientListMessage clientListMessage, long sessionId) {
+        Client client = clients.get(sessionId);
+        LinkedList<String> clientsList = new LinkedList<>();
+        Collection<Client> clientCollection = clients.values();
+        for(Client client1 : clientCollection) {
+            clientsList.add(client1.getUsername());
+        }
+
+        client.receiveMessage(new ServerClientListMessage(clientsList));
+
+    }
 
     public void handleExitMessage(ClientMessage message, long sessionId) {
 
@@ -150,8 +163,6 @@ public class ServerMessageController implements Runnable {
         if (null == serverMessage) {
             throw new NullPointerException("Null instead of clientMessage");
         }
-
-        //System.out.println("ONE");
 
         Client client = clients.get(sessionId);
         client.receiveMessage(serverMessage);
