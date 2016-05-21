@@ -33,17 +33,13 @@ public class Controller {
                     if (null != client) {
                         client.disconnect();
                     }
+
                     break;
                 case LOGOUT:
-                    client.onStop();
-                    break;
+                    if (null != client) {
+                        client.onStop();
+                    }
             }
         });
-    }
-
-    public void disconnectUser() {
-        if (null != client) {
-            client.disconnect();
-        }
     }
 }

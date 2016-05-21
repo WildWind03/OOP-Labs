@@ -57,7 +57,7 @@ public class Client {
 
         inputStreamReader = new InputStreamReader(socket.getInputStream(), protocolName, message -> {
             if (message instanceof LoginMessage) {
-                message = new SignedLoginMessage((LoginMessage) message, uniqueSessionId);
+                message = new SignedClientLoginMessage((LoginMessage) message, uniqueSessionId);
             }
 
             try {

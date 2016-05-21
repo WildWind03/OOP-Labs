@@ -81,7 +81,8 @@ public class Client {
     }
 
     public void onStop() {
-
+        ClientLogoutClientMessage clientLogoutClientMessage = new ClientLogoutClientMessage(sessionId);
+        messagesForServer.add(clientLogoutClientMessage);
     }
 
     public void disconnect() {
