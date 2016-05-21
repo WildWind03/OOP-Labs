@@ -39,6 +39,9 @@ public class InputStreamReader implements Runnable, Closeable{
                     message = messageSerializer.serialize();
                 } catch (SocketTimeoutException e) {
                     continue;
+                } catch (InvalidXMLException e) {
+                    logger.error("Invalid XML");
+                    continue;
                 }
 
                 logger.info("New message has been read");

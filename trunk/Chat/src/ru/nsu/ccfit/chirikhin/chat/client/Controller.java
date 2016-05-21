@@ -41,7 +41,7 @@ public class Controller {
                     }
 
                     try {
-                        client.sendMessage(new ClientTextMessage(message, client.getNickname(), client.getSessionId()));
+                        client.sendMessage(new ClientTextMessage(message, client.getSessionId()));
                     } catch (TimeoutException e) {
                         clientViewController.onTypedMessageNotDelivered();
                     }

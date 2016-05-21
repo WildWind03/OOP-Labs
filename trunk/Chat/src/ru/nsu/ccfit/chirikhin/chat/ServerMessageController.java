@@ -77,7 +77,7 @@ public class ServerMessageController implements Runnable {
 
         if (client.isLoggedIn()) {
             logger.info("Message from logged in user");
-            ServerTextMessage serverTextMessage = new ServerTextMessage(message.getAuthor(), message.getText());
+            ServerTextMessage serverTextMessage = new ServerTextMessage(client.getUsername(), message.getText());
 
             sendMessageToAllClients(serverTextMessage);
             addMessageToServerStorage(serverTextMessage);
@@ -98,6 +98,7 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleExitMessage(ClientMessage message, long sessionId) {
+        sendMessageToTheClient(new ServerSuccessAnswer(), sessionId);
 
     }
 

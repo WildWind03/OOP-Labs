@@ -8,5 +8,5 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public interface MessageSerializer extends Closeable {
-    Message serialize() throws IOException, ClassNotFoundException, SAXException;
+    Message serialize() throws IOException, ClassNotFoundException, SAXException, InvalidXMLException;
 }
