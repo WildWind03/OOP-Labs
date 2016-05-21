@@ -2,6 +2,7 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.client.Client;
+import ru.nsu.ccfit.chirikhin.chat.client.ServerMessageDescriptor;
 
 import java.util.Observable;
 import java.util.concurrent.BlockingQueue;
@@ -12,6 +13,11 @@ public class ClientMessageController extends Observable implements Runnable {
 
     private final Client client;
     private final BlockingQueue<Message> messages;
+    private ClientMessageEnum previousMessage = null;
+
+    public void setPreviousMessage(ClientMessageEnum clientMessageEnum) {
+        this.previousMessage = clientMessageEnum;
+    }
 
     public ClientMessageController(BlockingQueue<Message> messages, Client client) {
         this.client = client;
@@ -19,39 +25,54 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleTextMessage(ServerTextMessage serverMessage) {
-        setChanged();
-        notifyObservers(serverMessage);
+        notifyView(serverMessage);
+
+        if (serverMessage.getAuthor().equals(client.getNickname())) {
+            client.wakeUp();
+            previousMessage = null;
+        }
     }
 
     public void handleNewClientServerMessage(NewClientServerMessage newClientServerMessage) {
-        setChanged();
-        notifyObservers(newClientServerMessage);
+        notifyView(newClientServerMessage);
+
+        if (newClientServerMessage.getUsername().equals(client.getNickname())) {
+            previousMessage = null;
+        }
     }
 
     public void handleErrorServerMessage(ServerErrorAnswer serverErrorAnswer) {
-        setChanged();
-        notifyObservers(serverErrorAnswer);
+        notifyView(serverErrorAnswer);
+        client.wakeUp();
+        previousMessage = null;
     }
 
     public void handleServerClientListMessage(ServerClientListMessage serverClientListMessage) {
-        setChanged();
-        notifyObservers(serverClientListMessage);
+        notifyView(serverClientListMessage);
+        client.wakeUp();
+        previousMessage = null;
     }
 
     public void handleSuccessLoginServerMessage(ServerSuccessLoginAnswer serverSuccessMessage) {
         client.setSessionId(serverSuccessMessage.getSessionId());
-        setChanged();
-        notifyObservers(serverSuccessMessage);
+        notifyView(serverSuccessMessage);
+        client.wakeUp();
+        previousMessage = null;
     }
 
     public void handleSuccessServerAnswer(ServerSuccessAnswer serverSuccessAnswer) {
-        setChanged();
-        notifyObservers(serverSuccessAnswer);
+        notifyView(serverSuccessAnswer);
+        client.wakeUp();
+        previousMessage = null;
     }
 
     public void handleUserLogoutMessage(ClientLogoutServerMessage message) {
+        notifyView(message);
+    }
+
+    public void notifyView(ServerMessage serverMessage) {
         setChanged();
-        notifyObservers(message);
+        notifyObservers(new ServerMessageDescriptor(serverMessage, previousMessage));
     }
 
     @Override

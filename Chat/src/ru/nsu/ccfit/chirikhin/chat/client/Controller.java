@@ -1,6 +1,9 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ClientListMessage;
+import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
+import ru.nsu.ccfit.chirikhin.chat.TimeoutException;
 
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
@@ -12,33 +15,75 @@ public class Controller {
             InfoFromView infoFromView = (InfoFromView) arg;
 
             switch (infoFromView.getInfo()) {
-                case LOGIN:
+                case CONNECT:
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
 
                     try {
+                        if (null != client) {
+                            client.disconnect();
+                        }
+
                         client = new Client(clientProperties);
                         client.addMessageControllerObserver(clientViewController);
-                        clientViewController.onLoggedInSuccessfully();
+                        clientViewController.onConnectionSetSuccessfully();
+                        logger.error("Connected successfully");
                     } catch (Exception e) {
-                        clientViewController.onLoggedInFailed();
+                        logger.error("Can not connect");
+                        clientViewController.onConnectionSetFailed();
                     }
 
                     break;
                 case TYPED_MESSAGE:
-                    logger.info("Controller. Send message");
                     String message = (String) ((InfoFromView) arg).getObject();
-                    client.sendMessage(message);
-                    break;
-                case DISCONNECT:
-                    if (null != client) {
-                        client.disconnect();
+
+                    if (null == client) {
+                        throw new NullPointerException("Client is null");
                     }
 
-                    break;
-                case LOGOUT:
-                    if (null != client) {
-                        client.onStop();
+                    try {
+                        client.sendMessage(new ClientTextMessage(message, client.getNickname(), client.getSessionId()));
+                    } catch (TimeoutException e) {
+                        clientViewController.onTypedMessageNotDelivered();
                     }
+                    break;
+
+                case LOGOUT:
+
+                    if (null == client) {
+                        throw new NullPointerException("Client is null");
+                    }
+
+                    try {
+                        client.onStop();
+                    } catch (TimeoutException e) {
+                        clientViewController.onExitMessageNotDelivered();
+                    } finally {
+                        client.disconnect();
+                    }
+                    break;
+
+                case LOGIN:
+                    if (null == client) {
+                        throw new NullPointerException("Client is null");
+                    }
+
+                    try {
+                        client.login((String) (((InfoFromView) arg).getObject()));
+                    } catch (TimeoutException e) {
+                        clientViewController.onLoginMessageNotDelivered();
+                    }
+                    break;
+                case LIST_OF_USERS:
+                    if (null == client) {
+                        throw new NullPointerException("Client is null");
+                    }
+
+                    try {
+                        client.sendMessage(new ClientListMessage(client.getSessionId()));
+                    } catch (TimeoutException e) {
+                        clientViewController.onListOfUsersMessagesNotDelivered();
+                    }
+                    break;
             }
         });
     }

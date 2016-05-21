@@ -10,6 +10,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
 import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
+import ru.nsu.ccfit.chirikhin.chat.TimeoutException;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +18,6 @@ import java.util.Optional;
 
 public class ClientView extends Application {
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
-    private static final int TIMEOUT_TO_LOGIN = 3000;
 
     private Controller controller;
     private ClientViewController clientViewController;
@@ -49,31 +49,42 @@ public class ClientView extends Application {
         controller = new Controller(clientViewController);
 
         ClientProperties clientProperties;
+        while(true) {
+            do {
+                LoginView loginView = new LoginView();
+                Optional<ClientProperties> result = loginView.show();
 
-        do {
-            LoginView loginView = new LoginView();
-            Optional<ClientProperties> result = loginView.show();
+                if (!result.isPresent()) {
+                    return;
+                }
 
-            if (!result.isPresent()) {
-                logger.error("Exit");
-                return;
+                clientProperties = result.get();
+
+                if (clientViewController.connectWithServer(clientProperties)) {
+                    break;
+                }
+
+            } while (true);
+
+            while(true) {
+                EnterUsernameView enterUsernameView = new EnterUsernameView();
+                String nickname = enterUsernameView.show();
+
+                if (clientViewController.login(nickname)) {
+                    logger.info("Login success");
+                    break;
+                }
+
+                if(!clientViewController.isServerAnswered()) {
+                    logger.info("Login no answer");
+                    break;
+                }
             }
 
-            clientProperties = result.get();
-
-            logger.info("Trying to log");
-
-            if (!clientViewController.tryLogin(clientProperties)) {
-                continue;
-            }
-
-            clientViewController.waitLogin(TIMEOUT_TO_LOGIN);
-
-            if(clientViewController.isLoggedIn()) {
+            if (clientViewController.isLoggedIn()) {
                 break;
             }
-
-        } while (true);
+        }
 
         Scene scene = new Scene(root);
         stage.setTitle("Chat Client");

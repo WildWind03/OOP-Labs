@@ -30,9 +30,6 @@ public class LoginView {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField username = new TextField();
-        username.setPromptText("Username");
-
         TextField ipTextField = new TextField();
         ipTextField.setPromptText("IP");
 
@@ -43,14 +40,12 @@ public class LoginView {
         protocolType.setItems(FXCollections.observableArrayList("SERIALIZE", "XML"));
         protocolType.getSelectionModel().selectFirst();
 
-        grid.add(new Label("Username:"), 0, 0);
-        grid.add(username, 1, 0);
-        grid.add(new Label("IP:"), 0, 1);
-        grid.add(ipTextField, 1, 1);
-        grid.add(new Label("Port:"), 0, 2);
-        grid.add(portTextField, 1, 2);
-        grid.add(new Label("Protocol:"), 0, 3);
-        grid.add(protocolType, 1, 3);
+        grid.add(new Label("IP:"), 0, 0);
+        grid.add(ipTextField, 1, 0);
+        grid.add(new Label("Port:"), 0, 1);
+        grid.add(portTextField, 1, 1);
+        grid.add(new Label("Protocol:"), 0, 2);
+        grid.add(protocolType, 1, 2);
 
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
@@ -58,34 +53,28 @@ public class LoginView {
         ///////////////FOR TEST
         portTextField.setText("3000");
         ipTextField.setText("127.0.0.1");
-        username.setText("Wind");
         loginButton.setDisable(false);
         /////////////////////////
 
-        username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(!(IPChecker.isPort(portTextField.getText())) || newValue.trim().isEmpty() || !(IPChecker.isIp(ipTextField.getText())));
-        });
-
         ipTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(!(IPChecker.isPort(portTextField.getText())) || !IPChecker.isIp(newValue) || username.getText().trim().isEmpty());
+            loginButton.setDisable(!(IPChecker.isPort(portTextField.getText())) || !IPChecker.isIp(newValue));
         });
 
         portTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable((!IPChecker.isPort(newValue)) || username.getText().trim().isEmpty() || !(IPChecker.isIp(ipTextField.getText())));
+            loginButton.setDisable((!IPChecker.isPort(newValue)) || !(IPChecker.isIp(ipTextField.getText())));
         });
 
 
         dialog.getDialogPane().setContent(grid);
 
-        Platform.runLater(username::requestFocus);
+        Platform.runLater(ipTextField::requestFocus);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
                 int port = Integer.parseInt(portTextField.getText());
                 String ipString = ipTextField.getText();
-                String usernameString = username.getText();
                 ProtocolName protocolName = ProtocolParser.getProtocol(protocolType.getValue());
-                return new ClientProperties(port, ipString, usernameString, protocolName);
+                return new ClientProperties(port, ipString, protocolName);
             }
 
             return null;
