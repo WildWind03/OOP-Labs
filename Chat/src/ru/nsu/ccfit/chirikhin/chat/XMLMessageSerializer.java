@@ -27,9 +27,10 @@ public class XMLMessageSerializer implements MessageSerializer {
 
 
     @Override
-    public Message serialize() throws IOException, ClassNotFoundException, SAXException {
+    public Message serialize() throws IOException, ClassNotFoundException, SAXException, InvalidXMLException {
         Document document = documentBuilder.parse(inputStream);
-        ClientMessage clientMessage = null;
+        ClientMessageXMLParser clientMessageXmlParser = new ClientMessageXMLParser();
+        ClientMessage clientMessage = clientMessageXmlParser.getMessage(document);
 
         return clientMessage;
     }
