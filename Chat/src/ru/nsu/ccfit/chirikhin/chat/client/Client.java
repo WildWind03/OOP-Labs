@@ -1,7 +1,15 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.ClientLogoutClientMessage;
+import ru.nsu.ccfit.chirikhin.chat.ClientMessageController;
+import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
+import ru.nsu.ccfit.chirikhin.chat.ConnectionFailedMessage;
+import ru.nsu.ccfit.chirikhin.chat.InputStreamReader;
+import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
+import ru.nsu.ccfit.chirikhin.chat.Message;
+import ru.nsu.ccfit.chirikhin.chat.OutputStreamWriter;
+import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;

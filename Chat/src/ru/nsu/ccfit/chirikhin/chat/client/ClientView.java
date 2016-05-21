@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
+import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,14 +28,18 @@ public class ClientView extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Parameters parameters = getParameters();
+        List<String> args = parameters.getRaw();
+        ConsoleParser consoleParser = new ConsoleParser(args);
+        ConfigParser configParser = new ConfigParser(consoleParser.getPathToFile());
 
-       List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
-        loggers.add(LogManager.getRootLogger());
-        for (Logger logger : loggers) {
-            logger.setLevel(Level.OFF);
+        if (!configParser.isLog()) {
+            List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+            loggers.add(LogManager.getRootLogger());
+            for (Logger logger : loggers) {
+                logger.setLevel(Level.OFF);
+            }
         }
-
-
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
         Parent root = loader.load();
