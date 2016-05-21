@@ -62,7 +62,6 @@
 
 	<target name="runserver" depends="jarserver">
 		<java classname="ru/nsu/ccfit/chirikhin/chat/server/Main" fork = "true" args="./serverConfig.txt">
-
 			<classpath>
 				<path refid="CLASSPATH"/>
                 <path location="Server.jar"/>

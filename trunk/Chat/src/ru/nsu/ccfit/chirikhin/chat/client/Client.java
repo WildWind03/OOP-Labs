@@ -1,15 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientLogoutClientMessage;
-import ru.nsu.ccfit.chirikhin.chat.ClientMessageController;
-import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
-import ru.nsu.ccfit.chirikhin.chat.ConnectionFailedMessage;
-import ru.nsu.ccfit.chirikhin.chat.InputStreamReader;
-import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
-import ru.nsu.ccfit.chirikhin.chat.Message;
-import ru.nsu.ccfit.chirikhin.chat.OutputStreamWriter;
-import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -20,36 +12,34 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
+    private final int TIMEOUT_FOR_WAIT_ANSWER = 400;
+    private final static String CHAT_CLIENT_NAME = "Windogram";
+
+    private final Object lock = new Object();
+
+    private boolean isNotified;
+    private long sessionId;
+    private String username;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
     private final Thread readThread;
-    private final Thread writeThread;
-
-    private final BlockingQueue<Message> messagesForServer = new LinkedBlockingQueue<>();
+    private final MessageSender messageSender;
     private final BlockingQueue<Message> messagesFromServer = new LinkedBlockingQueue<>();
-
     private final InputStreamReader inputStreamReader;
 
-    private long sessionId;
-
-    private final String username;
 
     private final ClientMessageController clientMessageController = new ClientMessageController(messagesFromServer, this);
     private final Thread clientMessageControllerThread = new Thread(clientMessageController, "Client Message Controller Thread");
 
     public Client(ClientProperties clientProperties) throws ConnectionFailedException, IOException, ParserConfigurationException {
-
         Socket socket;
-        logger.info("Connect");
         ConnectorToServer connectorToServer = new ConnectorToServer();
 
         socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp());
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
-        logger.info("Connect success");
 
-        username = clientProperties.getUsername();
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), ProtocolName.SERIALIZE, messagesForServer);
+        messageSender = MessageSenderFactory.createMessageSender(clientProperties.getProtocolName(), socket.getOutputStream());
 
         inputStreamReader = new InputStreamReader(socket.getInputStream(), ProtocolName.SERIALIZE, message -> {
             try {
@@ -65,32 +55,65 @@ public class Client {
             }
         });
 
-        messagesForServer.add(new LoginMessage(username, "Windagram"));
-
-        writeThread = new Thread(outputStreamWriter, "User Writer Thread");
         readThread = new Thread(inputStreamReader, "User Reader Thread");
 
-        writeThread.start();
         readThread.start();
         clientMessageControllerThread.start();
+    }
+
+    public void login(String nickname) throws TimeoutException {
+        setNickname(nickname);
+        sendMessage(new LoginMessage(nickname, CHAT_CLIENT_NAME));
+    }
+
+    public void setNickname(String nickname) {
+        this.username = nickname;
     }
 
     public void setSessionId(long sessionId) {
         this.sessionId = sessionId;
     }
 
+    public long getSessionId(){
+        return sessionId;
+    }
+
     public void addMessageControllerObserver(Observer o) {
         clientMessageController.addObserver(o);
     }
 
-    public void sendMessage(String message) {
-        logger.info("Send message");
-        messagesForServer.add(new ClientTextMessage(message, username, sessionId));
+    public String getNickname() {
+        return username;
     }
 
-    public void onStop() {
+    public void sendMessage(Message message) throws TimeoutException {
+        messageSender.send(message);
+
+        synchronized (lock) {
+            try {
+                clientMessageController.setPreviousMessage(MessageTypeConverter.getMessageType(message));
+                isNotified = false;
+                lock.wait(TIMEOUT_FOR_WAIT_ANSWER);
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
+
+            if (!isNotified) {
+                throw new TimeoutException("There is no answer from server");
+            }
+        }
+    }
+
+    public void wakeUp() {
+        synchronized (lock) {
+            isNotified = true;
+            lock.notifyAll();
+        }
+    }
+
+    public void onStop() throws TimeoutException {
         ClientLogoutClientMessage clientLogoutClientMessage = new ClientLogoutClientMessage(sessionId);
-        messagesForServer.add(clientLogoutClientMessage);
+        sendMessage(clientLogoutClientMessage);
     }
 
     public void disconnect() {
@@ -102,13 +125,11 @@ public class Client {
         }
 
         readThread.interrupt();
-        writeThread.interrupt();
         clientMessageControllerThread.interrupt();
 
         try {
             clientMessageControllerThread.join();
             readThread.join();
-            writeThread.join();
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }

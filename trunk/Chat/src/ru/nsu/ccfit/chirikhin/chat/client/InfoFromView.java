@@ -12,10 +12,6 @@ public class InfoFromView {
             throw new NullPointerException("Null pointer exception instead of Info");
         }
 
-        if (null == object) {
-            throw new NullPointerException("Null pointer exception instead of object");
-        }
-
         this.info = info;
         this.object = object;
     }
