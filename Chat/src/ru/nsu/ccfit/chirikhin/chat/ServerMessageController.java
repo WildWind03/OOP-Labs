@@ -50,14 +50,14 @@ public class ServerMessageController implements Runnable {
 
                 NewClientServerMessage newClientServerMessage = new NewClientServerMessage(message.getUsername());
 
-                sendMessageToTheClient(new ServerSuccessMessage(sessionId), sessionId);
+                sendMessageToTheClient(new ServerSuccessLoginAnswer(sessionId), sessionId);
                 sendMessageToAllClients(newClientServerMessage);
                 addMessageToServerStorage(newClientServerMessage);
             } catch (NicknameBusyException e) {
-                sendMessageToTheClient(new ServerErrorMessage(e.getMessage()), sessionId);
+                sendMessageToTheClient(new ServerErrorAnswer(e.getMessage()), sessionId);
             }
         } else {
-            sendMessageToTheClient(new ServerErrorMessage("The client have already been registered!"), sessionId);
+            sendMessageToTheClient(new ServerErrorAnswer("The client have already been registered!"), sessionId);
         }
     }
 
@@ -99,7 +99,7 @@ public class ServerMessageController implements Runnable {
 
         clients.remove(sessionId);
 
-        sendMessageToAllClients(new UserLogoutMessage(client.getUsername()));
+        sendMessageToAllClients(new ClientLogoutServerMessage(client.getUsername()));
     }
 
     private void sendMessageToAllClients(ServerMessage serverMessage) {

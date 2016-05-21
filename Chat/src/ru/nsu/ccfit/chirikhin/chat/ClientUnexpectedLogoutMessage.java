@@ -13,6 +13,6 @@ public class ClientUnexpectedLogoutMessage implements ClientMessage{
 
     @Override
     public void process(ServerMessageController messageController) throws MessageProcessException {
-
+        messageController.handleConnectionFailedMessage(this, sessionId);
     }
 }

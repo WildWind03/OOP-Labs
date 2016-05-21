@@ -28,18 +28,28 @@ public class ClientMessageController extends Observable implements Runnable {
         notifyObservers(newClientServerMessage);
     }
 
-    public void handleErrorServerMessage(ServerErrorMessage serverErrorMessage) {
+    public void handleErrorServerMessage(ServerErrorAnswer serverErrorAnswer) {
         setChanged();
-        notifyObservers(serverErrorMessage);
+        notifyObservers(serverErrorAnswer);
     }
 
-    public void handleSuccessServerMessage(ServerSuccessMessage serverSuccessMessage) {
+    public void handleServerClientListMessage(ServerClientListMessage serverClientListMessage) {
+        setChanged();
+        notifyObservers(serverClientListMessage);
+    }
+
+    public void handleSuccessLoginServerMessage(ServerSuccessLoginAnswer serverSuccessMessage) {
         client.setSessionId(serverSuccessMessage.getSessionId());
         setChanged();
         notifyObservers(serverSuccessMessage);
     }
 
-    public void handleUserLogoutMessage(UserLogoutMessage message) {
+    public void handleSuccessServerAnswer(ServerSuccessAnswer serverSuccessAnswer) {
+        setChanged();
+        notifyObservers(serverSuccessAnswer);
+    }
+
+    public void handleUserLogoutMessage(ClientLogoutServerMessage message) {
         setChanged();
         notifyObservers(message);
     }

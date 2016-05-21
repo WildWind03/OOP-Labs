@@ -2,11 +2,11 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
-public class UserLogoutMessage implements ServerMessage {
-    private static final Logger logger = Logger.getLogger(UserLogoutMessage.class.getName());
+public class ClientLogoutServerMessage implements ServerMessage {
+    private static final Logger logger = Logger.getLogger(ClientLogoutServerMessage.class.getName());
     private final String userName;
 
-    public UserLogoutMessage(String userName) {
+    public ClientLogoutServerMessage(String userName) {
         this.userName = userName;
     }
 

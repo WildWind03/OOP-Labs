@@ -1,11 +1,11 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
-public class SignedLoginMessage implements ClientMessage{
+public class SignedClientLoginMessage implements ClientMessage{
     private final long sessionId;
     private final LoginMessage loginMessage;
 
 
-    public SignedLoginMessage(LoginMessage loginMessage, long sessionId) {
+    public SignedClientLoginMessage(LoginMessage loginMessage, long sessionId) {
         this.loginMessage = loginMessage;
         this.sessionId = sessionId;
     }

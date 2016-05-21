@@ -66,11 +66,6 @@ public class ClientViewController extends Observable implements Observer {
         notifyObservers(new InfoFromView(Info.TYPED_MESSAGE, str));
     }
 
-    public void onStop() {
-        setChanged();
-        notifyObservers(new InfoFromView(Info.LOGOUT, null));
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         ServerMessage message = (ServerMessage) arg;
@@ -79,7 +74,7 @@ public class ClientViewController extends Observable implements Observer {
             chatText.appendText(((ServerTextMessage) message).getAuthor() + ": " + ((ServerTextMessage) message).getText() + "\n");
         }
 
-        if (message instanceof ServerErrorMessage) {
+        if (message instanceof ServerErrorAnswer) {
             isLoggedIn = false;
             setChanged();
             notifyObservers(new InfoFromView(Info.DISCONNECT, null));
@@ -92,7 +87,7 @@ public class ClientViewController extends Observable implements Observer {
             chatText.appendText(((NewClientServerMessage) message).getUsername() + " joined\n");
         }
 
-        if (message instanceof ServerSuccessMessage) {
+        if (message instanceof ServerSuccessLoginAnswer) {
             logger.info("Server Success Message");
             isLoggedIn = true;
             synchronized (lock) {
@@ -100,8 +95,8 @@ public class ClientViewController extends Observable implements Observer {
             }
         }
 
-        if (message instanceof UserLogoutMessage) {
-            chatText.appendText(((UserLogoutMessage) message).getUserName() + " left the chat room");
+        if (message instanceof ClientLogoutServerMessage) {
+            chatText.appendText(((ClientLogoutServerMessage) message).getUserName() + " left the chat room");
         }
     }
 
@@ -113,5 +108,10 @@ public class ClientViewController extends Observable implements Observer {
                 logger.error("Interrupt");
             }
         }
+    }
+
+    public void onStop() {
+        setChanged();
+        notifyObservers(new InfoFromView(Info.LOGOUT, null));
     }
 }

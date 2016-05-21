@@ -2,12 +2,12 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
-public class ServerErrorMessage implements ServerMessage {
-    private static final Logger logger = Logger.getLogger(ServerErrorMessage.class.getName());
+public class ServerErrorAnswer implements ServerMessage {
+    private static final Logger logger = Logger.getLogger(ServerErrorAnswer.class.getName());
 
     private final String errorReason;
 
-    public ServerErrorMessage(String errorReason) {
+    public ServerErrorAnswer(String errorReason) {
         this.errorReason = errorReason;
     }
 

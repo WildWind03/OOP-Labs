@@ -82,7 +82,6 @@ public class ClientView extends Application {
     @Override
     public void stop() throws Exception {
         clientViewController.onStop();
-        controller.disconnectUser();
         super.stop();
     }
 }

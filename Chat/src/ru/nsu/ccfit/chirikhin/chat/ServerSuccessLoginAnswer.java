@@ -2,17 +2,17 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
-public class ServerSuccessMessage implements ServerMessage {
-    private static final Logger logger = Logger.getLogger(ServerSuccessMessage.class.getName());
+public class ServerSuccessLoginAnswer implements ServerMessage {
+    private static final Logger logger = Logger.getLogger(ServerSuccessLoginAnswer.class.getName());
     private final long sessionId;
 
-    public ServerSuccessMessage(long sessionId) {
+    public ServerSuccessLoginAnswer(long sessionId) {
         this.sessionId = sessionId;
     }
 
     @Override
     public void process(ClientMessageController clientMessageController) {
-        clientMessageController.handleSuccessServerMessage(this);
+        clientMessageController.handleSuccessLoginServerMessage(this);
     }
 
     public long getSessionId() {
