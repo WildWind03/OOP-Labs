@@ -1,10 +1,11 @@
-package ru.nsu.ccfit.chirikhin.chat;
+package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
 public class ClientMessageXMLParser {
     private static final Logger logger = Logger.getLogger(ClientMessageXMLParser.class.getName());
