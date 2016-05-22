@@ -98,8 +98,11 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleExitMessage(ClientMessage message, long sessionId) {
+        Client client = clients.get(sessionId);
+        client.exit();
         sendMessageToTheClient(new ServerSuccessAnswer(), sessionId);
-
+        sendMessageToAllClients(new ClientLogoutServerMessage(client.getUsername()));
+        clients.remove(sessionId);
     }
 
     public void handleConnectionFailedMessage(ClientMessage message, long sessionId) {

@@ -1,14 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientUnexpectedLogoutMessage;
-import ru.nsu.ccfit.chirikhin.chat.InputStreamReader;
-import ru.nsu.ccfit.chirikhin.chat.LoginMessage;
-import ru.nsu.ccfit.chirikhin.chat.Message;
-import ru.nsu.ccfit.chirikhin.chat.OutputStreamWriter;
-import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
-import ru.nsu.ccfit.chirikhin.chat.ServerMessage;
-import ru.nsu.ccfit.chirikhin.chat.SignedClientLoginMessage;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -29,6 +22,7 @@ public class Client {
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
     private String username = "NONAME";
+    public boolean isExit;
 
     @Override
     public boolean equals(Object o) {
@@ -60,7 +54,15 @@ public class Client {
 
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient, message -> {
+            if (isExit && message instanceof ServerSuccessAnswer) {
+                try {
+                    delete();
+                } catch (InterruptedException e) {
+                    logger.error("Interrupt");
+                }
+            }
+        });
 
         inputStreamReader = new InputStreamReader(socket.getInputStream(), protocolName, message -> {
             if (message instanceof LoginMessage) {
@@ -74,7 +76,9 @@ public class Client {
             }
         }, () -> {
             try {
-                messagesForServer.put(new ClientUnexpectedLogoutMessage(uniqueSessionId));
+                if (!isExit()) {
+                    messagesForServer.put(new ClientUnexpectedLogoutMessage(uniqueSessionId));
+                }
             } catch (InterruptedException e) {
                 logger.error("Interrupt");
             }
@@ -116,8 +120,6 @@ public class Client {
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }
-
-        logger.info("PUT");
     }
 
     public boolean isLoggedIn() {
@@ -132,6 +134,14 @@ public class Client {
         return chatClientName;
     }
 
+    public void exit() {
+        isExit = true;
+    }
+
+    public boolean isExit() {
+        return isExit;
+    }
+
     public void delete() throws InterruptedException {
 
         try {
@@ -140,11 +150,11 @@ public class Client {
             logger.error("Error while closing input stream reader");
         }
 
-        writerThread.interrupt();
         readerThread.interrupt();
-
-        writerThread.join();
         readerThread.join();
+
+        //writerThread.interrupt();
+        //writerThread.join();
 
         logger.info("ClientView has been deleted!");
     }
