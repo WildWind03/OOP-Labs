@@ -40,11 +40,7 @@ public class Controller {
                         throw new NullPointerException("Client is null");
                     }
 
-                    try {
-                        client.sendMessage(new ClientTextMessage(message, client.getSessionId()));
-                    } catch (TimeoutException e) {
-                        clientViewController.onTypedMessageNotDelivered();
-                    }
+                    client.sendMessage(new ClientTextMessage(message, client.getSessionId()));
                     break;
 
                 case LOGOUT:
@@ -53,13 +49,7 @@ public class Controller {
                         throw new NullPointerException("Client is null");
                     }
 
-                    try {
-                        client.onStop();
-                    } catch (TimeoutException e) {
-                        clientViewController.onExitMessageNotDelivered();
-                    } finally {
-                        client.disconnect();
-                    }
+                    client.onStop();
                     break;
 
                 case LOGIN:
@@ -67,22 +57,14 @@ public class Controller {
                         throw new NullPointerException("Client is null");
                     }
 
-                    try {
-                        client.login((String) (((InfoFromView) arg).getObject()));
-                    } catch (TimeoutException e) {
-                        clientViewController.onLoginMessageNotDelivered();
-                    }
+                    client.login((String) (((InfoFromView) arg).getObject()));
                     break;
                 case LIST_OF_USERS:
                     if (null == client) {
                         throw new NullPointerException("Client is null");
                     }
 
-                    try {
-                        client.sendMessage(new ClientListMessage(client.getSessionId()));
-                    } catch (TimeoutException e) {
-                        clientViewController.onListOfUsersMessagesNotDelivered();
-                    }
+                    client.sendMessage(new ClientListMessage(client.getSessionId()));
                     break;
             }
         });

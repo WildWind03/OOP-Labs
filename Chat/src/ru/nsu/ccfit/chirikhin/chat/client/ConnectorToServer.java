@@ -8,12 +8,14 @@ import java.net.Socket;
 
 public class ConnectorToServer {
     private static final Logger logger = Logger.getLogger(ConnectorToServer.class.getName());
-    private final static int TIMEOUT = 3000;
 
-    public Socket connect(int port, String ip) throws ConnectionFailedException {
+    public Socket connect(int port, String ip, int timeout) throws ConnectionFailedException {
+        if (port < 0 || timeout < 0 || null == ip) {
+            throw new IllegalArgumentException("Illegal args");
+        }
         Socket socket = new Socket();
         try {
-            socket.connect(new InetSocketAddress(ip, port), TIMEOUT);
+            socket.connect(new InetSocketAddress(ip, port), timeout);
         } catch (IOException e) {
             throw new ConnectionFailedException("Can't get connection");
         }

@@ -19,7 +19,6 @@ import java.util.Optional;
 public class ClientView extends Application {
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
-    private Controller controller;
     private ClientViewController clientViewController;
 
     public static void main(String[] args) {
@@ -46,9 +45,10 @@ public class ClientView extends Application {
 
         clientViewController = loader.getController();
 
-        controller = new Controller(clientViewController);
+        new Controller(clientViewController);
 
         ClientProperties clientProperties;
+
         while(true) {
             do {
                 LoginView loginView = new LoginView();
@@ -66,12 +66,15 @@ public class ClientView extends Application {
 
             } while (true);
 
+            boolean isLoggedIn = false;
+
             while(true) {
                 EnterUsernameView enterUsernameView = new EnterUsernameView();
                 String nickname = enterUsernameView.show();
 
                 if (clientViewController.login(nickname)) {
                     logger.info("Login success");
+                    isLoggedIn = true;
                     break;
                 }
 
@@ -81,13 +84,13 @@ public class ClientView extends Application {
                 }
             }
 
-            if (clientViewController.isLoggedIn()) {
+            if (isLoggedIn) {
                 break;
             }
         }
 
         Scene scene = new Scene(root);
-        stage.setTitle("Chat Client");
+        stage.setTitle("Windogram");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.sizeToScene();

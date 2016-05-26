@@ -12,36 +12,35 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
-    private final int TIMEOUT_FOR_WAIT_ANSWER = 400;
+    private static final int TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT = 400;
     private final static String CHAT_CLIENT_NAME = "Windogram";
 
-    private final Object lock = new Object();
-
-    private boolean isNotified;
     private long sessionId;
     private String username;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
     private final Thread readThread;
-    private final MessageSender messageSender;
+    private final Thread writeThread;
     private final BlockingQueue<Message> messagesFromServer = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Message> messagesForServer = new LinkedBlockingQueue<>();
+    private final BlockingQueue<ClientMessageEnum> historyOfCommands = new LinkedBlockingQueue<>();
     private final InputStreamReader inputStreamReader;
+    private final OutputStreamWriter outputStreamWriter;
 
 
-    private final ClientMessageController clientMessageController = new ClientMessageController(messagesFromServer, this);
+    private final ClientMessageController clientMessageController = new ClientMessageController(historyOfCommands, messagesFromServer, this);
     private final Thread clientMessageControllerThread = new Thread(clientMessageController, "Client Message Controller Thread");
 
     public Client(ClientProperties clientProperties) throws ConnectionFailedException, IOException, ParserConfigurationException {
-        Socket socket;
         ConnectorToServer connectorToServer = new ConnectorToServer();
 
-        socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp());
+        Socket socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp(), TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT);
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
-        messageSender = MessageSenderFactory.createMessageSender(clientProperties.getProtocolName(), socket.getOutputStream());
-
-        inputStreamReader = new InputStreamReader(socket.getInputStream(), ProtocolName.SERIALIZE, message -> {
+        outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), clientProperties.getProtocolName(),
+                messagesForServer);
+        inputStreamReader = new InputStreamReader(socket.getInputStream(), clientProperties.getProtocolName(), message -> {
             try {
                 messagesFromServer.put(message);
             } catch (InterruptedException e) {
@@ -56,12 +55,14 @@ public class Client {
         });
 
         readThread = new Thread(inputStreamReader, "User Reader Thread");
+        writeThread = new Thread(outputStreamWriter, "User Writer Thread");
 
         readThread.start();
+        writeThread.start();
         clientMessageControllerThread.start();
     }
 
-    public void login(String nickname) throws TimeoutException {
+    public void login(String nickname) {
         setNickname(nickname);
         sendMessage(new LoginMessage(nickname, CHAT_CLIENT_NAME));
     }
@@ -86,32 +87,16 @@ public class Client {
         return username;
     }
 
-    public void sendMessage(Message message) throws TimeoutException {
-        messageSender.send(message);
-
-        synchronized (lock) {
-            try {
-                clientMessageController.setPreviousMessage(MessageTypeConverter.getMessageType(message));
-                isNotified = false;
-                lock.wait(TIMEOUT_FOR_WAIT_ANSWER);
-            } catch (InterruptedException e) {
-                logger.error("Interrupt");
-            }
-
-            if (!isNotified) {
-                throw new TimeoutException("There is no answer from server");
-            }
+    public void sendMessage(Message message) {
+        try {
+            historyOfCommands.put(MessageTypeConverter.getMessageType(message));
+            messagesForServer.put(message);
+        } catch (InterruptedException e) {
+            logger.error("Interrupt while sending message");
         }
     }
 
-    public void wakeUp() {
-        synchronized (lock) {
-            isNotified = true;
-            lock.notifyAll();
-        }
-    }
-
-    public void onStop() throws TimeoutException {
+    public void onStop()  {
         ClientLogoutClientMessage clientLogoutClientMessage = new ClientLogoutClientMessage(sessionId);
         sendMessage(clientLogoutClientMessage);
     }

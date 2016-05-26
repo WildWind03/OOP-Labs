@@ -1,8 +1,8 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
+import jdk.nashorn.internal.ir.Block;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.client.Client;
-import ru.nsu.ccfit.chirikhin.chat.client.ServerMessageDescriptor;
+import ru.nsu.ccfit.chirikhin.chat.client.*;
 
 import java.util.Observable;
 import java.util.concurrent.BlockingQueue;
@@ -13,66 +13,65 @@ public class ClientMessageController extends Observable implements Runnable {
 
     private final Client client;
     private final BlockingQueue<Message> messages;
-    private ClientMessageEnum previousMessage = null;
+    private final BlockingQueue<ClientMessageEnum> historyOfCommands;
 
-    public void setPreviousMessage(ClientMessageEnum clientMessageEnum) {
-        this.previousMessage = clientMessageEnum;
-    }
-
-    public ClientMessageController(BlockingQueue<Message> messages, Client client) {
+    public ClientMessageController(BlockingQueue<ClientMessageEnum> historyOfCommands, BlockingQueue<Message> messages, Client client) {
+        this.historyOfCommands = historyOfCommands;
         this.client = client;
         this.messages = messages;
     }
 
     public void handleTextMessage(ServerTextMessage serverMessage) {
-        notifyView(serverMessage);
-
-        if (serverMessage.getAuthor().equals(client.getNickname())) {
-            client.wakeUp();
-            previousMessage = null;
-        }
+        notifyView(new NewMessageEvent(serverMessage.getText(), serverMessage.getClientType()));
     }
 
     public void handleNewClientServerMessage(NewClientServerMessage newClientServerMessage) {
-        notifyView(newClientServerMessage);
+        notifyView(new NewClientEvent(newClientServerMessage.getUsername()));
+    }
 
-        if (newClientServerMessage.getUsername().equals(client.getNickname())) {
-            previousMessage = null;
+    public void handleErrorServerMessage(ServerErrorAnswer serverErrorAnswer) throws ClientMessageControllerFunctionalityException {
+        ClientMessageEnum prevMessage = historyOfCommands.poll();
+
+        if (null == prevMessage) {
+            throw new ClientMessageControllerFunctionalityException("Error! There is not a history of messages!");
+        }
+
+        switch(prevMessage) {
+            case LOGIN:
+                notifyView(new LoginFailedAnswer(serverErrorAnswer.getErrorReason()));
+                break;
+            case LOGOUT:
+                notifyView(new LogoutFailedAnswer(serverErrorAnswer.getErrorReason()));
+                break;
+            case CLIENT_LIST:
+                notifyView(new ClientListFailedAnswer(serverErrorAnswer.getErrorReason()));
+                break;
+            case TEXT:
+                notifyView(new MessageNotDeliveredAnswer(serverErrorAnswer.getErrorReason()));
+                break;
         }
     }
 
-    public void handleErrorServerMessage(ServerErrorAnswer serverErrorAnswer) {
-        notifyView(serverErrorAnswer);
-        client.wakeUp();
-        previousMessage = null;
-    }
-
     public void handleServerClientListMessage(ServerClientListMessage serverClientListMessage) {
-        notifyView(serverClientListMessage);
-        client.wakeUp();
-        previousMessage = null;
+        notifyView(new ClientsListSuccessAnswer(serverClientListMessage.getUserNames()));
     }
 
     public void handleSuccessLoginServerMessage(ServerSuccessLoginAnswer serverSuccessMessage) {
         client.setSessionId(serverSuccessMessage.getSessionId());
-        notifyView(serverSuccessMessage);
-        client.wakeUp();
-        previousMessage = null;
+        notifyView(new LoginSuccessAnswer(Long.toString(serverSuccessMessage.getSessionId())));
     }
 
     public void handleSuccessServerAnswer(ServerSuccessAnswer serverSuccessAnswer) {
         notifyView(serverSuccessAnswer);
-        client.wakeUp();
-        previousMessage = null;
     }
 
     public void handleUserLogoutMessage(ClientLogoutServerMessage message) {
         notifyView(message);
     }
 
-    public void notifyView(ServerMessage serverMessage) {
+    public void notifyView(ServerEvent serverEvent) {
         setChanged();
-        notifyObservers(new ServerMessageDescriptor(serverMessage, previousMessage));
+        notifyObservers(serverEvent);
     }
 
     @Override

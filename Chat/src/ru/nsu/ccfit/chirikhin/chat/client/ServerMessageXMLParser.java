@@ -8,12 +8,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ru.nsu.ccfit.chirikhin.chat.*;
 
+import java.util.LinkedList;
+
 public class ServerMessageXMLParser {
     private static final Logger logger = Logger.getLogger(ru.nsu.ccfit.chirikhin.chat.server.ClientMessageXMLParser.class.getName());
-    private final static String ERRORSTR = "error";
-    private final static String SUCCESS_STR = "success";
-    private final static String EVENT_STR = "event";
-    private final static String LOGOUT_STR = "logout";
 
 
     public ServerMessage getMessage(Document document) throws InvalidXMLException {
@@ -61,6 +59,8 @@ public class ServerMessageXMLParser {
 
             NodeList nodeListUsers = success.getElementsByTagName("listusers");
             if (1 == nodeListUsers.getLength()) {
+                LinkedList<ClientDescriptor> clients = new LinkedList<>();
+
                 Node nodeUsers = nodeListUsers.item(0);
 
                 if (Node.ELEMENT_NODE != nodeUsers.getNodeType()) {
@@ -83,19 +83,22 @@ public class ServerMessageXMLParser {
 
                     Element userNodeElement = (Element) node;
 
-                    if (1 != nodeListMessage.getLength()) {
-                        throw new InvalidXMLException("Invalid XML. Tag 'message'");
+                    NodeList userNodeListName = userNodeElement.getElementsByTagName("name");
+                    if (1 != userNodeListName.getLength()) {
+                        throw new InvalidXMLException("Invalid XML. Tag 'name'");
                     }
 
-                    NodeList nodeListSession = cmd.getElementsByTagName("session");
-                    if (1 != nodeListSession.getLength()) {
-                        throw new InvalidXMLException("Invalid XML. Tag 'session'");
+                    NodeList userNodeListType = userNodeElement.getElementsByTagName("type");
+                    if (1 != userNodeListType.getLength()) {
+                        throw new InvalidXMLException("Invalid XML. Tag 'type'");
                     }
 
-                    String message = nodeListMessage.item(0).getTextContent();
-                    String session = nodeListSession.item(0).getTextContent();
-                    clientMessage = new ClientTextMessage(message, Long.parseLong(session));
+                    String userStr = userNodeListName.item(0).getTextContent();
+                    String typeStr = userNodeListType.item(0).getTextContent();
+                    clients.add(new ClientDescriptor(userStr, typeStr));
                 }
+
+                return new ServerClientListMessage(clients);
             }
 
             NodeList nodeList = success.getElementsByTagName("*");
@@ -103,85 +106,77 @@ public class ServerMessageXMLParser {
                 return new ServerSuccessAnswer();
             }
 
-            throw new InvalidXMLException("There is error while looking for 'session', 'listusers' and no tags")
+            throw new InvalidXMLException("There is error while looking for 'session', 'listusers' and no tags");
 
         }
 
         NodeList event = document.getElementsByTagName("event");
         if (1 == event.getLength()) {
+            Node eventNode = event.item(0);
+
+            if (Node.ELEMENT_NODE != eventNode.getNodeType()) {
+                logger.error("Invalid XML");
+                throw new InvalidXMLException("Invalid XML");
+            }
+
+            Element eventElement = (Element) eventNode;
+
+            String eventName = eventElement.getAttribute("name");
+
+            if (eventName.isEmpty()) {
+                throw new InvalidXMLException("There is no attribute 'name' in event tag");
+            }
+
+            switch(eventName) {
+                case "userlogout" :
+                    NodeList nodeListNickname = eventElement.getElementsByTagName("name");
+                    if (1 != nodeListNickname.getLength()) {
+                        throw new InvalidXMLException("Invalid XML. Tag 'name'");
+                    }
+
+                    String nickname = nodeListNickname.item(0).getTextContent();
+                    return new ClientLogoutServerMessage(nickname);
+                case "userlogin" :
+                    NodeList nodeListNicknameLogin = eventElement.getElementsByTagName("name");
+                    if (1 != nodeListNicknameLogin.getLength()) {
+                        throw new InvalidXMLException("Invalid XML. Tag 'name'");
+                    }
+
+                    String nicknameLogin = nodeListNicknameLogin.item(0).getTextContent();
+                    return new NewClientServerMessage(nicknameLogin);
+                case "message" :
+
+                    NodeList nodeListMessage = eventElement.getElementsByTagName("message");
+                    if (1 != nodeListMessage.getLength()) {
+                        throw new InvalidXMLException("Invalid XML. Tag 'message'");
+                    }
+
+                    String message = nodeListMessage.item(0).getTextContent();
+
+                    NodeList nodeListType = eventElement.getElementsByTagName("name");
+                    if (1 != nodeListType.getLength()) {
+                        throw new InvalidXMLException("Invalid XML. Tag 'name'");
+                    }
+
+                    String clientType = nodeListType.item(0).getTextContent();
+
+                    return new ServerTextMessage(clientType, message);
+            }
+
+            NodeList eventElementNodeListLogout = eventElement.getElementsByTagName("userlogout");
+
+            if (1 == eventElementNodeListLogout.getLength()) {
+
+            }
+
+            NodeList eventElementNodeListLogin = eventElement.getElementsByTagName("userlogin");
+
+            NodeList eventElementNodeListMessage = eventElement.getElementsByTagName("message");
+
+            throw new InvalidXMLException("Invalid xml. In 'event'");
 
         }
 
         throw new InvalidXMLException("There is not error, event or success tag in file");
-
-        Node node = cmdParams.item(0);
-
-        if (Node.ELEMENT_NODE != node.getNodeType()) {
-            logger.error("Invalid XML");
-            throw new InvalidXMLException("Invalid XML");
-        }
-
-        Element cmd = (Element) node;
-        String cmdString = cmd.getAttribute("name");
-
-        if (cmdString.isEmpty()) {
-            throw new InvalidXMLException("There is not attribute 'name' in XML");
-        }
-
-        ClientMessage clientMessage = null;
-
-        switch (cmdString) {
-            case LOGIN_STR:
-                NodeList nodeListName = cmd.getElementsByTagName("name");
-                if (1 != nodeListName.getLength()) {
-                    throw new InvalidXMLException("Invalid XML. Tag 'name'");
-                }
-
-                NodeList nodeListType = cmd.getElementsByTagName("type");
-                if (1 != nodeListType.getLength()) {
-                    throw new InvalidXMLException("Invalid XML. Tag 'type'");
-                }
-
-                String name = nodeListName.item(0).getTextContent();
-                String type = nodeListType.item(0).getTextContent();
-
-                clientMessage = new LoginMessage(name, type);
-                break;
-            case LIST_STR:
-                NodeList nodeListSessionId = cmd.getElementsByTagName("session");
-                if (1 != nodeListSessionId.getLength()) {
-                    throw new InvalidXMLException("Invalid XML. Tag 'session'");
-                }
-
-                String sessionId = nodeListSessionId.item(0).getTextContent();
-                clientMessage = new ClientListMessage(Long.parseLong(sessionId));
-                break;
-            case MESSAGE_STR:
-                NodeList nodeListMessage = cmd.getElementsByTagName("message");
-                if (1 != nodeListMessage.getLength()) {
-                    throw new InvalidXMLException("Invalid XML. Tag 'message'");
-                }
-
-                NodeList nodeListSession = cmd.getElementsByTagName("session");
-                if (1 != nodeListSession.getLength()) {
-                    throw new InvalidXMLException("Invalid XML. Tag 'session'");
-                }
-
-                String message = nodeListMessage.item(0).getTextContent();
-                String session = nodeListSession.item(0).getTextContent();
-                clientMessage = new ClientTextMessage(message, Long.parseLong(session));
-                break;
-            case LOGOUT_STR:
-                NodeList nodeListSessionIdLogout = cmd.getElementsByTagName("session");
-                if (1 != nodeListSessionIdLogout.getLength()) {
-                    throw new InvalidXMLException("Invalid XML. Tag 'session'");
-                }
-
-                String sessionIdLogout = nodeListSessionIdLogout.item(0).getTextContent();
-                clientMessage = new ClientListMessage(Long.parseLong(sessionIdLogout));
-                break;
-        }
-
-        return clientMessage;
     }
 }
