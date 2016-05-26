@@ -11,16 +11,14 @@ public class OutputStreamWriter implements Runnable {
 
     private final MessageSender messageSender;
     private final BlockingQueue <Message> clientMessages;
-    private final MessageHandler messageHandler;
 
-    public OutputStreamWriter(OutputStream outputStream, ProtocolName protocolName, BlockingQueue<Message> clientMessages, MessageHandler messageHandler) throws IOException {
-        if (null == outputStream || null == protocolName || null == clientMessages || null == messageHandler) {
+    public OutputStreamWriter(OutputStream outputStream, ProtocolName protocolName, BlockingQueue<Message> clientMessages) throws IOException {
+        if (null == outputStream || null == protocolName || null == clientMessages) {
             throw new NullPointerException("Null in constructor");
         }
 
         this.messageSender = MessageSenderFactory.createMessageSender(protocolName, outputStream);
         this.clientMessages = clientMessages;
-        this.messageHandler = messageHandler;
     }
 
     @Override
@@ -31,7 +29,6 @@ public class OutputStreamWriter implements Runnable {
                 Message message = clientMessages.take();
                 logger.info("New message has been taken");
                 messageSender.send(message);
-                messageHandler.handle(message);
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt exception");
