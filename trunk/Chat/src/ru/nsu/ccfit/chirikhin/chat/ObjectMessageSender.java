@@ -2,11 +2,12 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
-public class ObjectMessageSender implements MessageSender {
+public class ObjectMessageSender implements MessageSender, Closeable {
     private static final Logger logger = Logger.getLogger(ObjectMessageSender.class.getName());
     private final ObjectOutputStream objectOutputStream;
 
@@ -25,10 +26,14 @@ public class ObjectMessageSender implements MessageSender {
         }
 
         try {
-            logger.info("Sending");
             objectOutputStream.writeObject(message);
         } catch (IOException e) {
             logger.error("IO error");
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        objectOutputStream.close();
     }
 }

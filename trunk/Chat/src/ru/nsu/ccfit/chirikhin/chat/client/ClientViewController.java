@@ -75,7 +75,7 @@ public class ClientViewController extends Observable implements Observer {
 
     public void onStop() {
         setChanged();
-        notifyObservers(new InfoFromView(Info.LOGOUT, null));
+        notifyObservers(new InfoFromView(Info.STOP, null));
     }
 
     @FXML
@@ -170,6 +170,6 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onNewMessageEvent(NewMessageEvent newMessageEvent) {
-        chatText.appendText(newMessageEvent.getMessage() + " - " + newMessageEvent.getClientType() + "\n");
+        chatText.appendText(newMessageEvent.getMessage() + "\n");
     }
 }

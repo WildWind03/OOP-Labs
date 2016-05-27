@@ -38,7 +38,8 @@ public class OutputStreamWriter implements Runnable {
 
         if (isExit) {
             try {
-                for (int k = 0; (k < messageToSendBeforeExit) && !Thread.currentThread().isInterrupted(); ++k) {
+                int size = clientMessages.size();
+                for (int k = 0; k < size; ++k) {
                     Message message = clientMessages.take();
                     messageSender.send(message);
                 }
@@ -46,10 +47,19 @@ public class OutputStreamWriter implements Runnable {
                 logger.error("Interrupt exception");
             }
         }
+
+        close();
     }
 
     public void finishAndStop() {
-        messageToSendBeforeExit = clientMessages.size();
         isExit = true;
+    }
+
+    public void close() {
+        try {
+            messageSender.close();
+        } catch (IOException e) {
+            logger.error("Error while closing Message Sender");
+        }
     }
 }

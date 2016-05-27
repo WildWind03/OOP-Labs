@@ -17,6 +17,7 @@ public class Client {
 
     private long sessionId;
     private String username;
+    private boolean isLoggedIn;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
@@ -54,11 +55,11 @@ public class Client {
             }
         });
 
-        readThread = new Thread(inputStreamReader, "User Reader Thread");
         writeThread = new Thread(outputStreamWriter, "User Writer Thread");
+        readThread = new Thread(inputStreamReader, "User Reader Thread");
 
-        readThread.start();
         writeThread.start();
+        readThread.start();
         clientMessageControllerThread.start();
     }
 
@@ -73,6 +74,14 @@ public class Client {
 
     public void setSessionId(long sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public void setLoginState(boolean newState) {
+        isLoggedIn = newState;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
     }
 
     public long getSessionId(){
@@ -97,8 +106,12 @@ public class Client {
     }
 
     public void onStop()  {
-        ClientLogoutClientMessage clientLogoutClientMessage = new ClientLogoutClientMessage(sessionId);
-        sendMessage(clientLogoutClientMessage);
+        if (!isLoggedIn()) {
+            disconnect();
+        } else {
+            ClientLogoutClientMessage clientLogoutClientMessage = new ClientLogoutClientMessage(sessionId);
+            sendMessage(clientLogoutClientMessage);
+        }
     }
 
     public void disconnect() {
@@ -109,12 +122,14 @@ public class Client {
             logger.error("Error while closing Input Stream Reader");
         }
 
+        writeThread.interrupt();
         readThread.interrupt();
         clientMessageControllerThread.interrupt();
 
         try {
             clientMessageControllerThread.join();
             readThread.join();
+            writeThread.join();
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }
