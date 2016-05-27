@@ -64,6 +64,7 @@ public class Controller {
                         throw new NullPointerException("Client is null");
                     }
 
+                    logger.info("List of users");
                     client.sendMessage(new ClientListMessage(client.getSessionId()));
                     break;
             }

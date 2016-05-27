@@ -73,7 +73,6 @@ public class ServerMessageController implements Runnable {
         }
 
         if (client.isLoggedIn()) {
-            logger.info("Message from logged in user");
             ServerTextMessage serverTextMessage = new ServerTextMessage(client.getChatClientName(), client.getUsername() + ": " + message.getText());
 
             sendMessageToAllClients(serverTextMessage);
@@ -90,6 +89,7 @@ public class ServerMessageController implements Runnable {
                 .map(client1 -> new ClientDescriptor(client1.getUsername(), client1.getChatClientName()))
                 .collect(Collectors.toList()));
 
+        logger.info("Handling client list message");
         client.receiveMessage(new ServerClientListMessage(clientsList));
 
     }
@@ -129,7 +129,7 @@ public class ServerMessageController implements Runnable {
 
     private boolean isUsernameBusy(String username) {
         if (null == username) {
-            throw new NullPointerException("Usename ca not be null");
+            throw new NullPointerException("Username ca not be null");
         }
 
         for (Map.Entry<Long, Client> client : clients.entrySet()) {
@@ -186,13 +186,11 @@ public class ServerMessageController implements Runnable {
         try {
             while(!Thread.currentThread().isInterrupted()) {
                 Message message = messagesFromClients.take();
-                logger.info("New message has been taken");
                 if (!(message instanceof ClientMessage)) {
                     throw new ClassCastException("Can not cast a message to a client message");
                 }
                 ClientMessage clientMessage = (ClientMessage) message;
                 clientMessage.process(this);
-                logger.info("New message has been processed");
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt");
