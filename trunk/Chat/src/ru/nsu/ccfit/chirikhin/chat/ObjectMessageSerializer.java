@@ -39,8 +39,6 @@ public class ObjectMessageSerializer implements MessageSerializer {
 
         }
 
-        logger.info("Read message");
-
         if (!(object instanceof Message)) {
             throw new ClassCastException("Can not read! Object is not a message!");
         }

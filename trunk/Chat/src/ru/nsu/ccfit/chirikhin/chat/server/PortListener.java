@@ -53,7 +53,7 @@ public class PortListener implements Runnable, Closeable {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 Socket newSocket = serverSocket.accept();
                 long sessionId = idRegisterer.getNewId();
                 clients.put(sessionId, new Client(newSocket, protocolName, messages, sessionId));

@@ -32,8 +32,7 @@ public class InputStreamReader implements Runnable, Closeable{
     public void run() {
         try {
             while (!Thread.currentThread().isInterrupted()) {
-                logger.info("Read messsage");
-                Message message = null;
+                Message message;
 
                 try {
                     message = messageSerializer.serialize();
@@ -44,7 +43,6 @@ public class InputStreamReader implements Runnable, Closeable{
                     continue;
                 }
 
-                logger.info("New message has been read");
                 messageHandler.handle(message);
             }
         } catch (IOException | ClassNotFoundException | SAXException e) {

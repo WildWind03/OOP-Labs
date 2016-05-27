@@ -10,6 +10,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
 import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
+import ru.nsu.ccfit.chirikhin.chat.LoggerController;
 import ru.nsu.ccfit.chirikhin.chat.TimeoutException;
 
 import java.util.Collections;
@@ -33,11 +34,7 @@ public class ClientView extends Application {
         ConfigParser configParser = new ConfigParser(consoleParser.getPathToFile());
 
         if (!configParser.isLog()) {
-            List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
-            loggers.add(LogManager.getRootLogger());
-            for (Logger logger : loggers) {
-                logger.setLevel(Level.OFF);
-            }
+            LoggerController.switchOffLogger();
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
@@ -66,6 +63,8 @@ public class ClientView extends Application {
 
             } while (true);
 
+            logger.info("Connection is set!");
+
             boolean isLoggedIn = false;
 
             while(true) {
@@ -73,18 +72,17 @@ public class ClientView extends Application {
                 String nickname = enterUsernameView.show();
 
                 if (clientViewController.login(nickname)) {
-                    logger.info("Login success");
                     isLoggedIn = true;
                     break;
                 }
 
                 if(!clientViewController.isServerAnswered()) {
-                    logger.info("Login no answer");
                     break;
                 }
             }
 
             if (isLoggedIn) {
+                logger.info("Client is logged in!");
                 break;
             }
         }
@@ -95,8 +93,6 @@ public class ClientView extends Application {
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
-
-        logger.info("Logged in successfully!");
     }
 
     @Override
