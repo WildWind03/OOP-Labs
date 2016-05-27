@@ -2,6 +2,7 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class XMLMessageSender implements MessageSender {
@@ -18,5 +19,10 @@ public class XMLMessageSender implements MessageSender {
         if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+
     }
 }

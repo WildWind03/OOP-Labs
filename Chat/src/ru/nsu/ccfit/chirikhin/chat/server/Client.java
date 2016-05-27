@@ -142,6 +142,8 @@ public class Client {
         }
 
         outputStreamWriter.finishAndStop();
+        writerThread.interrupt();
+        writerThread.join();
 
         readerThread.interrupt();
         readerThread.join();

@@ -43,12 +43,13 @@ public class Controller {
                     client.sendMessage(new ClientTextMessage(message, client.getSessionId()));
                     break;
 
-                case LOGOUT:
+                case STOP:
                     if (null == client) {
                         break;
                     }
 
                     client.onStop();
+
                     break;
 
                 case LOGIN:
