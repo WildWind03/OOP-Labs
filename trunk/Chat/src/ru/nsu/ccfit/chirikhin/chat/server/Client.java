@@ -145,6 +145,7 @@ public class Client {
         writerThread.interrupt();
         writerThread.join();
 
+
         readerThread.interrupt();
         readerThread.join();
 

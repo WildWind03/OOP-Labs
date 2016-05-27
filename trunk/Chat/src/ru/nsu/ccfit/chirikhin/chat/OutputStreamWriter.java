@@ -13,7 +13,6 @@ public class OutputStreamWriter implements Runnable {
     private final MessageSender messageSender;
     private final BlockingQueue <Message> clientMessages;
 
-    private int messageToSendBeforeExit = 0;
     private boolean isExit = false;
 
     public OutputStreamWriter(OutputStream outputStream, ProtocolName protocolName, BlockingQueue<Message> clientMessages) throws IOException {
@@ -47,8 +46,6 @@ public class OutputStreamWriter implements Runnable {
                 logger.error("Interrupt exception");
             }
         }
-
-        close();
     }
 
     public void finishAndStop() {
