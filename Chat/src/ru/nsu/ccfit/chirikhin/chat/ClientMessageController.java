@@ -53,6 +53,7 @@ public class ClientMessageController extends Observable implements Runnable {
                 notifyView(new LoginFailedAnswer(serverErrorAnswer.getErrorReason()));
                 break;
             case LOGOUT:
+                //notifyView(new LogoutFailedAnswer(serverErrorAnswer.getErrorReason()));
                 client.disconnect();
                 break;
             case CLIENT_LIST:
@@ -86,6 +87,7 @@ public class ClientMessageController extends Observable implements Runnable {
 
         switch(prevMessage) {
             case LOGOUT:
+                //notifyView(new LogoutSuccessAnswer());
                 client.disconnect();
                 break;
             case TEXT:
@@ -115,7 +117,6 @@ public class ClientMessageController extends Observable implements Runnable {
 
                 ServerMessage serverMessage = (ServerMessage) message;
                 serverMessage.process(this);
-
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt");

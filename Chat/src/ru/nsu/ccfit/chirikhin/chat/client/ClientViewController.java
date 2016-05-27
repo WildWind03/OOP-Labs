@@ -153,9 +153,11 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {
+
     }
 
     public void onLogoutSuccessAnswer(LogoutSuccessAnswer logoutSuccessAnswer) {
+
     }
 
     public void onMessageDeliveredAnswer(MessageDeliveredAnswer messageDeliveredAnswer) {

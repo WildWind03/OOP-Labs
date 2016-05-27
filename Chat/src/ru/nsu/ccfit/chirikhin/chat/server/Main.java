@@ -1,20 +1,14 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
 import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
 import ru.nsu.ccfit.chirikhin.chat.LoggerController;
 import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
-import sun.awt.image.ImageWatched;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws ServerConfigException, IOException {

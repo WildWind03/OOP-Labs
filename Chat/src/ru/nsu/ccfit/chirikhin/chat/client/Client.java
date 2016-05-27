@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 
 public class Client {
     private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
@@ -118,20 +119,28 @@ public class Client {
 
         try {
             inputStreamReader.close();
+            outputStreamWriter.close();
         } catch (IOException e) {
             logger.error("Error while closing Input Stream Reader");
         }
 
-        writeThread.interrupt();
         readThread.interrupt();
-        clientMessageControllerThread.interrupt();
+        writeThread.interrupt();
 
         try {
-            clientMessageControllerThread.join();
+
+            if (Thread.currentThread() != clientMessageControllerThread) {
+                clientMessageControllerThread.join();
+            }
+
             readThread.join();
             writeThread.join();
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }
+
+        clientMessageControllerThread.interrupt();
+
+
     }
 }
