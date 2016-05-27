@@ -3,22 +3,31 @@ package ru.nsu.ccfit.chirikhin.chat.server;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
+import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
+import ru.nsu.ccfit.chirikhin.chat.LoggerController;
 import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import sun.awt.image.ImageWatched;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws ServerConfigException, IOException {
         try {
-            /*List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
-            loggers.add(LogManager.getRootLogger());
-            for (Logger logger : loggers) {
-                logger.setLevel(Level.OFF);
-            }*/
+            LinkedList<String> parameters = new LinkedList<>();
+            Collections.addAll(parameters, args);
+
+            ConsoleParser consoleParser = new ConsoleParser(parameters);
+            ConfigParser configParser = new ConfigParser(consoleParser.getPathToFile());
+
+            if (!configParser.isLog()) {
+                LoggerController.switchOffLogger();
+            }
 
             ServerConfig serverConfig = new ServerConfig();
             serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(3000, ProtocolName.SERIALIZE));

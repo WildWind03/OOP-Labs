@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class ServerMessageController implements Runnable {
     private static final Logger logger = Logger.getLogger(ServerMessageController.class.getName());
@@ -87,11 +88,11 @@ public class ServerMessageController implements Runnable {
     }
     public void handleClientListMessage(ClientListMessage clientListMessage, long sessionId) {
         Client client = clients.get(sessionId);
-        LinkedList<String> clientsList = new LinkedList<>();
+        LinkedList<ClientDescriptor> clientsList = new LinkedList<>();
         Collection<Client> clientCollection = clients.values();
-        for(Client client1 : clientCollection) {
-            clientsList.add(client1.getUsername());
-        }
+        clientsList.addAll(clientCollection.stream()
+                .map(client1 -> new ClientDescriptor(client1.getUsername(), client1.getChatClientName()))
+                .collect(Collectors.toList()));
 
         client.receiveMessage(new ServerClientListMessage(clientsList));
 

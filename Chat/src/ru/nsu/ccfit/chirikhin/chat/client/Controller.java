@@ -44,9 +44,8 @@ public class Controller {
                     break;
 
                 case LOGOUT:
-
                     if (null == client) {
-                        throw new NullPointerException("Client is null");
+                        break;
                     }
 
                     client.onStop();

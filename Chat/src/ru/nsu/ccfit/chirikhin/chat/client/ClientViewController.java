@@ -17,6 +17,8 @@ import java.util.Observer;
 
 public class ClientViewController extends Observable implements Observer {
     private static final Logger logger = Logger.getLogger(ClientViewController.class.getName());
+    private static final int TIMEOUT_TO_WAIT_LOGIN = 1000;
+    private final Object lock = new Object();
 
     @FXML
     TextField inputField;
@@ -40,6 +42,14 @@ public class ClientViewController extends Observable implements Observer {
         setChanged();
         notifyObservers(new InfoFromView(Info.LOGIN, username));
 
+        synchronized (lock) {
+            try {
+                lock.wait(TIMEOUT_TO_WAIT_LOGIN);
+            } catch (InterruptedException e) {
+                logger.info("Interrupt");
+            }
+        }
+
         return isLoggedIn;
     }
 
@@ -58,7 +68,6 @@ public class ClientViewController extends Observable implements Observer {
         KeyCode keyCode = keyEvent.getCode();
 
         if (keyCode == KeyCode.ENTER) {
-            logger.info("Send Message: " + inputField.getText());
             sendTextMessage(inputField.getText());
             inputField.clear();
         }
@@ -127,11 +136,20 @@ public class ClientViewController extends Observable implements Observer {
     public void onLoginFailedAnswer(LoginFailedAnswer loginFailedAnswer) {
         isLoggedIn = false;
         isServerAnswered = true;
+
+        synchronized (lock) {
+            lock.notifyAll();
+        }
     }
 
     public void onLoginSuccessAnswer(LoginSuccessAnswer loginSuccessAnswer) {
+        logger.info("Handling success login answer");
         isLoggedIn = true;
         isServerAnswered = true;
+
+        synchronized (lock) {
+            lock.notifyAll();
+        }
     }
 
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {

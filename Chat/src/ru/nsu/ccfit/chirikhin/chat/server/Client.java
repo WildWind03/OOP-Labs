@@ -16,13 +16,16 @@ public class Client {
     private final Thread writerThread;
     private final Thread readerThread;
     private final InputStreamReader inputStreamReader;
+    private final OutputStreamWriter outputStreamWriter;
 
     private final long uniqueSessionId;
 
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
     private String username = "NONAME";
-    public boolean isExit;
+    private boolean isExit;
+    private String chatClientName = "UNKNOWN_CLIENT";
+    private boolean isLoggedIn;
 
     @Override
     public boolean equals(Object o) {
@@ -40,10 +43,6 @@ public class Client {
         return (int) (uniqueSessionId ^ (uniqueSessionId >>> 32));
     }
 
-    private String chatClientName = "UNKNOWN_CLIENT";
-    private boolean isLoggedIn;
-
-
     public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messagesForServer, long uniqueSessionId) throws IOException, ParserConfigurationException {
         if (null == socket || null == protocolName || null == messagesForServer) {
             logger.error("Null reference in constructor");
@@ -54,15 +53,7 @@ public class Client {
 
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient, message -> {
-            if (isExit && message instanceof ServerSuccessAnswer) {
-                try {
-                    delete();
-                } catch (InterruptedException e) {
-                    logger.error("Interrupt");
-                }
-            }
-        });
+        outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
 
         inputStreamReader = new InputStreamReader(socket.getInputStream(), protocolName, message -> {
             if (message instanceof LoginMessage) {
@@ -150,11 +141,10 @@ public class Client {
             logger.error("Error while closing input stream reader");
         }
 
+        outputStreamWriter.finishAndStop();
+
         readerThread.interrupt();
         readerThread.join();
-
-        //writerThread.interrupt();
-        //writerThread.join();
 
         logger.info("ClientView has been deleted!");
     }

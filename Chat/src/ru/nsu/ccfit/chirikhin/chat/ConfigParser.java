@@ -43,10 +43,8 @@ public class ConfigParser {
                 throw new InvalidConfigException("There is no property with name " + LOGGING_STR + " in config");
             }
 
-            logger.info("Log str is " + isLogStr);
-
             if (!NumberValidator.isNumber(isLogStr)) {
-                logger.info("Log str is not a number");
+                logger.error("Log str is not a number");
                 throw new InvalidConfigException("Invalid config. Value of log is not an integer");
             }
 

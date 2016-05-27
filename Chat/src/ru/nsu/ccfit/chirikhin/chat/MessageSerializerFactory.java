@@ -20,25 +20,21 @@ public class MessageSerializerFactory {
             throw new NullPointerException("Null reference in constructor");
         }
 
-        logger.info("After checking for null");
-
         MessageSerializer messageSerializer = null;
 
         switch (protocolName) {
             case XML:
+                logger.info("Protocol - XML");
                 messageSerializer = new XMLMessageSerializer(inputStream);
                 break;
             case SERIALIZE:
-                logger.info("SERIALIZE");
+                logger.info("Protocol - SERIALIZE");
                 messageSerializer = new ObjectMessageSerializer(inputStream);
                 break;
             default:
-                logger.info("DEFAULT");
+                logger.info("Protocol - DEFAULT");
                 break;
         }
-
-
-        logger.error("After switch");
         return messageSerializer;
     }
 }
