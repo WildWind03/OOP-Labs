@@ -3,7 +3,6 @@ package ru.nsu.ccfit.chirikhin.chat;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-import ru.nsu.ccfit.chirikhin.chat.server.ClientMessageXMLParser;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -30,9 +29,9 @@ public class XMLMessageSerializer implements MessageSerializer {
     @Override
     public Message serialize() throws IOException, ClassNotFoundException, SAXException, InvalidXMLException {
         Document document = documentBuilder.parse(inputStream);
-        ClientMessageXMLParser clientMessageXmlParser = new ClientMessageXMLParser();
+        XMLMessageParser clientXmlMessageParser = new XMLMessageParser();
 
-        return clientMessageXmlParser.getMessage(document);
+        return clientXmlMessageParser.getMessage(document);
     }
 
     @Override

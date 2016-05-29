@@ -3,17 +3,17 @@ package ru.nsu.ccfit.chirikhin.chat;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.client.ClientMessageControllerFunctionalityException;
 
-public class ServerErrorAnswer implements ServerMessage {
-    private static final Logger logger = Logger.getLogger(ServerErrorAnswer.class.getName());
+public class AnswerError implements ServerMessage {
+    private static final Logger logger = Logger.getLogger(AnswerError.class.getName());
 
-    private final String errorReason;
+    private final String reason;
 
-    public ServerErrorAnswer(String errorReason) {
-        this.errorReason = errorReason;
+    public AnswerError(String reason) {
+        this.reason = reason;
     }
 
-    public String getErrorReason() {
-        return errorReason;
+    public String getReason() {
+        return reason;
     }
 
     @Override

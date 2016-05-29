@@ -7,19 +7,19 @@ import java.io.Serializable;
 public class ClientDescriptor implements Serializable{
     private static final Logger logger = Logger.getLogger(ClientDescriptor.class.getName());
 
-    private final String nickname;
-    private final String clientType;
+    private final String name;
+    private final String type;
 
-    public ClientDescriptor(String nickname, String clientType) {
-        this.nickname = nickname;
-        this.clientType = clientType;
+    public ClientDescriptor(String name, String type) {
+        this.name = name;
+        this.type = type;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getName() {
+        return name;
     }
 
-    public String getClientType() {
-        return clientType;
+    public String getType() {
+        return type;
     }
 }

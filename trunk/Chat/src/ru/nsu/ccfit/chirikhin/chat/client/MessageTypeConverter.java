@@ -11,19 +11,19 @@ public class MessageTypeConverter {
     }
 
     public static ClientMessageEnum getMessageType(Message message) {
-        if (message instanceof ClientTextMessage) {
+        if (message instanceof CommandText) {
             return ClientMessageEnum.TEXT;
         }
 
-        if (message instanceof LoginMessage) {
+        if (message instanceof CommandLogin) {
             return ClientMessageEnum.LOGIN;
         }
 
-        if (message instanceof ClientLogoutClientMessage) {
+        if (message instanceof CommandLogout) {
             return ClientMessageEnum.LOGOUT;
         }
 
-        if (message instanceof ClientListMessage) {
+        if (message instanceof CommandClientList) {
             return ClientMessageEnum.CLIENT_LIST;
         }
 

@@ -8,8 +8,6 @@ import ru.nsu.ccfit.chirikhin.chat.client.ClientMessageControllerFunctionalityEx
 import ru.nsu.ccfit.chirikhin.chat.client.ClientsListSuccessAnswer;
 import ru.nsu.ccfit.chirikhin.chat.client.LoginFailedAnswer;
 import ru.nsu.ccfit.chirikhin.chat.client.LoginSuccessAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.LogoutFailedAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.LogoutSuccessAnswer;
 import ru.nsu.ccfit.chirikhin.chat.client.MessageDeliveredAnswer;
 import ru.nsu.ccfit.chirikhin.chat.client.MessageNotDeliveredAnswer;
 import ru.nsu.ccfit.chirikhin.chat.client.NewClientEvent;
@@ -33,15 +31,15 @@ public class ClientMessageController extends Observable implements Runnable {
         this.messages = messages;
     }
 
-    public void handleTextMessage(ServerTextMessage serverMessage) {
-        notifyView(new NewMessageEvent(serverMessage.getText(), serverMessage.getClientType()));
+    public void handleTextMessage(EventText serverMessage) {
+        notifyView(new NewMessageEvent(serverMessage.getMessage(), serverMessage.getType()));
     }
 
-    public void handleNewClientServerMessage(NewClientServerMessage newClientServerMessage) {
-        notifyView(new NewClientEvent(newClientServerMessage.getUsername()));
+    public void handleNewClientServerMessage(EventNewClient eventNewClient) {
+        notifyView(new NewClientEvent(eventNewClient.getName()));
     }
 
-    public void handleErrorServerMessage(ServerErrorAnswer serverErrorAnswer) throws ClientMessageControllerFunctionalityException {
+    public void handleErrorServerMessage(AnswerError answerError) throws ClientMessageControllerFunctionalityException {
         ClientMessageEnum prevMessage = historyOfCommands.poll();
 
         if (null == prevMessage) {
@@ -50,35 +48,35 @@ public class ClientMessageController extends Observable implements Runnable {
 
         switch(prevMessage) {
             case LOGIN:
-                notifyView(new LoginFailedAnswer(serverErrorAnswer.getErrorReason()));
+                notifyView(new LoginFailedAnswer(answerError.getReason()));
                 break;
             case LOGOUT:
-                //notifyView(new LogoutFailedAnswer(serverErrorAnswer.getErrorReason()));
+                //notifyView(new LogoutFailedAnswer(serverErrorAnswer.getReason()));
                 client.disconnect();
                 break;
             case CLIENT_LIST:
-                notifyView(new ClientListFailedAnswer(serverErrorAnswer.getErrorReason()));
+                notifyView(new ClientListFailedAnswer(answerError.getReason()));
                 break;
             case TEXT:
-                notifyView(new MessageNotDeliveredAnswer(serverErrorAnswer.getErrorReason()));
+                notifyView(new MessageNotDeliveredAnswer(answerError.getReason()));
                 break;
         }
     }
 
-    public void handleServerClientListMessage(ServerClientListMessage serverClientListMessage) {
+    public void handleServerClientListMessage(AnswerClientList answerClientList) {
         historyOfCommands.poll();
-        notifyView(new ClientsListSuccessAnswer(serverClientListMessage.getUserNames()));
+        notifyView(new ClientsListSuccessAnswer(answerClientList.getUser()));
     }
 
-    public void handleSuccessLoginServerMessage(ServerSuccessLoginAnswer serverSuccessMessage) {
+    public void handleSuccessLoginServerMessage(AnswerSuccessLogin serverSuccessMessage) {
         logger.info("Handling success login server message");
         historyOfCommands.poll();
-        client.setSessionId(serverSuccessMessage.getSessionId());
+        client.setSessionId(serverSuccessMessage.getSession());
         client.setLoginState(true);
-        notifyView(new LoginSuccessAnswer(Long.toString(serverSuccessMessage.getSessionId())));
+        notifyView(new LoginSuccessAnswer(Long.toString(serverSuccessMessage.getSession())));
     }
 
-    public void handleSuccessServerAnswer(ServerSuccessAnswer serverSuccessAnswer) throws ClientMessageControllerFunctionalityException {
+    public void handleSuccessServerAnswer(AnswerSuccess answerSuccess) throws ClientMessageControllerFunctionalityException {
         ClientMessageEnum prevMessage = historyOfCommands.poll();
 
         if (null == prevMessage) {
@@ -96,8 +94,8 @@ public class ClientMessageController extends Observable implements Runnable {
         }
     }
 
-    public void handleUserLogoutMessage(ClientLogoutServerMessage message) {
-        notifyView(new ClientLeftEvent(message.getUserName()));
+    public void handleUserLogoutMessage(EventLogout message) {
+        notifyView(new ClientLeftEvent(message.getName()));
     }
 
     public void notifyView(ServerEvent serverEvent) {
