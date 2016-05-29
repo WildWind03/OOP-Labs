@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 public class EventText implements ServerMessage {
     private static final Logger logger = Logger.getLogger(EventText.class.getName());
+    private final String messageType = "message";
 
     private final String message;
     private final String type;

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 public class EventLogout implements ServerMessage {
     private static final Logger logger = Logger.getLogger(EventLogout.class.getName());
+    private final String messageType = "clientlogout";
     private final String name;
 
     public EventLogout(String name) {
