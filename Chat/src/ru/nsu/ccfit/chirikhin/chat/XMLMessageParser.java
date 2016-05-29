@@ -144,7 +144,7 @@ public class XMLMessageParser {
 
                         if (Node.ELEMENT_NODE != userNode.getNodeType()) {
                             logger.error("Invalid XML");
-                            throw new InvalidXMLException("Invalid XML");
+                            throw new InvalidXMLException("Invalid XML. Not Element Node");
                         }
 
                         Element userNodeElement = (Element) userNode;

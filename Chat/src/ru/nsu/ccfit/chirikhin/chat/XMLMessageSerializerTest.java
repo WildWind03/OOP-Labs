@@ -33,6 +33,25 @@ public class XMLMessageSerializerTest {
     }
 
     @Test
+    public void checkTextXML() {
+        XMLMessageSerializer xmlMessageSerializer = null;
+
+        try {
+            xmlMessageSerializer = new XMLMessageSerializer(new FileInputStream(new File("./src/resources/testTextEvent.xml")));
+        } catch (ParserConfigurationException | FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            EventText eventText = (EventText) xmlMessageSerializer.serialize();
+            Assert.assertTrue(eventText.getType().equals("Windograd"));
+            Assert.assertTrue(eventText.getMessage().equals("Hi"));
+        } catch (IOException | ClassNotFoundException | InvalidXMLException | SAXException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void checkListXML() {
         XMLMessageSerializer xmlMessageSerializer = null;
 
