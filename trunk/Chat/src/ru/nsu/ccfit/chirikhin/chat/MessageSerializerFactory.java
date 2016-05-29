@@ -20,7 +20,7 @@ public class MessageSerializerFactory {
             throw new NullPointerException("Null reference in constructor");
         }
 
-        MessageSerializer messageSerializer = null;
+        MessageSerializer messageSerializer;
 
         switch (protocolName) {
             case XML:
@@ -33,7 +33,7 @@ public class MessageSerializerFactory {
                 break;
             default:
                 logger.info("Protocol - DEFAULT");
-                break;
+                throw new IllegalArgumentException("There is no possible protocol");
         }
         return messageSerializer;
     }

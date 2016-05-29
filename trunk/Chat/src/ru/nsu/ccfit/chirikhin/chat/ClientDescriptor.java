@@ -2,7 +2,9 @@ package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
 
-public class ClientDescriptor {
+import java.io.Serializable;
+
+public class ClientDescriptor implements Serializable{
     private static final Logger logger = Logger.getLogger(ClientDescriptor.class.getName());
 
     private final String nickname;

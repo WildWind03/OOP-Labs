@@ -47,8 +47,12 @@ public class ServerMessageController implements Runnable {
                 client.setChatClientName(message.getChatClientName());
                 client.login();
 
-                NewClientServerMessage newClientServerMessage = new NewClientServerMessage(message.getUsername());
+                LinkedList<Message> oldMessages = messagesForNewClients.get();
+                for (Message message1 : oldMessages) {
+                    sendMessageToTheClient((ServerMessage) message1, sessionId);
+                }
 
+                NewClientServerMessage newClientServerMessage = new NewClientServerMessage(message.getUsername());
                 sendMessageToTheClient(new ServerSuccessLoginAnswer(sessionId), sessionId);
                 sendMessageToAllClients(newClientServerMessage);
                 addMessageToServerStorage(newClientServerMessage);
