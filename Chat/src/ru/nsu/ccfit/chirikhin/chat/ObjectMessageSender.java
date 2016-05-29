@@ -1,6 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.client.MessageTypeConverter;
 
 import java.io.Closeable;
 import java.io.IOException;

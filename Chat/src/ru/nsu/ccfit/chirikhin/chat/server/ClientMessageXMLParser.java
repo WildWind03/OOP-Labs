@@ -22,10 +22,11 @@ public class ClientMessageXMLParser {
 
         NodeList cmdParams = document.getElementsByTagName("command");
 
-        if (cmdParams.getLength() != 1) {
+        if (cmdParams.getLength()  < 1) {
             logger.error("Invalid XML");
             throw new InvalidXMLException("Invalid XML. Not one field with tag 'command");
         }
+
 
         Node node = cmdParams.item(0);
 
