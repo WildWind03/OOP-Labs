@@ -23,6 +23,46 @@ public class XMLMessageParser {
     private final static String MESSAGE_STR = "message";
     private final static String LOGOUT_STR = "logout";
 
+    private final XStream xStream;
+
+    public XMLMessageParser() {
+        xStream = new XStream();
+        xStream.alias("command", CommandLogin.class);
+        xStream.useAttributeFor(CommandLogin.class, "messageType");
+        xStream.aliasField("name", CommandLogin.class, "messageType");
+
+        xStream.alias("command", CommandClientList.class);
+        xStream.useAttributeFor(CommandClientList.class, "messageType");
+        xStream.aliasField("name", CommandClientList.class, "messageType");
+
+        xStream.alias("command", CommandLogout.class);
+        xStream.useAttributeFor(CommandLogout.class, "messageType");
+        xStream.aliasField("name", CommandLogout.class, "messageType");
+
+        xStream.alias("command", CommandText.class);
+        xStream.useAttributeFor(CommandText.class, "messageType");
+        xStream.aliasField("name", CommandText.class, "messageType");
+
+        xStream.alias("event", EventNewClient.class);
+        xStream.useAttributeFor(EventNewClient.class, "messageType");
+        xStream.aliasField("name", EventNewClient.class, "messageType");
+
+        xStream.alias("event", EventText.class);
+        xStream.useAttributeFor(EventText.class, "messageType");
+        xStream.aliasField("name", EventText.class, "messageType");
+
+        xStream.alias("event", EventLogout.class);
+        xStream.useAttributeFor(EventLogout.class, "messageType");
+        xStream.aliasField("name", EventLogout.class, "messageType");
+
+        xStream.alias("error", AnswerError.class);
+
+        xStream.alias("success", AnswerSuccess.class);
+        xStream.alias("success", AnswerSuccessLogin.class);
+        xStream.alias("success", AnswerClientList.class);
+
+        xStream.alias("user", ClientDescriptor.class);
+    }
 
     public Message getMessage(Document document) throws InvalidXMLException {
         if (null == document) {
@@ -229,42 +269,6 @@ public class XMLMessageParser {
     }
 
     public String createXMLFromMessage(Message message) {
-        XStream xStream = new XStream();
-        xStream.alias("command", CommandLogin.class);
-        xStream.useAttributeFor(CommandLogin.class, "messageType");
-        xStream.aliasField("name", CommandLogin.class, "messageType");
-
-        xStream.alias("command", CommandClientList.class);
-        xStream.useAttributeFor(CommandClientList.class, "messageType");
-        xStream.aliasField("name", CommandClientList.class, "messageType");
-
-        xStream.alias("command", CommandLogout.class);
-        xStream.useAttributeFor(CommandLogout.class, "messageType");
-        xStream.aliasField("name", CommandLogout.class, "messageType");
-
-        xStream.alias("command", CommandText.class);
-        xStream.useAttributeFor(CommandText.class, "messageType");
-        xStream.aliasField("name", CommandText.class, "messageType");
-
-        xStream.alias("event", EventNewClient.class);
-        xStream.useAttributeFor(EventNewClient.class, "messageType");
-        xStream.aliasField("name", EventNewClient.class, "messageType");
-
-        xStream.alias("event", EventText.class);
-        xStream.useAttributeFor(EventText.class, "messageType");
-        xStream.aliasField("name", EventText.class, "messageType");
-
-        xStream.alias("event", EventLogout.class);
-        xStream.useAttributeFor(EventLogout.class, "messageType");
-        xStream.aliasField("name", EventLogout.class, "messageType");
-
-        xStream.alias("error", AnswerError.class);
-
-        xStream.alias("success", AnswerSuccess.class);
-        xStream.alias("success", AnswerSuccessLogin.class);
-        xStream.alias("success", AnswerClientList.class);
-
-        xStream.alias("user", ClientDescriptor.class);
         xStream.registerConverter(new Converter() {
             @Override
             public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {

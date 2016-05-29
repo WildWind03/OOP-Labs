@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 public class ClientsListSuccessAnswer implements ServerEvent {
     private static final Logger logger = Logger.getLogger(ClientsListSuccessAnswer.class.getName());
-    LinkedList<ClientDescriptor> clients;
+    private final LinkedList<ClientDescriptor> clients;
 
     public LinkedList<ClientDescriptor> getClients() {
         return clients;

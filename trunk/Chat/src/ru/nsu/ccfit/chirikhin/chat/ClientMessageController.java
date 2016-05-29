@@ -51,7 +51,6 @@ public class ClientMessageController extends Observable implements Runnable {
                 notifyView(new LoginFailedAnswer(answerError.getReason()));
                 break;
             case LOGOUT:
-                //notifyView(new LogoutFailedAnswer(serverErrorAnswer.getReason()));
                 client.disconnect();
                 break;
             case CLIENT_LIST:
