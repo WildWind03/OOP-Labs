@@ -30,7 +30,7 @@ public class ServerMessageController implements Runnable {
         this.messagesForNewClients = messagesForNewClients;
     }
 
-    public void handleLoginMessage(LoginMessage message, long sessionId) {
+    public void handleLoginMessage(CommandLogin message, long sessionId) {
         if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
@@ -43,8 +43,8 @@ public class ServerMessageController implements Runnable {
 
         if (!client.isLoggedIn()) {
             try {
-                setUsername(message.getUsername(), sessionId);
-                client.setChatClientName(message.getChatClientName());
+                setUsername(message.getName(), sessionId);
+                client.setChatClientName(message.getType());
                 client.login();
 
                 LinkedList<Message> oldMessages = messagesForNewClients.get();
@@ -52,19 +52,19 @@ public class ServerMessageController implements Runnable {
                     sendMessageToTheClient((ServerMessage) message1, sessionId);
                 }
 
-                NewClientServerMessage newClientServerMessage = new NewClientServerMessage(message.getUsername());
-                sendMessageToTheClient(new ServerSuccessLoginAnswer(sessionId), sessionId);
-                sendMessageToAllClients(newClientServerMessage);
-                addMessageToServerStorage(newClientServerMessage);
+                EventNewClient eventNewClient = new EventNewClient(message.getName());
+                sendMessageToTheClient(new AnswerSuccessLogin(sessionId), sessionId);
+                sendMessageToAllClients(eventNewClient);
+                addMessageToServerStorage(eventNewClient);
             } catch (NicknameBusyException e) {
-                sendMessageToTheClient(new ServerErrorAnswer(e.getMessage()), sessionId);
+                sendMessageToTheClient(new AnswerError(e.getMessage()), sessionId);
             }
         } else {
-            sendMessageToTheClient(new ServerErrorAnswer("The client have already been registered!"), sessionId);
+            sendMessageToTheClient(new AnswerError("The client have already been registered!"), sessionId);
         }
     }
 
-    public void handleTextMessage(ClientTextMessage message, long sessionId) {
+    public void handleTextMessage(CommandText message, long sessionId) {
 
         if (null == message) {
             throw new NullPointerException("Null instead of message");
@@ -77,15 +77,15 @@ public class ServerMessageController implements Runnable {
         }
 
         if (client.isLoggedIn()) {
-            ServerTextMessage serverTextMessage = new ServerTextMessage(client.getChatClientName(), client.getUsername() + ": " + message.getText());
+            EventText eventText = new EventText(client.getChatClientName(), client.getUsername() + ": " + message.getMessage());
 
-            sendMessageToAllClients(serverTextMessage);
-            addMessageToServerStorage(serverTextMessage);
+            sendMessageToAllClients(eventText);
+            addMessageToServerStorage(eventText);
         } else {
             logger.info("Client is not logged in");
         }
     }
-    public void handleClientListMessage(ClientListMessage clientListMessage, long sessionId) {
+    public void handleClientListMessage(CommandClientList commandClientList, long sessionId) {
         Client client = clients.get(sessionId);
         LinkedList<ClientDescriptor> clientsList = new LinkedList<>();
         Collection<Client> clientCollection = clients.values();
@@ -94,15 +94,15 @@ public class ServerMessageController implements Runnable {
                 .collect(Collectors.toList()));
 
         logger.info("Handling client list message");
-        client.receiveMessage(new ServerClientListMessage(clientsList));
+        client.receiveMessage(new AnswerClientList(clientsList));
 
     }
 
     public void handleExitMessage(ClientMessage message, long sessionId) {
         Client client = clients.get(sessionId);
         client.exit();
-        sendMessageToTheClient(new ServerSuccessAnswer(), sessionId);
-        sendMessageToAllClients(new ClientLogoutServerMessage(client.getUsername()));
+        sendMessageToTheClient(new AnswerSuccess(), sessionId);
+        sendMessageToAllClients(new EventLogout(client.getUsername()));
         clients.remove(sessionId);
     }
 
@@ -117,7 +117,7 @@ public class ServerMessageController implements Runnable {
 
         clients.remove(sessionId);
 
-        sendMessageToAllClients(new ClientLogoutServerMessage(client.getUsername()));
+        sendMessageToAllClients(new EventLogout(client.getUsername()));
     }
 
     private void sendMessageToAllClients(ServerMessage serverMessage) {

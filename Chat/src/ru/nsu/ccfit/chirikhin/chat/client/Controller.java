@@ -1,9 +1,8 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientListMessage;
-import ru.nsu.ccfit.chirikhin.chat.ClientTextMessage;
-import ru.nsu.ccfit.chirikhin.chat.TimeoutException;
+import ru.nsu.ccfit.chirikhin.chat.CommandClientList;
+import ru.nsu.ccfit.chirikhin.chat.CommandText;
 
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
@@ -40,7 +39,7 @@ public class Controller {
                         throw new NullPointerException("Client is null");
                     }
 
-                    client.sendMessage(new ClientTextMessage(message, client.getSessionId()));
+                    client.sendMessage(new CommandText(message, client.getSessionId()));
                     break;
 
                 case STOP:
@@ -65,7 +64,7 @@ public class Controller {
                     }
 
                     logger.info("List of users");
-                    client.sendMessage(new ClientListMessage(client.getSessionId()));
+                    client.sendMessage(new CommandClientList(client.getSessionId()));
                     break;
             }
         });

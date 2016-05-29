@@ -10,7 +10,6 @@ import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.*;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
@@ -129,7 +128,7 @@ public class ClientViewController extends Observable implements Observer {
         chatText.appendText("\nThe list of clients:\n");
 
         for (ClientDescriptor current : clients) {
-            chatText.appendText("Nickname: " + current.getNickname() + "\nClient Type: " + current.getClientType() + "\n\n");
+            chatText.appendText("Nickname: " + current.getName() + "\nClient Type: " + current.getType() + "\n\n");
         }
     }
 

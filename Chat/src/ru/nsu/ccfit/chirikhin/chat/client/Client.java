@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.util.Observer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 
 public class Client {
     private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
@@ -50,7 +49,7 @@ public class Client {
             }
         }, () -> {
             try {
-                messagesFromServer.put(new ConnectionFailedMessage());
+                messagesFromServer.put(new EventConnectionFailed());
             } catch (InterruptedException e) {
                 logger.error("Interrupt");
             }
@@ -66,7 +65,7 @@ public class Client {
 
     public void login(String nickname) {
         setNickname(nickname);
-        sendMessage(new LoginMessage(nickname, CHAT_CLIENT_NAME));
+        sendMessage(new CommandLogin(nickname, CHAT_CLIENT_NAME));
     }
 
     public void setNickname(String nickname) {
@@ -110,8 +109,8 @@ public class Client {
         if (!isLoggedIn()) {
             disconnect();
         } else {
-            ClientLogoutClientMessage clientLogoutClientMessage = new ClientLogoutClientMessage(sessionId);
-            sendMessage(clientLogoutClientMessage);
+            CommandLogout commandLogout = new CommandLogout(sessionId);
+            sendMessage(commandLogout);
         }
     }
 

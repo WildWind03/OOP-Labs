@@ -56,8 +56,8 @@ public class Client {
         outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
 
         inputStreamReader = new InputStreamReader(socket.getInputStream(), protocolName, message -> {
-            if (message instanceof LoginMessage) {
-                message = new SignedClientLoginMessage((LoginMessage) message, uniqueSessionId);
+            if (message instanceof CommandLogin) {
+                message = new CommandSignedLogin((CommandLogin) message, uniqueSessionId);
             }
 
             try {
@@ -68,7 +68,7 @@ public class Client {
         }, () -> {
             try {
                 if (!isExit()) {
-                    messagesForServer.put(new ClientUnexpectedLogoutMessage(uniqueSessionId));
+                    messagesForServer.put(new CommandUnexpectedLogout(uniqueSessionId));
                 }
             } catch (InterruptedException e) {
                 logger.error("Interrupt");

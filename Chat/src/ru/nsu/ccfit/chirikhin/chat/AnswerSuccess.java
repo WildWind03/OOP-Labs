@@ -3,8 +3,8 @@ package ru.nsu.ccfit.chirikhin.chat;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.client.ClientMessageControllerFunctionalityException;
 
-public class ServerSuccessAnswer implements ServerMessage {
-    private static final Logger logger = Logger.getLogger(ServerSuccessAnswer.class.getName());
+public class AnswerSuccess implements ServerMessage {
+    private static final Logger logger = Logger.getLogger(AnswerSuccess.class.getName());
 
     @Override
     public void process(ClientMessageController clientMessageController) {

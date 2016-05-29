@@ -22,6 +22,6 @@
         </image>
     </ImageView>
 
-    <Button fx:id="listOfUsers" GridPane.columnIndex="1" GridPane.rowIndex="1" text="Show all the users" onMousePressed="#onMousePressed"/>
+    <Button fx:id="listOfUsers" GridPane.columnIndex="1" GridPane.rowIndex="1" message="Show all the users" onMousePressed="#onMousePressed"/>
 
 </GridPane>
