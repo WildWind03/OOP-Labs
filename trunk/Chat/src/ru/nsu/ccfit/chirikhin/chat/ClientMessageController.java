@@ -1,18 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.client.Client;
-import ru.nsu.ccfit.chirikhin.chat.client.ClientLeftEvent;
-import ru.nsu.ccfit.chirikhin.chat.client.ClientListFailedAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.ClientMessageControllerFunctionalityException;
-import ru.nsu.ccfit.chirikhin.chat.client.ClientsListSuccessAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.LoginFailedAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.LoginSuccessAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.MessageDeliveredAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.MessageNotDeliveredAnswer;
-import ru.nsu.ccfit.chirikhin.chat.client.NewClientEvent;
-import ru.nsu.ccfit.chirikhin.chat.client.NewMessageEvent;
-import ru.nsu.ccfit.chirikhin.chat.client.ServerEvent;
+import ru.nsu.ccfit.chirikhin.chat.client.*;
 
 import java.util.Observable;
 import java.util.concurrent.BlockingQueue;
@@ -84,7 +73,6 @@ public class ClientMessageController extends Observable implements Runnable {
 
         switch(prevMessage) {
             case LOGOUT:
-                //notifyView(new LogoutSuccessAnswer());
                 client.disconnect();
                 break;
             case TEXT:
@@ -114,9 +102,17 @@ public class ClientMessageController extends Observable implements Runnable {
 
                 ServerMessage serverMessage = (ServerMessage) message;
                 serverMessage.process(this);
+
+                if (serverMessage instanceof EventConnectionFailed) {
+                    Thread.currentThread().interrupt();
+                }
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }
+    }
+
+    public void handleEventConnectionFailed(EventConnectionFailed eventConnectionFailed) {
+        notifyView(new ConnectionFailedEvent());
     }
 }

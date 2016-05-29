@@ -8,7 +8,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.BlockingQueue;
 
 public class InputStreamReader implements Runnable, Closeable{
 
@@ -16,9 +15,9 @@ public class InputStreamReader implements Runnable, Closeable{
 
     private final MessageSerializer messageSerializer;
     private final MessageHandler messageHandler;
-    private final OnResultHandler onResultHandler;
+    private final NoArgHandler onResultHandler;
 
-    public InputStreamReader(InputStream inputStream, ProtocolName protocolName, MessageHandler messageHandler, OnResultHandler onResultHandler) throws IOException, ParserConfigurationException {
+    public InputStreamReader(InputStream inputStream, ProtocolName protocolName, MessageHandler messageHandler, NoArgHandler onResultHandler) throws IOException, ParserConfigurationException {
         if (null == inputStream || null == protocolName || null == messageHandler || null == onResultHandler) {
             throw new NullPointerException("Null in constructor");
         }

@@ -36,8 +36,15 @@ public class XMLMessageSerializer implements MessageSerializer {
     @Override
     public Message serialize() throws IOException, ClassNotFoundException, SAXException, InvalidXMLException {
         int size = inputStream.read();
+        if (size < 0) {
+            throw new IOException("Size can not be less than zero");
+        }
         byte[] xmlBytes = new byte[size];
         int readChar = inputStream.read(xmlBytes, 0, size);
+
+        if (readChar != size) {
+            throw new IOException("Error while reading");
+        }
 
         String str = new String(xmlBytes, StandardCharsets.UTF_8);
 

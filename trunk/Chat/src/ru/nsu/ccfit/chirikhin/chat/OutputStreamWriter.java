@@ -33,6 +33,8 @@ public class OutputStreamWriter implements Runnable {
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt exception");
+        } catch (IOException e) {
+            logger.error("Can't send message");
         }
 
         if (isExit) {
@@ -44,6 +46,8 @@ public class OutputStreamWriter implements Runnable {
                 }
             } catch (InterruptedException e) {
                 logger.error("Interrupt exception");
+            } catch (IOException e) {
+                logger.error("Can't send message");
             }
         }
     }

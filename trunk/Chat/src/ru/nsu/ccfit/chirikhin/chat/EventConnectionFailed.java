@@ -7,6 +7,6 @@ public class EventConnectionFailed implements ServerMessage {
 
     @Override
     public void process(ClientMessageController clientMessageController) {
-
+        clientMessageController.handleEventConnectionFailed(this);
     }
 }
