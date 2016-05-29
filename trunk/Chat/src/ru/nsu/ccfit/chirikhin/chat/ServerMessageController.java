@@ -77,6 +77,9 @@ public class ServerMessageController implements Runnable {
         }
 
         if (client.isLoggedIn()) {
+            AnswerSuccess answerSuccess = new AnswerSuccess();
+            sendMessageToTheClient(answerSuccess, sessionId);
+
             EventText eventText = new EventText(client.getChatClientName(), client.getUsername() + ": " + message.getMessage());
 
             sendMessageToAllClients(eventText);
