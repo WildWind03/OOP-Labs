@@ -65,7 +65,7 @@ public class ClientMessageController extends Observable implements Runnable {
 
     public void handleServerClientListMessage(AnswerClientList answerClientList) {
         historyOfCommands.poll();
-        notifyView(new ClientsListSuccessAnswer(answerClientList.getUser()));
+        notifyView(new ClientsListSuccessAnswer(answerClientList.getListusers()));
     }
 
     public void handleSuccessLoginServerMessage(AnswerSuccessLogin serverSuccessMessage) {

@@ -44,7 +44,7 @@ public class XMLMessageSerializerTest {
 
         try {
             AnswerClientList answerClientList = (AnswerClientList) xmlMessageSerializer.serialize();
-            LinkedList<ClientDescriptor> clients = answerClientList.getUser();
+            LinkedList<ClientDescriptor> clients = answerClientList.getListusers();
 
             ClientDescriptor clientDescriptor1 = clients.get(0);
             Assert.assertTrue(clientDescriptor1.getType().equals("Windogram"));

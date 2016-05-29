@@ -1,12 +1,12 @@
 <success>
     <listusers>
-        <user>
+        <listusers>
             <name>Wind</name>
             <type>Windogram</type>
-        </user>
-        <user>
+        </listusers>
+        <listusers>
             <name>14203</name>
             <type>NONAME</type>
-        </user>
+        </listusers>
     </listusers>
 </success>

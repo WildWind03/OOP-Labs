@@ -6,14 +6,14 @@ import java.util.LinkedList;
 
 public class AnswerClientList implements ServerMessage{
     private static final Logger logger = Logger.getLogger(AnswerClientList.class.getName());
-    private final LinkedList<ClientDescriptor> user;
+    private final LinkedList<ClientDescriptor> listusers;
 
-    public AnswerClientList(LinkedList<ClientDescriptor> user) {
-        this.user = user;
+    public AnswerClientList(LinkedList<ClientDescriptor> listusers) {
+        this.listusers = listusers;
     }
 
-    public LinkedList<ClientDescriptor> getUser() {
-        return user;
+    public LinkedList<ClientDescriptor> getListusers() {
+        return listusers;
     }
 
     @Override

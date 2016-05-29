@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 public class CommandLogin implements ClientMessage {
     private static final Logger logger = Logger.getLogger(CommandLogin.class.getName());
+    private final String messageType = "login";
 
     private final String name;
     private final String type;
