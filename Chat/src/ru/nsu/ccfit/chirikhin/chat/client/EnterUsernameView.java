@@ -14,12 +14,18 @@ public class EnterUsernameView {
         dialog.setHeaderText("Windogram");
         dialog.setContentText("Please, enter your nickname:");
 
-        dialog.setResultConverter((dialogButton) -> dialog.getEditor().getText());
+        dialog.setResultConverter((dialogButton) -> {
+            if (dialogButton == ButtonType.OK) {
+                return dialog.getEditor().getText();
+            } else {
+                return null;
+            }
+        });
 
         Optional<String> str = dialog.showAndWait();
 
         if (!str.isPresent()) {
-            return "";
+            return null;
         }
 
         return str.get();

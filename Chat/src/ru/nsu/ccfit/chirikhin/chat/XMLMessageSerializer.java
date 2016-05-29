@@ -19,7 +19,7 @@ public class XMLMessageSerializer implements MessageSerializer {
     private static final Logger logger = Logger.getLogger(XMLMessageSerializer.class.getName());
     private final InputStream inputStream;
     private final DocumentBuilder documentBuilder;
-    private final Reader reader;
+    private final XMLMessageParser xmlMessageParser = new XMLMessageParser();
 
     public XMLMessageSerializer(InputStream inputStream) throws ParserConfigurationException {
         if (null == inputStream) {
@@ -27,7 +27,6 @@ public class XMLMessageSerializer implements MessageSerializer {
         }
 
         this.inputStream = inputStream;
-        reader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -41,19 +40,16 @@ public class XMLMessageSerializer implements MessageSerializer {
         int readChar = inputStream.read(xmlBytes, 0, size);
 
         String str = new String(xmlBytes, StandardCharsets.UTF_8);
-        System.out.println(str);
-        System.out.flush();
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xmlBytes);
 
         Document document = documentBuilder.parse(byteArrayInputStream);
 
-        XMLMessageParser xmlMessageParser = new XMLMessageParser();
         return xmlMessageParser.getMessage(document);
     }
 
     @Override
     public void close() throws IOException {
-
+        inputStream.close();
     }
 }

@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 
 public class EventNewClient implements ServerMessage {
     private static final Logger logger = Logger.getLogger(EventNewClient.class.getName());
-    private final String messageType = "clientlogin";
+    private final String messageType = "userlogin";
 
     private final String name;
 

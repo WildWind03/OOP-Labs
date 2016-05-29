@@ -92,10 +92,6 @@ public class Client {
         clientMessageController.addObserver(o);
     }
 
-    public String getNickname() {
-        return username;
-    }
-
     public void sendMessage(Message message) {
         try {
             historyOfCommands.put(MessageTypeConverter.getMessageType(message));
@@ -127,11 +123,6 @@ public class Client {
         writeThread.interrupt();
 
         try {
-
-            if (Thread.currentThread() != clientMessageControllerThread) {
-                clientMessageControllerThread.join();
-            }
-
             readThread.join();
             writeThread.join();
         } catch (InterruptedException e) {
@@ -139,6 +130,14 @@ public class Client {
         }
 
         clientMessageControllerThread.interrupt();
+
+        if (Thread.currentThread() != clientMessageControllerThread) {
+            try {
+                clientMessageControllerThread.join();
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
+        }
 
 
     }

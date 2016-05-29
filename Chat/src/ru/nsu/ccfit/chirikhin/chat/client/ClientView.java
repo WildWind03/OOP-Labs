@@ -71,6 +71,10 @@ public class ClientView extends Application {
                 EnterUsernameView enterUsernameView = new EnterUsernameView();
                 String nickname = enterUsernameView.show();
 
+                if (null == nickname) {
+                    break;
+                }
+
                 if (clientViewController.login(nickname)) {
                     isLoggedIn = true;
                     break;

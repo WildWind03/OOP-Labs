@@ -120,7 +120,7 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onClientLeftEvent(ClientLeftEvent clientLeftEvent) {
-        chatText.appendText(clientLeftEvent.getName() + " left the chat room");
+        chatText.appendText(clientLeftEvent.getName() + " left the chat room\n");
     }
 
     public void onClientListSuccessAnswer(ClientsListSuccessAnswer clientsListSuccessAnswer) {
