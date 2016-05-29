@@ -1,10 +1,9 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
@@ -172,5 +171,23 @@ public class ClientViewController extends Observable implements Observer {
 
     public void onNewMessageEvent(NewMessageEvent newMessageEvent) {
         chatText.appendText(newMessageEvent.getMessage() + "\n");
+    }
+
+    public void onConnectionFailedEvent(ConnectionFailedEvent connectionFailedEvent) {
+        logger.info("The connection failed!");
+        listOfUsers.setDisable(true);
+        inputField.setDisable(true);
+        chatText.setDisable(true);
+
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Windogram");
+            alert.setHeaderText("The connection is lost");
+            alert.setContentText("We are sorry...");
+            alert.showAndWait();
+            Platform.exit();
+        });
+
+        onStop();
     }
 }

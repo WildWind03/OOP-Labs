@@ -22,7 +22,7 @@ public class XMLMessageSender implements MessageSender {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message) throws IOException {
         if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
@@ -30,13 +30,8 @@ public class XMLMessageSender implements MessageSender {
         String xml = xmlMessageParser.createXMLFromMessage(message);
         byte[] xmlBytes = xml.getBytes(Charset.forName("UTF-8"));
         int size = xmlBytes.length;
-        try {
-            outputStream.write(size);
-            outputStream.write(xmlBytes);
-
-        } catch (IOException e) {
-            logger.error("Error while sending");
-        }
+        outputStream.write(size);
+        outputStream.write(xmlBytes);
     }
 
     @Override

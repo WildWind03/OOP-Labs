@@ -106,6 +106,7 @@ public class ServerMessageController implements Runnable {
         client.exit();
         sendMessageToTheClient(new AnswerSuccess(), sessionId);
         sendMessageToAllClients(new EventLogout(client.getUsername()));
+        client.finishAndStop();
         clients.remove(sessionId);
     }
 

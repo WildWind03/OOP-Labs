@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -59,6 +60,12 @@ public class ClientView extends Application {
 
                 if (clientViewController.connectWithServer(clientProperties)) {
                     break;
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Windogram");
+                    alert.setHeaderText("The connection can not be setup");
+                    alert.setContentText("There isn't server with such configuration");
+                    alert.showAndWait();
                 }
 
             } while (true);
@@ -81,8 +88,19 @@ public class ClientView extends Application {
                 }
 
                 if(!clientViewController.isServerAnswered()) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Windogram");
+                    alert.setHeaderText("The server doesn't answer");
+                    alert.setContentText("Please, choose other server");
+                    alert.showAndWait();
                     break;
                 }
+
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Windogram");
+                alert.setHeaderText("The nickname is busy!");
+                alert.setContentText("Please, type new nickname");
+                alert.showAndWait();
             }
 
             if (isLoggedIn) {

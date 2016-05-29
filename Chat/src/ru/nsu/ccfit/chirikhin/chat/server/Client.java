@@ -133,21 +133,24 @@ public class Client {
         return isExit;
     }
 
+    public void finishAndStop() {
+        outputStreamWriter.finishAndStop();
+    }
+
     public void delete() throws InterruptedException {
 
         try {
             inputStreamReader.close();
+            outputStreamWriter.close();
         } catch (IOException e) {
             logger.error("Error while closing input stream reader");
         }
 
-        outputStreamWriter.finishAndStop();
-        writerThread.interrupt();
-        writerThread.join();
-
-
         readerThread.interrupt();
+        writerThread.interrupt();
+
         readerThread.join();
+        writerThread.join();
 
         logger.info("ClientView has been deleted!");
     }

@@ -21,16 +21,12 @@ public class ObjectMessageSender implements MessageSender, Closeable {
     }
 
     @Override
-    public void send(Message message) {
+    public void send(Message message) throws IOException {
         if (null == message) {
             throw new NullPointerException("Null reference instead of message");
         }
 
-        try {
-            objectOutputStream.writeObject(message);
-        } catch (IOException e) {
-            logger.error("IO error");
-        }
+        objectOutputStream.writeObject(message);
     }
 
     @Override
