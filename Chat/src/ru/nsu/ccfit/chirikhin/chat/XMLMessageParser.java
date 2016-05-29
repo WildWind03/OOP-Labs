@@ -1,6 +1,11 @@
 package ru.nsu.ccfit.chirikhin.chat;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import org.apache.log4j.Logger;
 
 import org.w3c.dom.Document;
@@ -100,7 +105,7 @@ public class XMLMessageParser {
                         }
 
                         String sessionIdLogout = nodeListSessionIdLogout.item(0).getTextContent();
-                        clientMessage = new CommandClientList(Long.parseLong(sessionIdLogout));
+                        clientMessage = new CommandLogout(Long.parseLong(sessionIdLogout));
                         break;
                 }
 
@@ -207,9 +212,9 @@ public class XMLMessageParser {
 
                         String message = nodeListMessage.item(0).getTextContent();
 
-                        NodeList nodeListType = nodeElement.getElementsByTagName("name");
+                        NodeList nodeListType = nodeElement.getElementsByTagName("type");
                         if (1 != nodeListType.getLength()) {
-                            throw new InvalidXMLException("Invalid XML. Tag 'name'");
+                            throw new InvalidXMLException("Invalid XML. Tag 'type'");
                         }
 
                         String clientType = nodeListType.item(0).getTextContent();
@@ -260,6 +265,22 @@ public class XMLMessageParser {
         xStream.alias("success", AnswerClientList.class);
 
         xStream.alias("user", ClientDescriptor.class);
+        xStream.registerConverter(new Converter() {
+            @Override
+            public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+                writer.setValue("");
+            }
+
+            @Override
+            public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
+                return null;
+            }
+
+            @Override
+            public boolean canConvert(Class type) {
+                return type.equals(AnswerSuccess.class);
+            }
+        });
 
         String str = xStream.toXML(message);
         return str;
