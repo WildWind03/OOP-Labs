@@ -1,15 +1,18 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
+import javafx.application.Platform;
 import javafx.scene.control.*;
 import org.apache.log4j.Logger;
 
+import java.io.Closeable;
 import java.util.Optional;
 
-public class EnterUsernameView {
+public class EnterUsernameView implements Closeable{
     private static final Logger logger = Logger.getLogger(EnterUsernameView.class.getName());
 
+    private TextInputDialog dialog = new TextInputDialog("Wind");
+
     public String show() {
-        TextInputDialog dialog = new TextInputDialog("Wind");
         dialog.setTitle("Windogram");
         dialog.setHeaderText("Windogram");
         dialog.setContentText("Please, enter your nickname:");
@@ -29,5 +32,13 @@ public class EnterUsernameView {
         }
 
         return str.get();
+    }
+
+    @Override
+    public void close() {
+        Platform.runLater(() -> {
+            Button cancelButton = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancelButton.fire();
+        });
     }
 }

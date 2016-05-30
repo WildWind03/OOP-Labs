@@ -22,6 +22,9 @@ public class ClientView extends Application {
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
     private ClientViewController clientViewController;
+    private EnterUsernameView enterUsernameView;
+
+    private boolean isClose;
 
     public static void main(String[] args) {
         launch(args);
@@ -44,6 +47,8 @@ public class ClientView extends Application {
         clientViewController = loader.getController();
 
         new Controller(clientViewController);
+
+        clientViewController.setApp(this);
 
         ClientProperties clientProperties;
 
@@ -75,10 +80,13 @@ public class ClientView extends Application {
             boolean isLoggedIn = false;
 
             while(true) {
-                EnterUsernameView enterUsernameView = new EnterUsernameView();
+                enterUsernameView = new EnterUsernameView();
                 String nickname = enterUsernameView.show();
 
                 if (null == nickname) {
+                    if (isClose) {
+                        return;
+                    }
                     break;
                 }
 
@@ -103,6 +111,8 @@ public class ClientView extends Application {
                 alert.showAndWait();
             }
 
+            enterUsernameView = null;
+
             if (isLoggedIn) {
                 logger.info("Client is logged in!");
                 break;
@@ -121,5 +131,13 @@ public class ClientView extends Application {
     public void stop() throws Exception {
         clientViewController.onStop();
         super.stop();
+    }
+
+    public void closeModal() {
+        isClose = true;
+
+        if (null != enterUsernameView) {
+            enterUsernameView.close();
+        }
     }
 }
