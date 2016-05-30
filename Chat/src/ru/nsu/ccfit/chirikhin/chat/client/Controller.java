@@ -4,6 +4,9 @@ import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.CommandClientList;
 import ru.nsu.ccfit.chirikhin.chat.CommandText;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+
 public class Controller {
     private static final Logger logger = Logger.getLogger(Controller.class.getName());
 
@@ -14,22 +17,30 @@ public class Controller {
             InfoFromView infoFromView = (InfoFromView) arg;
 
             switch (infoFromView.getInfo()) {
+                case DISCONNECT:
+                    if (null != client) {
+                        client.disconnect();
+                        client = null;
+                    }
+                    break;
                 case CONNECT:
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
 
                     try {
-                        if (null != client) {
-                            client.disconnect();
-                        }
-
                         client = new Client(clientProperties);
                         client.addMessageControllerObserver(clientViewController);
-                        clientViewController.onConnectionSetSuccessfully();
+                        boolean result = client.login(clientProperties.getNickname());
+                        if (!result) {
+                            clientViewController.onConnectionSetFailed();
+                        } else {
+                            clientViewController.onConnectionSetSuccessfully();
+                        }
+
                         logger.error("Connected successfully");
-                    } catch (Exception e) {
-                        logger.error("Can not connect");
-                        clientViewController.onConnectionSetFailed();
-                    }
+                    } catch (ConnectionFailedException | IOException | ParserConfigurationException e) {
+                            logger.error("Can not connect");
+                            clientViewController.onConnectionSetFailed();
+                        }
 
                     break;
                 case TYPED_MESSAGE:
@@ -48,16 +59,8 @@ public class Controller {
                     }
 
                     client.onStop();
-
                     break;
 
-                case LOGIN:
-                    if (null == client) {
-                        throw new NullPointerException("Client is null");
-                    }
-
-                    client.login((String) (((InfoFromView) arg).getObject()));
-                    break;
                 case LIST_OF_USERS:
                     if (null == client) {
                         throw new NullPointerException("Client is null");

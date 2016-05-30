@@ -22,9 +22,6 @@ public class ClientView extends Application {
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
     private ClientViewController clientViewController;
-    private EnterUsernameView enterUsernameView;
-
-    private boolean isClose;
 
     public static void main(String[] args) {
         launch(args);
@@ -48,11 +45,8 @@ public class ClientView extends Application {
 
         new Controller(clientViewController);
 
-        clientViewController.setApp(this);
-
         ClientProperties clientProperties;
 
-        while(true) {
             do {
                 LoginView loginView = new LoginView();
                 Optional<ClientProperties> result = loginView.show();
@@ -69,55 +63,13 @@ public class ClientView extends Application {
                     Alert alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Windogram");
                     alert.setHeaderText("The connection can not be setup");
-                    alert.setContentText("There isn't server with such configuration");
+                    alert.setContentText("Try again or choose another server/protocol/nickname");
                     alert.showAndWait();
                 }
 
             } while (true);
 
             logger.info("Connection is set!");
-
-            boolean isLoggedIn = false;
-
-            while(true) {
-                enterUsernameView = new EnterUsernameView();
-                String nickname = enterUsernameView.show();
-
-                if (null == nickname) {
-                    if (isClose) {
-                        return;
-                    }
-                    break;
-                }
-
-                if (clientViewController.login(nickname)) {
-                    isLoggedIn = true;
-                    break;
-                }
-
-                if(!clientViewController.isServerAnswered()) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Windogram");
-                    alert.setHeaderText("The server doesn't answer");
-                    alert.setContentText("Please, choose other server");
-                    alert.showAndWait();
-                    break;
-                }
-
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Windogram");
-                alert.setHeaderText("The nickname is busy!");
-                alert.setContentText("Please, type new nickname");
-                alert.showAndWait();
-            }
-
-            enterUsernameView = null;
-
-            if (isLoggedIn) {
-                logger.info("Client is logged in!");
-                break;
-            }
-        }
 
         Scene scene = new Scene(root);
         stage.setTitle("Windogram");
@@ -131,13 +83,5 @@ public class ClientView extends Application {
     public void stop() throws Exception {
         clientViewController.onStop();
         super.stop();
-    }
-
-    public void closeModal() {
-        isClose = true;
-
-        if (null != enterUsernameView) {
-            enterUsernameView.close();
-        }
     }
 }

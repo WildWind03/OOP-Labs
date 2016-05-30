@@ -8,19 +8,21 @@ public class ClientProperties {
     private final int port;
     private final String ip;
     private final ProtocolName protocolName;
+    private final String nickname;
 
-    public ClientProperties(int port, String ip, ProtocolName protocolName) {
+    public ClientProperties(int port, String ip, ProtocolName protocolName, String nickname) {
         if (port < 0) {
             throw new IllegalArgumentException("Port must be negative");
         }
 
-        if (null == ip || null == protocolName) {
+        if (null == ip || null == protocolName || null == nickname) {
             throw new NullPointerException("Null reference");
         }
 
         this.port = port;
         this.ip = ip;
         this.protocolName = protocolName;
+        this.nickname = nickname;
     }
 
     public int getPort() {
@@ -33,5 +35,9 @@ public class ClientProperties {
 
     public ProtocolName getProtocolName() {
         return protocolName;
+    }
+
+    public String getNickname() {
+        return nickname;
     }
 }

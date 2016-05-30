@@ -117,10 +117,6 @@ public class Client {
         return isLoggedIn;
     }
 
-    public long getUniqueSessionId() {
-        return uniqueSessionId;
-    }
-
     public String getChatClientName() {
         return chatClientName;
     }

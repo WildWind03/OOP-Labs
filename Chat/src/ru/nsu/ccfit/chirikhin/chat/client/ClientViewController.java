@@ -51,6 +51,11 @@ public class ClientViewController extends Observable implements Observer {
         return isLoggedIn;
     }
 
+    public void disconnect() {
+        setChanged();
+        notifyObservers(new InfoFromView(Info.DISCONNECT, null));
+    }
+
     private void sendTextMessage(String str) {
         setChanged();
         notifyObservers(new InfoFromView(Info.TYPED_MESSAGE, str));
@@ -151,11 +156,11 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {
-
+        disconnect();
     }
 
     public void onLogoutSuccessAnswer(LogoutSuccessAnswer logoutSuccessAnswer) {
-
+        disconnect();
     }
 
     public void onMessageDeliveredAnswer(MessageDeliveredAnswer messageDeliveredAnswer) {
@@ -175,19 +180,20 @@ public class ClientViewController extends Observable implements Observer {
 
     public void onConnectionFailedEvent(ConnectionFailedEvent connectionFailedEvent) {
         logger.info("The connection failed!");
-        listOfUsers.setDisable(true);
-        inputField.setDisable(true);
-        chatText.setDisable(true);
 
         Platform.runLater(() -> {
+            listOfUsers.setDisable(true);
+            inputField.setDisable(true);
+            chatText.setDisable(true);
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Windogram");
             alert.setHeaderText("The connection is lost");
             alert.setContentText("We are sorry...");
             alert.showAndWait();
             Platform.exit();
+            onStop();
+            System.exit(0);
         });
-
-        onStop();
     }
 }
