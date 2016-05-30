@@ -92,9 +92,10 @@ public class ServerMessageController implements Runnable {
         Client client = clients.get(sessionId);
         LinkedList<ClientDescriptor> clientsList = new LinkedList<>();
         Collection<Client> clientCollection = clients.values();
-        clientsList.addAll(clientCollection.stream()
-                .map(client1 -> new ClientDescriptor(client1.getUsername(), client1.getChatClientName()))
-                .collect(Collectors.toList()));
+
+        clientCollection.stream()
+                .filter(Client::isLoggedIn)
+                .forEachOrdered(client1 -> clientsList.push(new ClientDescriptor(client1.getUsername(), client1.getChatClientName())));
 
         logger.info("Handling client list message");
         client.receiveMessage(new AnswerClientList(clientsList));
@@ -106,6 +107,7 @@ public class ServerMessageController implements Runnable {
         client.exit();
         sendMessageToTheClient(new AnswerSuccess(), sessionId);
         sendMessageToAllClients(new EventLogout(client.getUsername()));
+        addMessageToServerStorage(new EventLogout(client.getUsername()));
         client.finishAndStop();
         clients.remove(sessionId);
     }

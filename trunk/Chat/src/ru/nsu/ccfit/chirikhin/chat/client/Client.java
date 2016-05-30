@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
+import com.thoughtworks.xstream.mapper.Mapper;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.*;
 
@@ -14,6 +15,8 @@ public class Client {
     private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
     private static final int TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT = 400;
     private final static String CHAT_CLIENT_NAME = "Windogram";
+
+    private final Object lock = new Object();
 
     private long sessionId;
     private String username;
@@ -34,7 +37,13 @@ public class Client {
     private final Thread clientMessageControllerThread = new Thread(clientMessageController, "Client Message Controller Thread");
 
     public Client(ClientProperties clientProperties) throws ConnectionFailedException, IOException, ParserConfigurationException {
+        if (null == clientProperties) {
+            throw new NullPointerException("ClientProperties is null");
+        }
+
         ConnectorToServer connectorToServer = new ConnectorToServer();
+
+        username = clientProperties.getNickname();
 
         Socket socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp(), TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT);
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
@@ -45,13 +54,13 @@ public class Client {
             try {
                 messagesFromServer.put(message);
             } catch (InterruptedException e) {
-                logger.error("Interrupt");
+                logger.error("Interrupt while putting messages to messageFromServer");
             }
         }, () -> {
             try {
                 messagesFromServer.put(new EventConnectionFailed());
             } catch (InterruptedException e) {
-                logger.error("Interrupt");
+                logger.error("Interrupt while putting EventConnectionFailed");
             }
         });
 
@@ -63,13 +72,26 @@ public class Client {
         clientMessageControllerThread.start();
     }
 
-    public void login(String nickname) {
-        setNickname(nickname);
-        sendMessage(new CommandLogin(nickname, CHAT_CLIENT_NAME));
-    }
+    public boolean login(String nickname) {
+        if (null == nickname) {
+            throw new NullPointerException("Null reference instead of nickname");
+        }
 
-    public void setNickname(String nickname) {
-        this.username = nickname;
+        sendMessage(new CommandLogin(nickname, CHAT_CLIENT_NAME));
+
+        synchronized (lock) {
+            try {
+                lock.wait(TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT);
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
+        }
+
+        if (isLoggedIn) {
+            return true;
+        }
+
+        return false;
     }
 
     public void setSessionId(long sessionId) {
@@ -78,10 +100,10 @@ public class Client {
 
     public void setLoginState(boolean newState) {
         isLoggedIn = newState;
-    }
 
-    public boolean isLoggedIn() {
-        return isLoggedIn;
+        synchronized (lock) {
+            lock.notifyAll();
+        }
     }
 
     public long getSessionId(){
@@ -89,10 +111,17 @@ public class Client {
     }
 
     public void addMessageControllerObserver(Observer o) {
+        if (null == o) {
+            throw new NullPointerException("Observer is null");
+        }
         clientMessageController.addObserver(o);
     }
 
     public void sendMessage(Message message) {
+        if (null == message) {
+            throw new NullPointerException("Message is null while sending message");
+        }
+
         try {
             historyOfCommands.put(MessageTypeConverter.getMessageType(message));
             messagesForServer.put(message);
@@ -102,12 +131,8 @@ public class Client {
     }
 
     public void onStop()  {
-        if (!isLoggedIn()) {
-            disconnect();
-        } else {
-            CommandLogout commandLogout = new CommandLogout(sessionId);
-            sendMessage(commandLogout);
-        }
+        CommandLogout commandLogout = new CommandLogout(sessionId);
+        sendMessage(commandLogout);
     }
 
     public void disconnect() {
@@ -126,7 +151,7 @@ public class Client {
             readThread.join();
             writeThread.join();
         } catch (InterruptedException e) {
-            logger.error("Interrupt");
+            logger.error("Interrupt while joining threads");
         }
 
         clientMessageControllerThread.interrupt();

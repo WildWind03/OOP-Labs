@@ -11,6 +11,9 @@ public class ClientLeftEvent implements ServerEvent{
     }
 
     public ClientLeftEvent(String name) {
+        if (null == name) {
+            throw new NullPointerException("Name is null");
+        }
         this.name = name;
     }
 

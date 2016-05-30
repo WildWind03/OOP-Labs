@@ -286,8 +286,7 @@ public class XMLMessageParser {
             }
         });
 
-        String str = xStream.toXML(message);
-        return str;
+        return xStream.toXML(message);
 
     }
 }
