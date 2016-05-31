@@ -1,7 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.service.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -23,9 +23,9 @@ public class Client {
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
     private String username = "NONAME";
-    private boolean isExit;
+    private boolean isExit = false;
     private String chatClientName = "UNKNOWN_CLIENT";
-    private boolean isLoggedIn;
+    private boolean isLoggedIn = false;
 
     @Override
     public boolean equals(Object o) {
@@ -121,32 +121,49 @@ public class Client {
         return chatClientName;
     }
 
-    public void exit() {
-        isExit = true;
-    }
-
     public boolean isExit() {
         return isExit;
     }
 
     public void finishAndStop() {
+        readerThread.interrupt();
+        try {
+            inputStreamReader.close();
+            readerThread.join();
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        } catch (IOException e) {
+            logger.error("IO while closing");
+        }
+
+        isExit = true;
         outputStreamWriter.finishAndStop();
     }
 
-    public void delete() throws InterruptedException {
+    public void delete() {
+
+        if (!isExit) {
+            readerThread.interrupt();
+            writerThread.interrupt();
+        }
 
         try {
-            inputStreamReader.close();
-            outputStreamWriter.close();
+            if (!isExit) {
+                inputStreamReader.close();
+                outputStreamWriter.close();
+            }
         } catch (IOException e) {
             logger.error("Error while closing input stream reader");
         }
 
-        readerThread.interrupt();
-        writerThread.interrupt();
-
-        readerThread.join();
-        writerThread.join();
+        try {
+            if (!isExit) {
+                readerThread.join();
+                writerThread.join();
+            }
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        }
 
         logger.info("ClientView has been deleted!");
     }

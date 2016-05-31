@@ -1,8 +1,8 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.CommandClientList;
-import ru.nsu.ccfit.chirikhin.chat.CommandText;
+import ru.nsu.ccfit.chirikhin.chat.service.CommandClientList;
+import ru.nsu.ccfit.chirikhin.chat.service.CommandText;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;

@@ -6,13 +6,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import org.apache.log4j.Level;
-import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.service.ConfigParser;
+import ru.nsu.ccfit.chirikhin.chat.service.ConsoleParser;
+import ru.nsu.ccfit.chirikhin.chat.service.InvalidConfigException;
+import ru.nsu.ccfit.chirikhin.chat.service.LoggerController;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

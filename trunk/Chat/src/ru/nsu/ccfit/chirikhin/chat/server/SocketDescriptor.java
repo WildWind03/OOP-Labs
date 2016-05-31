@@ -1,7 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import ru.nsu.ccfit.chirikhin.chat.service.ProtocolName;
 
 import java.net.Socket;
 
