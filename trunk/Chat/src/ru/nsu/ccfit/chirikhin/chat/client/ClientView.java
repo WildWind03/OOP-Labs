@@ -9,17 +9,17 @@ import javafx.stage.Stage;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
-import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
-import ru.nsu.ccfit.chirikhin.chat.LoggerController;
-import ru.nsu.ccfit.chirikhin.chat.TimeoutException;
+import ru.nsu.ccfit.chirikhin.chat.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class ClientView extends Application {
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
+    private static final int ERROR_EXIT = -1;
+    private final static String CLIENT_TYPE = "Windogram";
 
     private ClientViewController clientViewController;
 
@@ -28,21 +28,33 @@ public class ClientView extends Application {
     }
 
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         Parameters parameters = getParameters();
         List<String> args = parameters.getRaw();
         ConsoleParser consoleParser = new ConsoleParser(args);
-        ConfigParser configParser = new ConfigParser(consoleParser.getPathToFile());
+        ConfigParser configParser = null;
+
+        try {
+            configParser = new ConfigParser(consoleParser.getPathToFile());
+        } catch (IOException | InvalidConfigException e) {
+            logger.error("Error while parsing config");
+            System.exit(ERROR_EXIT);
+        }
 
         if (!configParser.isLog()) {
             LoggerController.switchOffLogger();
         }
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
-        Parent root = loader.load();
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            logger.error("Error while loading fxml form");
+            System.exit(ERROR_EXIT);
+        }
 
         clientViewController = loader.getController();
-
         new Controller(clientViewController);
 
         ClientProperties clientProperties;
@@ -57,22 +69,38 @@ public class ClientView extends Application {
 
                 clientProperties = result.get();
 
-                if (clientViewController.connectWithServer(clientProperties)) {
-                    break;
-                } else {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Windogram");
-                    alert.setHeaderText("The connection can not be setup");
-                    alert.setContentText("Try again or choose another server/protocol/nickname");
-                    alert.showAndWait();
+                ConnectionState connectionState = clientViewController.connectWithServer(clientProperties);
+
+                Alert alert;
+                switch(connectionState) {
+                    case DISCONNECTED:
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle(CLIENT_TYPE);
+                        alert.setHeaderText("The connection can not be setup");
+                        alert.setContentText("The server doesn't answer");
+                        alert.showAndWait();
+                        continue;
+
+                    case CONNECTED:
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle(CLIENT_TYPE);
+                        alert.setHeaderText("Can't log in");
+                        alert.setContentText("Try to change nickname");
+                        alert.showAndWait();
+                        continue;
+
+                    case LOGGED_IN:
+                        break;
                 }
+
+                break;
 
             } while (true);
 
-            logger.info("Connection is set!");
+        logger.info("The connection is set. Logged in successfully");
 
         Scene scene = new Scene(root);
-        stage.setTitle("Windogram");
+        stage.setTitle(CLIENT_TYPE);
         stage.setScene(scene);
         stage.setResizable(false);
         stage.sizeToScene();

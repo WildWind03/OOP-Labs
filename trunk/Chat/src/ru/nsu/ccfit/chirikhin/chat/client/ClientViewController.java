@@ -25,15 +25,16 @@ public class ClientViewController extends Observable implements Observer {
     @FXML
     Button listOfUsers;
 
-    private boolean isConnectionSet = false;
-    private boolean isLoggedIn = false;
-    private boolean isServerAnswered = false;
+    //private boolean isConnectionSet = false;
+    //private boolean isLoggedIn = false;
+    //private boolean isServerAnswered = false;
+    private ConnectionState connectionState = ConnectionState.DISCONNECTED;
 
-    public boolean connectWithServer(ClientProperties clientProperties) {
+    public ConnectionState connectWithServer(ClientProperties clientProperties) {
         setChanged();
         notifyObservers(new InfoFromView(Info.CONNECT, clientProperties));
 
-        return isConnectionSet;
+        return connectionState;
     }
 
     public boolean login(String username) {
