@@ -1,6 +1,9 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -10,6 +13,7 @@ import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.*;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,6 +27,8 @@ public class ClientViewController extends Observable implements Observer {
     TextArea chatText;
     @FXML
     Button listOfUsers;
+    @FXML
+    ListView<String> userList;
 
     public ConnectionState connectWithServer(ClientProperties clientProperties) {
         if (null == clientProperties) {
@@ -99,11 +105,19 @@ public class ClientViewController extends Observable implements Observer {
 
     public void onClientListSuccessAnswer(ClientsListSuccessAnswer clientsListSuccessAnswer) {
         LinkedList<ClientDescriptor> clients = clientsListSuccessAnswer.getClients();
-        chatText.appendText("\nThe list of clients:\n");
 
-        for (ClientDescriptor current : clients) {
-            chatText.appendText("Nickname: " + current.getName() + "\nClient Type: " + current.getType() + "\n\n");
+        LinkedList<String> clientNames = new LinkedList<>();
+        for (ClientDescriptor clientDescriptor : clients) {
+            String result = clientDescriptor.getName() + " (" + clientDescriptor.getType() + ")";
+            clientNames.push(result);
         }
+
+        Platform.runLater(() -> {
+            ObservableList<String> observableList = FXCollections.observableList(clientNames);
+            userList.setItems(observableList);
+
+        });
+
     }
 
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {
