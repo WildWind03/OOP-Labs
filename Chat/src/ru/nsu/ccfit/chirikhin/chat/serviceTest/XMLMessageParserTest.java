@@ -10,8 +10,7 @@ public class XMLMessageParserTest {
 
     @Test
     public void testFromMessageToXml() {
-        XMLMessageParser xmlMessageParser = new XMLMessageParser();
+       XMLMessageParser xmlMessageParser = new XMLMessageParser();
         String result = xmlMessageParser.createXMLFromMessage(new CommandLogin("Wild", "Windogram"));
-        System.out.println(result);
     }
 }
