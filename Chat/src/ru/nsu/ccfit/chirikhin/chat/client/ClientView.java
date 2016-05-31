@@ -29,35 +29,36 @@ public class ClientView extends Application {
 
     @Override
     public void start(Stage stage) {
-        Parameters parameters = getParameters();
-        List<String> args = parameters.getRaw();
-        ConsoleParser consoleParser = new ConsoleParser(args);
-        ConfigParser configParser = null;
-
         try {
-            configParser = new ConfigParser(consoleParser.getPathToFile());
-        } catch (IOException | InvalidConfigException e) {
-            logger.error("Error while parsing config");
-            System.exit(ERROR_EXIT);
-        }
+            Parameters parameters = getParameters();
+            List<String> args = parameters.getRaw();
+            ConsoleParser consoleParser = new ConsoleParser(args);
+            ConfigParser configParser = null;
 
-        if (!configParser.isLog()) {
-            LoggerController.switchOffLogger();
-        }
+            try {
+                configParser = new ConfigParser(consoleParser.getPathToFile());
+            } catch (IOException | InvalidConfigException e) {
+                logger.error("Error while parsing config");
+                System.exit(ERROR_EXIT);
+            }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
-        Parent root = null;
-        try {
-            root = loader.load();
-        } catch (IOException e) {
-            logger.error("Error while loading fxml form");
-            System.exit(ERROR_EXIT);
-        }
+            if (!configParser.isLog()) {
+                LoggerController.switchOffLogger();
+            }
 
-        clientViewController = loader.getController();
-        new Controller(clientViewController);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view.fxml"));
+            Parent root = null;
+            try {
+                root = loader.load();
+            } catch (IOException e) {
+                logger.error("Error while loading fxml form");
+                System.exit(ERROR_EXIT);
+            }
 
-        ClientProperties clientProperties;
+            clientViewController = loader.getController();
+            new Controller(clientViewController);
+
+            ClientProperties clientProperties;
 
             do {
                 LoginView loginView = new LoginView();
@@ -72,8 +73,8 @@ public class ClientView extends Application {
                 ConnectionState connectionState = clientViewController.connectWithServer(clientProperties);
 
                 Alert alert;
-                switch(connectionState) {
-                    case DISCONNECTED:
+                switch (connectionState) {
+                    case CONNECT_FAILED:
                         alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle(CLIENT_TYPE);
                         alert.setHeaderText("The connection can not be setup");
@@ -81,7 +82,7 @@ public class ClientView extends Application {
                         alert.showAndWait();
                         continue;
 
-                    case CONNECTED:
+                    case LOGGED_FAILED:
                         alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle(CLIENT_TYPE);
                         alert.setHeaderText("Can't log in");
@@ -91,20 +92,34 @@ public class ClientView extends Application {
 
                     case LOGGED_IN:
                         break;
+                    case NO_ANSWER:
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle(CLIENT_TYPE);
+                        alert.setHeaderText("The connection can not be setup");
+                        alert.setContentText("Can not connect to the server");
+                        alert.showAndWait();
+                        continue;
                 }
 
                 break;
 
             } while (true);
 
-        logger.info("The connection is set. Logged in successfully");
+            logger.info("The connection is set. Logged in successfully");
 
-        Scene scene = new Scene(root);
-        stage.setTitle(CLIENT_TYPE);
-        stage.setScene(scene);
-        stage.setResizable(false);
-        stage.sizeToScene();
-        stage.show();
+            Scene scene = new Scene(root);
+            stage.setTitle(CLIENT_TYPE);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.sizeToScene();
+            stage.show();
+        } catch (Exception e) {
+            logger.error("Runtime error " + e.getMessage());
+            System.exit(ERROR_EXIT);
+        } catch (Throwable throwable) {
+            logger.error(("Unknown runtime error"));
+            System.exit(ERROR_EXIT);
+        }
     }
 
     @Override

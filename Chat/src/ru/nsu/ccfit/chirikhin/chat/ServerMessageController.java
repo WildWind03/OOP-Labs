@@ -123,7 +123,9 @@ public class ServerMessageController implements Runnable {
 
         clients.remove(sessionId);
 
-        sendMessageToAllClients(new EventLogout(client.getUsername()));
+        if (client.isLoggedIn()) {
+            sendMessageToAllClients(new EventLogout(client.getUsername()));
+        }
     }
 
     private void sendMessageToAllClients(ServerMessage serverMessage) {
