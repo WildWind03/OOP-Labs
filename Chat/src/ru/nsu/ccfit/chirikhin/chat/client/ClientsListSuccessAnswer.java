@@ -14,12 +14,18 @@ public class ClientsListSuccessAnswer implements ServerEvent {
     }
 
     public ClientsListSuccessAnswer(LinkedList<ClientDescriptor> clients) {
+        if (null == clients) {
+            throw new NullPointerException("Clients can not be null");
+        }
 
         this.clients = clients;
     }
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController can not be null");
+        }
         clientViewController.onClientListSuccessAnswer(this);
     }
 }

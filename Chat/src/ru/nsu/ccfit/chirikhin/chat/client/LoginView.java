@@ -71,7 +71,7 @@ public class LoginView {
         });
 
         nicknameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable((!IPChecker.isPort(newValue)) || !(IPChecker.isIp(ipTextField.getText())) || newValue.isEmpty());
+            loginButton.setDisable((!(IPChecker.isPort(portTextField.getText()))) || !(IPChecker.isIp(ipTextField.getText())) || newValue.isEmpty());
         });
 
 

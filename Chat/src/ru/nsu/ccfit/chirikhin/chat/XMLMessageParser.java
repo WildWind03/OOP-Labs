@@ -23,45 +23,54 @@ public class XMLMessageParser {
     private final static String MESSAGE_STR = "message";
     private final static String LOGOUT_STR = "logout";
 
+    private final static String COMMAND_STR = "command";
+    private final static String EVENT_STR = "event";
+    private final static String SUCCESS_STR = "success";
+    private final static String ERROR_STR = "error";
+    private final static String USER_STR = "user";
+
+    private final static String MESSAGE_TYPE_FIELD_STR = "messageType";
+    private final static String ALIAS_FOR_MESSAGE_TYPE_FIELD = "name";
+
     private final XStream xStream;
 
     public XMLMessageParser() {
         xStream = new XStream();
-        xStream.alias("command", CommandLogin.class);
-        xStream.useAttributeFor(CommandLogin.class, "messageType");
-        xStream.aliasField("name", CommandLogin.class, "messageType");
+        xStream.alias(COMMAND_STR, CommandLogin.class);
+        xStream.useAttributeFor(CommandLogin.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, CommandLogin.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("command", CommandClientList.class);
-        xStream.useAttributeFor(CommandClientList.class, "messageType");
-        xStream.aliasField("name", CommandClientList.class, "messageType");
+        xStream.alias(COMMAND_STR, CommandClientList.class);
+        xStream.useAttributeFor(CommandClientList.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, CommandClientList.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("command", CommandLogout.class);
-        xStream.useAttributeFor(CommandLogout.class, "messageType");
-        xStream.aliasField("name", CommandLogout.class, "messageType");
+        xStream.alias(COMMAND_STR, CommandLogout.class);
+        xStream.useAttributeFor(CommandLogout.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, CommandLogout.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("command", CommandText.class);
-        xStream.useAttributeFor(CommandText.class, "messageType");
-        xStream.aliasField("name", CommandText.class, "messageType");
+        xStream.alias(COMMAND_STR, CommandText.class);
+        xStream.useAttributeFor(CommandText.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, CommandText.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("event", EventNewClient.class);
-        xStream.useAttributeFor(EventNewClient.class, "messageType");
-        xStream.aliasField("name", EventNewClient.class, "messageType");
+        xStream.alias(EVENT_STR, EventNewClient.class);
+        xStream.useAttributeFor(EventNewClient.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, EventNewClient.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("event", EventText.class);
-        xStream.useAttributeFor(EventText.class, "messageType");
-        xStream.aliasField("name", EventText.class, "messageType");
+        xStream.alias(EVENT_STR, EventText.class);
+        xStream.useAttributeFor(EventText.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, EventText.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("event", EventLogout.class);
-        xStream.useAttributeFor(EventLogout.class, "messageType");
-        xStream.aliasField("name", EventLogout.class, "messageType");
+        xStream.alias(EVENT_STR, EventLogout.class);
+        xStream.useAttributeFor(EventLogout.class, MESSAGE_TYPE_FIELD_STR);
+        xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, EventLogout.class, MESSAGE_TYPE_FIELD_STR);
 
-        xStream.alias("error", AnswerError.class);
+        xStream.alias(ERROR_STR, AnswerError.class);
 
-        xStream.alias("success", AnswerSuccess.class);
-        xStream.alias("success", AnswerSuccessLogin.class);
-        xStream.alias("success", AnswerClientList.class);
+        xStream.alias(SUCCESS_STR, AnswerSuccess.class);
+        xStream.alias(SUCCESS_STR, AnswerSuccessLogin.class);
+        xStream.alias(SUCCESS_STR, AnswerClientList.class);
 
-        xStream.alias("user", ClientDescriptor.class);
+        xStream.alias(USER_STR, ClientDescriptor.class);
     }
 
     public Message getMessage(Document document) throws InvalidXMLException {
@@ -86,10 +95,10 @@ public class XMLMessageParser {
 
         switch(nodeElement.getTagName()) {
 
-            case "command" :
+            case COMMAND_STR :
 
                 Element cmd = (Element) node;
-                String cmdString = cmd.getAttribute("name");
+                String cmdString = cmd.getAttribute(ALIAS_FOR_MESSAGE_TYPE_FIELD);
 
                 if (cmdString.isEmpty()) {
                     throw new InvalidXMLException("There is not attribute 'name' in XML");
@@ -99,7 +108,7 @@ public class XMLMessageParser {
 
                 switch (cmdString) {
                     case LOGIN_STR:
-                        NodeList nodeListName = cmd.getElementsByTagName("name");
+                        NodeList nodeListName = cmd.getElementsByTagName(ALIAS_FOR_MESSAGE_TYPE_FIELD);
                         if (1 != nodeListName.getLength()) {
                             throw new InvalidXMLException("Invalid XML. Tag 'name'");
                         }
@@ -151,7 +160,7 @@ public class XMLMessageParser {
 
                 return clientMessage;
 
-            case "error" :
+            case ERROR_STR :
                 NodeList nodeListReason = nodeElement.getElementsByTagName("reason");
                 if (1 != nodeListReason.getLength()) {
                     throw new InvalidXMLException("Invalid XML. Tag 'reason'");
@@ -160,7 +169,7 @@ public class XMLMessageParser {
                 String reason = nodeListReason.item(0).getTextContent();
                 return new AnswerError(reason);
 
-            case "success" :
+            case SUCCESS_STR :
                 NodeList nodeListSessionId = nodeElement.getElementsByTagName("session");
                 if (1 == nodeListSessionId.getLength()) {
                     String  sessionId = nodeListSessionId.item(0).getTextContent();
@@ -181,7 +190,7 @@ public class XMLMessageParser {
 
                     Element elementUsers = (Element) node;
 
-                    NodeList userList = elementUsers.getElementsByTagName("user");
+                    NodeList userList = elementUsers.getElementsByTagName(USER_STR);
 
                     for (int i = 0; i < userList.getLength(); ++i) {
 
@@ -194,7 +203,7 @@ public class XMLMessageParser {
 
                         Element userNodeElement = (Element) userNode;
 
-                        NodeList userNodeListName = userNodeElement.getElementsByTagName("name");
+                        NodeList userNodeListName = userNodeElement.getElementsByTagName(ALIAS_FOR_MESSAGE_TYPE_FIELD);
                         if (1 != userNodeListName.getLength()) {
                             throw new InvalidXMLException("Invalid XML. Tag 'name'");
                         }
@@ -219,8 +228,8 @@ public class XMLMessageParser {
 
                 throw new InvalidXMLException("There is error while looking for 'session', 'listusers' and no tags");
 
-            case "event" :
-                String eventName = nodeElement.getAttribute("name");
+            case EVENT_STR :
+                String eventName = nodeElement.getAttribute(ALIAS_FOR_MESSAGE_TYPE_FIELD);
 
                 if (eventName.isEmpty()) {
                     throw new InvalidXMLException("There is no attribute 'name' in event tag");
@@ -228,7 +237,7 @@ public class XMLMessageParser {
 
                 switch(eventName) {
                     case "userlogout":
-                        NodeList nodeListNickname = nodeElement.getElementsByTagName("name");
+                        NodeList nodeListNickname = nodeElement.getElementsByTagName(ALIAS_FOR_MESSAGE_TYPE_FIELD);
                         if (1 != nodeListNickname.getLength()) {
                             throw new InvalidXMLException("Invalid XML. Tag 'name'");
                         }
@@ -236,7 +245,7 @@ public class XMLMessageParser {
                         String nickname = nodeListNickname.item(0).getTextContent();
                         return new EventLogout(nickname);
                     case "userlogin":
-                        NodeList nodeListNicknameLogin = nodeElement.getElementsByTagName("name");
+                        NodeList nodeListNicknameLogin = nodeElement.getElementsByTagName(ALIAS_FOR_MESSAGE_TYPE_FIELD);
                         if (1 != nodeListNicknameLogin.getLength()) {
                             throw new InvalidXMLException("Invalid XML. Tag 'name'");
                         }

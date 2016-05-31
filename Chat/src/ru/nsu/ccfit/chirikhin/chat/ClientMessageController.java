@@ -25,6 +25,7 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleNewClientServerMessage(EventNewClient eventNewClient) {
+        client.sendMessage(new CommandClientList(client.getSessionId()));
         notifyView(new NewClientEvent(eventNewClient.getName()));
     }
 
@@ -83,6 +84,7 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleUserLogoutMessage(EventLogout message) {
+        client.sendMessage(new CommandClientList(client.getSessionId()));
         notifyView(new ClientLeftEvent(message.getName()));
     }
 

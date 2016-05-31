@@ -7,6 +7,9 @@ public class ClientListFailedAnswer implements ServerEvent{
 
     private final String reason;
     public ClientListFailedAnswer(String reason) {
+        if (null == reason) {
+            throw new NullPointerException("Reason can not be null");
+        }
         this.reason = reason;
     }
 
@@ -16,6 +19,10 @@ public class ClientListFailedAnswer implements ServerEvent{
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController can not be null");
+        }
+
         clientViewController.onClientListFailedAnswer(this);
     }
 }
