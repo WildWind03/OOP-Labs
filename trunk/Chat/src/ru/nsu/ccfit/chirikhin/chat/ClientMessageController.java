@@ -37,6 +37,7 @@ public class ClientMessageController extends Observable implements Runnable {
 
         switch(prevMessage) {
             case LOGIN:
+                client.setLoginState(LoginState.ERROR);
                 notifyView(new LoginFailedAnswer(answerError.getReason()));
                 break;
             case LOGOUT:
@@ -60,7 +61,7 @@ public class ClientMessageController extends Observable implements Runnable {
         logger.info("Handling success login server message");
         historyOfCommands.poll();
         client.setSessionId(serverSuccessMessage.getSession());
-        client.setLoginState(true);
+        client.setLoginState(LoginState.SUCCESS);
         notifyView(new LoginSuccessAnswer(Long.toString(serverSuccessMessage.getSession())));
     }
 
@@ -113,6 +114,9 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleEventConnectionFailed(EventConnectionFailed eventConnectionFailed) {
-        notifyView(new ConnectionFailedEvent());
+        client.disconnect();
+        if (LoginState.SUCCESS == client.getLoginState()) {
+            notifyView(new ConnectionFailedEvent());
+        }
     }
 }

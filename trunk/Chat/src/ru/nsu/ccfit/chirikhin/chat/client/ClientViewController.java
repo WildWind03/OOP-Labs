@@ -15,8 +15,7 @@ import java.util.Observer;
 
 public class ClientViewController extends Observable implements Observer {
     private static final Logger logger = Logger.getLogger(ClientViewController.class.getName());
-    private static final int TIMEOUT_TO_WAIT_LOGIN = 1000;
-    private final Object lock = new Object();
+    private ConnectionState connectionState = ConnectionState.NO_ANSWER;
 
     @FXML
     TextField inputField;
@@ -25,45 +24,31 @@ public class ClientViewController extends Observable implements Observer {
     @FXML
     Button listOfUsers;
 
-    //private boolean isConnectionSet = false;
-    //private boolean isLoggedIn = false;
-    //private boolean isServerAnswered = false;
-    private ConnectionState connectionState = ConnectionState.DISCONNECTED;
-
     public ConnectionState connectWithServer(ClientProperties clientProperties) {
+        if (null == clientProperties) {
+            throw new NullPointerException("Null instead of client properties");
+        }
+
+        connectionState = ConnectionState.NO_ANSWER;
+
         setChanged();
         notifyObservers(new InfoFromView(Info.CONNECT, clientProperties));
 
         return connectionState;
     }
 
-    public boolean login(String username) {
-        setChanged();
-        notifyObservers(new InfoFromView(Info.LOGIN, username));
-
-        synchronized (lock) {
-            try {
-                lock.wait(TIMEOUT_TO_WAIT_LOGIN);
-            } catch (InterruptedException e) {
-                logger.info("Interrupt");
-            }
-        }
-
-        return isLoggedIn;
-    }
-
-    public void disconnect() {
+   /* public void disconnect() {
         setChanged();
         notifyObservers(new InfoFromView(Info.DISCONNECT, null));
-    }
+    }*/
 
     private void sendTextMessage(String str) {
+        if (null == str) {
+            throw new NullPointerException("Text message can not be null");
+        }
+
         setChanged();
         notifyObservers(new InfoFromView(Info.TYPED_MESSAGE, str));
-    }
-
-    public boolean isServerAnswered() {
-        return isServerAnswered;
     }
 
     @FXML
@@ -95,30 +80,10 @@ public class ClientViewController extends Observable implements Observer {
         serverEvent.process(this);
     }
 
-    public void onConnectionSetSuccessfully() {
-        isConnectionSet = true;
-    }
-
     public void onConnectionSetFailed() {
-        isConnectionSet = false;
+        connectionState = ConnectionState.CONNECT_FAILED;
     }
 
-    public void onTypedMessageNotDelivered() {
-        chatText.appendText("The message hasn't been delivered! There is no connection with server!\n");
-    }
-
-    public void onLoginMessageNotDelivered() {
-        isServerAnswered = false;
-        isLoggedIn = false;
-    }
-
-    public void onExitMessageNotDelivered() {
-        chatText.appendText("There is no answer from server. The message about logging out can not be delivered\n");
-    }
-
-    public void onListOfUsersMessagesNotDelivered() {
-        chatText.appendText("There is no answer from server. Can't show list of users\n");
-    }
 
     public void onClientListFailedAnswer(ClientListFailedAnswer clientListFailedAnswer) {
         chatText.appendText("Error! Can not get list of clients. Reason: " + clientListFailedAnswer.getReason() + "\n");
@@ -137,31 +102,12 @@ public class ClientViewController extends Observable implements Observer {
         }
     }
 
-    public void onLoginFailedAnswer(LoginFailedAnswer loginFailedAnswer) {
-        isLoggedIn = false;
-        isServerAnswered = true;
-
-        synchronized (lock) {
-            lock.notifyAll();
-        }
-    }
-
-    public void onLoginSuccessAnswer(LoginSuccessAnswer loginSuccessAnswer) {
-        logger.info("Handling success login answer");
-        isLoggedIn = true;
-        isServerAnswered = true;
-
-        synchronized (lock) {
-            lock.notifyAll();
-        }
-    }
-
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {
-        disconnect();
+        //disconnect();
     }
 
     public void onLogoutSuccessAnswer(LogoutSuccessAnswer logoutSuccessAnswer) {
-        disconnect();
+       // disconnect();
     }
 
     public void onMessageDeliveredAnswer(MessageDeliveredAnswer messageDeliveredAnswer) {
@@ -193,8 +139,25 @@ public class ClientViewController extends Observable implements Observer {
             alert.setContentText("We are sorry...");
             alert.showAndWait();
             Platform.exit();
-            onStop();
-            System.exit(0);
         });
+    }
+
+    public void onLoginFailed() {
+        connectionState = ConnectionState.LOGGED_FAILED;
+        //disconnect();
+    }
+
+    public void onLoginSuccessfully() {
+        connectionState = ConnectionState.LOGGED_IN;
+    }
+
+    public void onNoAnswer() {
+        connectionState = ConnectionState.NO_ANSWER;
+    }
+
+    public void onLoginFailedAnswer(LoginFailedAnswer loginFailedAnswer) {
+    }
+
+    public void onLoginSuccessAnswer(LoginSuccessAnswer loginSuccessAnswer) {
     }
 }

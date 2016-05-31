@@ -1,5 +1,5 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 public enum ConnectionState {
-    CONNECTED, DISCONNECTED, LOGGED_IN
+    LOGGED_FAILED, CONNECT_FAILED, LOGGED_IN, NO_ANSWER
 }

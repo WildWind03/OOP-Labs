@@ -3,6 +3,7 @@ package ru.nsu.ccfit.chirikhin.chat.client;
 import com.thoughtworks.xstream.mapper.Mapper;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.*;
+import sun.rmi.runtime.Log;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class Client {
 
     private long sessionId;
     private String username;
-    private boolean isLoggedIn;
+    //private boolean isLoggedIn;
+    private LoginState loginState = LoginState.NO_ANSWER;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
 
@@ -72,10 +74,12 @@ public class Client {
         clientMessageControllerThread.start();
     }
 
-    public boolean login(String nickname) {
+    public LoginState login(String nickname) {
         if (null == nickname) {
             throw new NullPointerException("Null reference instead of nickname");
         }
+
+        loginState = LoginState.NO_ANSWER;
 
         sendMessage(new CommandLogin(nickname, CHAT_CLIENT_NAME));
 
@@ -87,19 +91,20 @@ public class Client {
             }
         }
 
-        if (isLoggedIn) {
-            return true;
-        }
+        return loginState;
 
-        return false;
+    }
+
+    public LoginState getLoginState() {
+        return loginState;
     }
 
     public void setSessionId(long sessionId) {
         this.sessionId = sessionId;
     }
 
-    public void setLoginState(boolean newState) {
-        isLoggedIn = newState;
+    public void setLoginState(LoginState newState) {
+        loginState = newState;
 
         synchronized (lock) {
             lock.notifyAll();

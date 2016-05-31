@@ -17,26 +17,25 @@ public class Controller {
             InfoFromView infoFromView = (InfoFromView) arg;
 
             switch (infoFromView.getInfo()) {
-                case DISCONNECT:
-                    if (null != client) {
-                        client.disconnect();
-                        client = null;
-                    }
-                    break;
                 case CONNECT:
                     ClientProperties clientProperties = (ClientProperties) ((InfoFromView) arg).getObject();
 
                     try {
                         client = new Client(clientProperties);
                         client.addMessageControllerObserver(clientViewController);
-                        boolean result = client.login(clientProperties.getNickname());
-                        if (!result) {
-                            clientViewController.onConnectionSetFailed();
-                        } else {
-                            clientViewController.onConnectionSetSuccessfully();
-                        }
+                        LoginState loginState = client.login(clientProperties.getNickname());
 
-                        logger.error("Connected successfully");
+                        switch (loginState) {
+                            case SUCCESS:
+                                clientViewController.onLoginSuccessfully();
+                                break;
+                            case ERROR:
+                                clientViewController.onLoginFailed();
+                                break;
+                            case NO_ANSWER:
+                                clientViewController.onNoAnswer();
+                                break;
+                        }
                     } catch (ConnectionFailedException | IOException | ParserConfigurationException e) {
                             logger.error("Can not connect");
                             clientViewController.onConnectionSetFailed();
