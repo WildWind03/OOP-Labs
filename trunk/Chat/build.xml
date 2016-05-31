@@ -102,17 +102,22 @@
     </target>
 
 		<target name="test" depends = "compile">
-		<mkdir dir="build.test.dir"/>
+		<mkdir dir="${test.dir}"/>
+
+			<copy todir="${build.classes.dir}">
+				<fileset dir="./src/resources"/>
+			</copy>
 
 		<junit printsummary="yes" haltonfailure="yes">
 			<classpath>
-				<pathelement location="CLASSPATH"/>
+				<path refid="CLASSPATH"/>
+				<pathelement location="classes"/>
 			</classpath>
 
 			<formatter type="plain"/>
 			<formatter type="xml"/>
 
-			<batchtest fork="yes" todir="test.dir">
+			<batchtest fork="yes" todir="${test.dir}">
 				<fileset dir="src/">
 					<include name="**/*Test*.java"/>
 				</fileset>
