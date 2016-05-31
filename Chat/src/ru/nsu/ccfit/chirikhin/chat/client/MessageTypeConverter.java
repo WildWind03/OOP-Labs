@@ -1,7 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.*;
+import ru.nsu.ccfit.chirikhin.chat.service.*;
 
 public class MessageTypeConverter {
     private static final Logger logger = Logger.getLogger(MessageTypeConverter.class.getName());

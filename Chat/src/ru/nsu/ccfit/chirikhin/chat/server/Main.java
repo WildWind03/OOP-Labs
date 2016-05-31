@@ -1,9 +1,9 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
-import ru.nsu.ccfit.chirikhin.chat.ConfigParser;
-import ru.nsu.ccfit.chirikhin.chat.ConsoleParser;
-import ru.nsu.ccfit.chirikhin.chat.LoggerController;
-import ru.nsu.ccfit.chirikhin.chat.ProtocolName;
+import ru.nsu.ccfit.chirikhin.chat.service.ConfigParser;
+import ru.nsu.ccfit.chirikhin.chat.service.ConsoleParser;
+import ru.nsu.ccfit.chirikhin.chat.service.LoggerController;
+import ru.nsu.ccfit.chirikhin.chat.service.ProtocolName;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

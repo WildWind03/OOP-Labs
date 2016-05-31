@@ -1,4 +1,4 @@
-<project xmlns:fx="javafx:com.sun.javafx.tools.ant" name = "Chat" default = "runclient">
+<project xmlns:fx="javafx:com.sun.javafx.tools.ant" name = "Chat" default = "jar">
 
 	<property environment="env"/>
 
@@ -15,6 +15,8 @@
 	<path id="CLASSPATH">
 		<fileset dir="${lib.dir}" includes="**/*.jar"/>
 	</path>
+
+	<target name = "jar" depends="jarclient, jarserver"/>
 
 	<target name="clean">
 		<delete dir="${build.classes.dir}"/>
@@ -50,13 +52,22 @@
 		</copy>
 	</target>
 
+	<manifestclasspath property="lib.list" jarfile="Server.jar">
+		<classpath refid="CLASSPATH"/>
+	</manifestclasspath>
+
+
+
 	<target name="jarserver" depends="clean, compile">
 		<jar destfile="./Server.jar" basedir="./classes" excludes="**/*Test*.class">
+
 			<manifest>
 				<attribute name="Main-Class" value="ru/nsu/ccfit/chirikhin/chat/server/Main"/>
+				<attribute name="Class-Path" value="${lib.list}"/>
 			</manifest>
 
 			<fileset dir="${server.resources}" includes="log4j.properties"/>
+
 		</jar>
 	</target>
 

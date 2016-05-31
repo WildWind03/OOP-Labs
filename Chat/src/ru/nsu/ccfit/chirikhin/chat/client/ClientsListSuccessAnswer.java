@@ -1,7 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.ClientDescriptor;
+import ru.nsu.ccfit.chirikhin.chat.service.ClientDescriptor;
 
 import java.util.LinkedList;
 
