@@ -1,9 +1,7 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
-import com.thoughtworks.xstream.mapper.Mapper;
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.*;
-import sun.rmi.runtime.Log;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -20,8 +18,6 @@ public class Client {
     private final Object lock = new Object();
 
     private long sessionId;
-    private String username;
-    //private boolean isLoggedIn;
     private LoginState loginState = LoginState.NO_ANSWER;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
@@ -44,8 +40,6 @@ public class Client {
         }
 
         ConnectorToServer connectorToServer = new ConnectorToServer();
-
-        username = clientProperties.getNickname();
 
         Socket socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp(), TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT);
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
@@ -104,6 +98,10 @@ public class Client {
     }
 
     public void setLoginState(LoginState newState) {
+        if (null == newState) {
+            throw new NullPointerException("Null reference insted of newState");
+        }
+
         loginState = newState;
 
         synchronized (lock) {
@@ -160,15 +158,5 @@ public class Client {
         }
 
         clientMessageControllerThread.interrupt();
-
-        if (Thread.currentThread() != clientMessageControllerThread) {
-            try {
-                clientMessageControllerThread.join();
-            } catch (InterruptedException e) {
-                logger.error("Interrupt");
-            }
-        }
-
-
     }
 }
