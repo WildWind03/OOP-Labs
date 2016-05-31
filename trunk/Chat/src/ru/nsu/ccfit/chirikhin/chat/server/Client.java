@@ -127,6 +127,7 @@ public class Client {
 
     public void finishAndStop() {
         readerThread.interrupt();
+        writerThread.interrupt();
         try {
             inputStreamReader.close();
             readerThread.join();
@@ -148,10 +149,12 @@ public class Client {
         }
 
         try {
+
             if (!isExit) {
                 inputStreamReader.close();
-                outputStreamWriter.close();
             }
+
+            outputStreamWriter.close();
         } catch (IOException e) {
             logger.error("Error while closing input stream reader");
         }

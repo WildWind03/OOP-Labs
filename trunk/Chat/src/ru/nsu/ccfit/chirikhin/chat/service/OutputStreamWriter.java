@@ -40,11 +40,12 @@ public class OutputStreamWriter implements Runnable {
             try {
                 int size = clientMessages.size();
                 for (int k = 0; k < size; ++k) {
-                    Message message = clientMessages.take();
+                    Message message = clientMessages.poll();
+                    if (null == message) {
+                        throw new NullPointerException("There aren't enough messages to send");
+                    }
                     messageSender.send(message);
                 }
-            } catch (InterruptedException e) {
-                logger.error("Interrupt exception");
             } catch (IOException e) {
                 logger.error("Can't send message");
             }
