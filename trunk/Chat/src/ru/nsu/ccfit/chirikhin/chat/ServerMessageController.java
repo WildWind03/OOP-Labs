@@ -125,6 +125,7 @@ public class ServerMessageController implements Runnable {
 
         if (client.isLoggedIn()) {
             sendMessageToAllClients(new EventLogout(client.getUsername()));
+            addMessageToServerStorage(new EventLogout(client.getUsername()));
         }
     }
 

@@ -123,8 +123,15 @@ public class ClientView extends Application {
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         clientViewController.onStop();
-        super.stop();
+
+        try {
+            super.stop();
+        } catch (Exception e) {
+            logger.error("Error while closing javafx view: " + e.getMessage());
+        } catch (Throwable throwable) {
+            logger.error("Unknown error while closing javafx view");
+        }
     }
 }

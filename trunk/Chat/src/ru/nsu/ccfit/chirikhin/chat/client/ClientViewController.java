@@ -37,11 +37,6 @@ public class ClientViewController extends Observable implements Observer {
         return connectionState;
     }
 
-   /* public void disconnect() {
-        setChanged();
-        notifyObservers(new InfoFromView(Info.DISCONNECT, null));
-    }*/
-
     private void sendTextMessage(String str) {
         if (null == str) {
             throw new NullPointerException("Text message can not be null");
@@ -53,7 +48,12 @@ public class ClientViewController extends Observable implements Observer {
 
     @FXML
     public void onKeyPressed(Event event) {
+        if (null == event) {
+            logger.error("Null reference instead of event");
+        }
+
         KeyEvent keyEvent = (KeyEvent) event;
+
         KeyCode keyCode = keyEvent.getCode();
 
         if (keyCode == KeyCode.ENTER) {
@@ -76,6 +76,10 @@ public class ClientViewController extends Observable implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        if (null == arg) {
+            throw new NullPointerException("observable can not be null");
+        }
+
         ServerEvent serverEvent = (ServerEvent) arg;
         serverEvent.process(this);
     }
@@ -103,11 +107,9 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {
-        //disconnect();
     }
 
     public void onLogoutSuccessAnswer(LogoutSuccessAnswer logoutSuccessAnswer) {
-       // disconnect();
     }
 
     public void onMessageDeliveredAnswer(MessageDeliveredAnswer messageDeliveredAnswer) {
@@ -144,7 +146,6 @@ public class ClientViewController extends Observable implements Observer {
 
     public void onLoginFailed() {
         connectionState = ConnectionState.LOGGED_FAILED;
-        //disconnect();
     }
 
     public void onLoginSuccessfully() {
