@@ -71,13 +71,6 @@ public class ClientViewController extends Observable implements Observer {
         notifyObservers(new InfoFromView(Info.STOP, null));
     }
 
-    @FXML
-    public void onMousePressed(Event event) {
-        setChanged();
-        notifyObservers(new InfoFromView(Info.LIST_OF_USERS, null));
-    }
-
-
     @Override
     public void update(Observable o, Object arg) {
         if (null == arg) {
@@ -136,7 +129,7 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onNewMessageEvent(NewMessageEvent newMessageEvent) {
-        chatText.appendText(newMessageEvent.getMessage() + "\n");
+        chatText.appendText(newMessageEvent.getAuthor() + ": " + newMessageEvent.getMessage() + "\n");
     }
 
     public void onConnectionFailedEvent(ConnectionFailedEvent connectionFailedEvent) {

@@ -21,7 +21,7 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleTextMessage(EventText serverMessage) {
-        notifyView(new NewMessageEvent(serverMessage.getMessage(), serverMessage.getType()));
+        notifyView(new NewMessageEvent(serverMessage.getMessage(), serverMessage.getName()));
     }
 
     public void handleNewClientServerMessage(EventNewClient eventNewClient) {
@@ -63,7 +63,7 @@ public class ClientMessageController extends Observable implements Runnable {
         historyOfCommands.poll();
         client.setSessionId(serverSuccessMessage.getSession());
         client.setLoginState(LoginState.SUCCESS);
-        notifyView(new LoginSuccessAnswer(Long.toString(serverSuccessMessage.getSession())));
+        notifyView(new LoginSuccessAnswer(serverSuccessMessage.getSession()));
     }
 
     public void handleSuccessServerAnswer(AnswerSuccess answerSuccess) throws ClientMessageControllerFunctionalityException {

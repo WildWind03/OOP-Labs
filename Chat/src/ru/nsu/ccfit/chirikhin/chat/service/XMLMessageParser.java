@@ -6,6 +6,8 @@ import com.thoughtworks.xstream.converters.MarshallingContext;
 import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.StaxWriter;
 import org.apache.log4j.Logger;
 
 import org.w3c.dom.Document;
@@ -13,6 +15,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.util.LinkedList;
 
 public class XMLMessageParser {
@@ -35,7 +39,15 @@ public class XMLMessageParser {
     private final XStream xStream;
 
     public XMLMessageParser() {
-        xStream = new XStream();
+        StaxDriver driver = new StaxDriver() {
+            @Override
+            public StaxWriter createStaxWriter(XMLStreamWriter out) throws XMLStreamException {
+                return super.createStaxWriter(out, false);
+            }
+        };
+
+        xStream = new XStream(driver);
+
         xStream.alias(COMMAND_STR, CommandLogin.class);
         xStream.useAttributeFor(CommandLogin.class, MESSAGE_TYPE_FIELD_STR);
         xStream.aliasField(ALIAS_FOR_MESSAGE_TYPE_FIELD, CommandLogin.class, MESSAGE_TYPE_FIELD_STR);
@@ -130,7 +142,7 @@ public class XMLMessageParser {
                         }
 
                         String sessionId = nodeListSessionId.item(0).getTextContent();
-                        clientMessage = new CommandClientList(Long.parseLong(sessionId));
+                        clientMessage = new CommandClientList(sessionId);
                         break;
                     case MESSAGE_STR:
                         NodeList nodeListMessage = cmd.getElementsByTagName("message");
@@ -145,7 +157,7 @@ public class XMLMessageParser {
 
                         String message = nodeListMessage.item(0).getTextContent();
                         String session = nodeListSession.item(0).getTextContent();
-                        clientMessage = new CommandText(message, Long.parseLong(session));
+                        clientMessage = new CommandText(message, session);
                         break;
                     case LOGOUT_STR:
                         NodeList nodeListSessionIdLogout = cmd.getElementsByTagName("session");
@@ -154,7 +166,7 @@ public class XMLMessageParser {
                         }
 
                         String sessionIdLogout = nodeListSessionIdLogout.item(0).getTextContent();
-                        clientMessage = new CommandLogout(Long.parseLong(sessionIdLogout));
+                        clientMessage = new CommandLogout(sessionIdLogout);
                         break;
                 }
 
@@ -173,7 +185,7 @@ public class XMLMessageParser {
                 NodeList nodeListSessionId = nodeElement.getElementsByTagName("session");
                 if (1 == nodeListSessionId.getLength()) {
                     String  sessionId = nodeListSessionId.item(0).getTextContent();
-                    return new AnswerSuccessLogin(Long.parseLong(sessionId));
+                    return new AnswerSuccessLogin(sessionId);
                 }
 
 
@@ -261,9 +273,9 @@ public class XMLMessageParser {
 
                         String message = nodeListMessage.item(0).getTextContent();
 
-                        NodeList nodeListType = nodeElement.getElementsByTagName("type");
+                        NodeList nodeListType = nodeElement.getElementsByTagName("name");
                         if (1 != nodeListType.getLength()) {
-                            throw new InvalidXMLException("Invalid XML. Tag 'type'");
+                            throw new InvalidXMLException("Invalid XML. Tag 'name'");
                         }
 
                         String clientType = nodeListType.item(0).getTextContent();
@@ -278,7 +290,7 @@ public class XMLMessageParser {
     }
 
     public String createXMLFromMessage(Message message) {
-        xStream.registerConverter(new Converter() {
+        /*xStream.registerConverter(new Converter() {
             @Override
             public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
                 writer.setValue("");
@@ -293,7 +305,7 @@ public class XMLMessageParser {
             public boolean canConvert(Class type) {
                 return type.equals(AnswerSuccess.class);
             }
-        });
+        });*/
 
         return xStream.toXML(message);
 

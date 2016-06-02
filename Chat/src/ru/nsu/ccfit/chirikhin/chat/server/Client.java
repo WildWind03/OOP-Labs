@@ -18,7 +18,7 @@ public class Client {
     private final InputStreamReader inputStreamReader;
     private final OutputStreamWriter outputStreamWriter;
 
-    private final long uniqueSessionId;
+    private final String uniqueSessionId;
 
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
@@ -34,16 +34,20 @@ public class Client {
 
         Client client = (Client) o;
 
-        return uniqueSessionId == client.uniqueSessionId;
+        if (uniqueSessionId != null ? !uniqueSessionId.equals(client.uniqueSessionId) : client.uniqueSessionId != null)
+            return false;
+        return username != null ? username.equals(client.username) : client.username == null;
 
     }
 
     @Override
     public int hashCode() {
-        return (int) (uniqueSessionId ^ (uniqueSessionId >>> 32));
+        int result = uniqueSessionId != null ? uniqueSessionId.hashCode() : 0;
+        result = 31 * result + (username != null ? username.hashCode() : 0);
+        return result;
     }
 
-    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messagesForServer, long uniqueSessionId) throws IOException, ParserConfigurationException {
+    public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messagesForServer, String uniqueSessionId) throws IOException, ParserConfigurationException {
         if (null == socket || null == protocolName || null == messagesForServer) {
             logger.error("Null reference in constructor");
             throw new NullPointerException("Null reference in constructor");

@@ -6,9 +6,9 @@ import ru.nsu.ccfit.chirikhin.chat.server.ServerMessageController;
 public class CommandUnexpectedLogout implements ClientMessage{
     private static final Logger logger = Logger.getLogger(CommandUnexpectedLogout.class.getName());
 
-    private final long session;
+    private final String session;
 
-    public CommandUnexpectedLogout(long session) {
+    public CommandUnexpectedLogout(String session) {
         this.session = session;
     }
 

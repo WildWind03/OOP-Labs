@@ -18,13 +18,13 @@ public class PortListener implements Runnable, Closeable {
     private final ProtocolName protocolName;
     private final ServerSocket serverSocket;
 
-    private final ConcurrentHashMap<Long, Client> clients;
+    private final ConcurrentHashMap<String, Client> clients;
 
     private final IdRegisterer idRegisterer = IdRegistererSingleton.getInstance();
 
     private final BlockingQueue<Message> messages;
 
-    public PortListener(int port, ProtocolName protocolName, ConcurrentHashMap<Long, Client> clients, BlockingQueue<Message> messages) throws IOException {
+    public PortListener(int port, ProtocolName protocolName, ConcurrentHashMap<String, Client> clients, BlockingQueue<Message> messages) throws IOException {
         if (port < 0) {
             logger.error("Port can not be negative");
             throw new IllegalArgumentException("Port can not be negative!");
@@ -55,7 +55,7 @@ public class PortListener implements Runnable, Closeable {
         try {
             while (!Thread.currentThread().isInterrupted()) {
                 Socket newSocket = serverSocket.accept();
-                long sessionId = idRegisterer.getNewId();
+                String sessionId = idRegisterer.getNewId();
                 try {
                     clients.put(sessionId, new Client(newSocket, protocolName, messages, sessionId));
                     logger.info("New client has been connected");

@@ -13,11 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerMessageController implements Runnable {
     private static final Logger logger = Logger.getLogger(ServerMessageController.class.getName());
 
-    private final ConcurrentHashMap<Long, Client> clients;
+    private final ConcurrentHashMap<String, Client> clients;
     private final CycleQueue<Message> messagesForNewClients;
     private final BlockingQueue<Message> messagesFromClients;
 
-    public ServerMessageController(CycleQueue<Message> messagesForNewClients, ConcurrentHashMap<Long, Client> clients,
+    public ServerMessageController(CycleQueue<Message> messagesForNewClients, ConcurrentHashMap<String, Client> clients,
                                    BlockingQueue<Message> messagesFromClients) {
         if (null == clients || null == messagesForNewClients || null == messagesFromClients) {
             throw new NullPointerException("Null reference in constructor");
@@ -28,7 +28,7 @@ public class ServerMessageController implements Runnable {
         this.messagesForNewClients = messagesForNewClients;
     }
 
-    public void handleLoginMessage(CommandLogin message, long sessionId) {
+    public void handleLoginMessage(CommandLogin message, String sessionId) {
         if (null == message) {
             throw new NullPointerException("Null instead of message");
         }
@@ -45,13 +45,15 @@ public class ServerMessageController implements Runnable {
                 client.setChatClientName(message.getType());
                 client.login();
 
+                EventNewClient eventNewClient = new EventNewClient(message.getName());
+
+                sendMessageToTheClient(new AnswerSuccessLogin(sessionId), sessionId);
+
                 LinkedList<Message> oldMessages = messagesForNewClients.get();
                 for (Message message1 : oldMessages) {
                     sendMessageToTheClient((ServerMessage) message1, sessionId);
                 }
 
-                EventNewClient eventNewClient = new EventNewClient(message.getName());
-                sendMessageToTheClient(new AnswerSuccessLogin(sessionId), sessionId);
                 sendMessageToAllClients(eventNewClient);
                 addMessageToServerStorage(eventNewClient);
             } catch (NicknameBusyException e) {
@@ -62,7 +64,7 @@ public class ServerMessageController implements Runnable {
         }
     }
 
-    public void handleTextMessage(CommandText message, long sessionId) {
+    public void handleTextMessage(CommandText message, String sessionId) {
 
         if (null == message) {
             throw new NullPointerException("Null instead of message");
@@ -78,7 +80,7 @@ public class ServerMessageController implements Runnable {
             AnswerSuccess answerSuccess = new AnswerSuccess();
             sendMessageToTheClient(answerSuccess, sessionId);
 
-            EventText eventText = new EventText(client.getChatClientName(), client.getUsername() + ": " + message.getMessage());
+            EventText eventText = new EventText(client.getUsername(), message.getMessage());
 
             sendMessageToAllClients(eventText);
             addMessageToServerStorage(eventText);
@@ -86,7 +88,7 @@ public class ServerMessageController implements Runnable {
             logger.info("Client is not logged in");
         }
     }
-    public void handleClientListMessage(CommandClientList commandClientList, long sessionId) {
+    public void handleClientListMessage(CommandClientList commandClientList, String sessionId) {
         Client client = clients.get(sessionId);
 
         if (null == client) {
@@ -105,7 +107,7 @@ public class ServerMessageController implements Runnable {
 
     }
 
-    public void handleExitMessage(ClientMessage message, long sessionId) {
+    public void handleExitMessage(ClientMessage message, String sessionId) {
         Client client = clients.get(sessionId);
 
         if (null == client) {
@@ -120,7 +122,7 @@ public class ServerMessageController implements Runnable {
         client.finishAndStop();
     }
 
-    public void handleConnectionFailedMessage(ClientMessage message, long sessionId) {
+    public void handleConnectionFailedMessage(ClientMessage message, String sessionId) {
         Client client = clients.get(sessionId);
 
         if (null == client) {
@@ -142,7 +144,7 @@ public class ServerMessageController implements Runnable {
             throw new NullPointerException("Can't send message. ServerMessage is null");
         }
 
-        for (Map.Entry<Long, Client> client : clients.entrySet()) {
+        for (Map.Entry<String, Client> client : clients.entrySet()) {
             logger.info("Client " + client.getValue().getUsername() + " is ready to get new server message");
             client.getValue().receiveMessage(serverMessage);
         }
@@ -153,7 +155,7 @@ public class ServerMessageController implements Runnable {
             throw new NullPointerException("Username ca not be null");
         }
 
-        for (Map.Entry<Long, Client> client : clients.entrySet()) {
+        for (Map.Entry<String, Client> client : clients.entrySet()) {
             if (client.getValue().getUsername().equals(username)) {
                 return true;
             }
@@ -163,7 +165,7 @@ public class ServerMessageController implements Runnable {
     }
 
 
-    private void setUsername(String newUsername, long sessionId) throws NicknameBusyException {
+    private void setUsername(String newUsername, String sessionId) throws NicknameBusyException {
         if (null == newUsername) {
             throw new NullPointerException("Username can not be null");
         }
@@ -181,7 +183,7 @@ public class ServerMessageController implements Runnable {
         }
     }
 
-    private void sendMessageToTheClient(ServerMessage serverMessage, long sessionId) {
+    private void sendMessageToTheClient(ServerMessage serverMessage, String sessionId) {
         if (null == serverMessage) {
             throw new NullPointerException("Null instead of clientMessage");
         }

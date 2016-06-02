@@ -8,14 +8,16 @@ import java.nio.charset.Charset;
 public class XMLMessageSender implements MessageSender {
     private static final Logger logger = Logger.getLogger(XMLMessageSender.class.getName());
     private final XMLMessageParser xmlMessageParser = new XMLMessageParser();
-    private final OutputStream outputStream;
+    //private final OutputStream outputStream;
+    private final DataOutputStream dataOutputStream;
 
     public XMLMessageSender(OutputStream outputStream) {
         if (null == outputStream) {
             throw new NullPointerException("Null in constructor");
         }
 
-        this.outputStream = outputStream;
+        //this.outputStream = outputStream;
+        this.dataOutputStream = new DataOutputStream(outputStream);
     }
 
     @Override
@@ -27,12 +29,15 @@ public class XMLMessageSender implements MessageSender {
         String xml = xmlMessageParser.createXMLFromMessage(message);
         byte[] xmlBytes = xml.getBytes(Charset.forName("UTF-8"));
         int size = xmlBytes.length;
-        outputStream.write(size);
-        outputStream.write(xmlBytes);
+        dataOutputStream.writeInt(size);
+        dataOutputStream.write(xmlBytes);
+        //outputStream.write(size);
+        //outputStream.write(xmlBytes);
     }
 
     @Override
     public void close() throws IOException {
-        outputStream.close();
+        //outputStream.close();
+        dataOutputStream.close();
     }
 }

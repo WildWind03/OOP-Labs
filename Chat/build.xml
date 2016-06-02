@@ -114,8 +114,8 @@
 				<pathelement location="classes"/>
 			</classpath>
 
-			<formatter type="plain"/>
-			<formatter type="xml"/>
+			<formatter name="plain"/>
+			<formatter name="xml"/>
 
 			<batchtest fork="yes" todir="${test.dir}">
 				<fileset dir="src/">

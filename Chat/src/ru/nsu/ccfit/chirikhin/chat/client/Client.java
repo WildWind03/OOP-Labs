@@ -12,12 +12,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Client {
     private static final int TIMEOUT_FOR_READING_FROM_SOCKET = 3000;
-    private static final int TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT = 400;
+    private static final int TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT = 4000;
     private final static String CHAT_CLIENT_NAME = "Windogram";
 
     private final Object lock = new Object();
 
-    private long sessionId;
+    private String sessionId;
     private LoginState loginState = LoginState.NO_ANSWER;
 
     private static final Logger logger = Logger.getLogger(Client.class.getName());
@@ -44,8 +44,7 @@ public class Client {
         Socket socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp(), TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT);
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
-        outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), clientProperties.getProtocolName(),
-                messagesForServer);
+        outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), clientProperties.getProtocolName(), messagesForServer);
         inputStreamReader = new InputStreamReader(socket.getInputStream(), clientProperties.getProtocolName(), message -> {
             try {
                 messagesFromServer.put(message);
@@ -93,7 +92,7 @@ public class Client {
         return loginState;
     }
 
-    public void setSessionId(long sessionId) {
+    public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
@@ -109,7 +108,7 @@ public class Client {
         }
     }
 
-    public long getSessionId(){
+    public String getSessionId(){
         return sessionId;
     }
 

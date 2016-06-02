@@ -6,13 +6,13 @@ import ru.nsu.ccfit.chirikhin.chat.server.ServerMessageController;
 public class CommandClientList implements ClientMessage {
     private static final Logger logger = Logger.getLogger(CommandClientList.class.getName());
     private final String messageType = "list";
-    private final long session;
+    private final String session;
 
-    public long getSession() {
+    public String getSession() {
         return session;
     }
 
-    public CommandClientList(long session) {
+    public CommandClientList(String session) {
 
         this.session = session;
     }

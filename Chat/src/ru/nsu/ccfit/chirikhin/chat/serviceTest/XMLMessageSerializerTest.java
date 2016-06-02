@@ -45,7 +45,7 @@ public class XMLMessageSerializerTest {
 
         try {
             EventText eventText = (EventText) xmlMessageSerializer.serialize();
-            Assert.assertTrue(eventText.getType().equals("Windograd"));
+            Assert.assertTrue(eventText.getName().equals("Windograd"));
             Assert.assertTrue(eventText.getMessage().equals("Hi"));
         } catch (IOException | ClassNotFoundException | InvalidXMLException | SAXException e) {
             e.printStackTrace();

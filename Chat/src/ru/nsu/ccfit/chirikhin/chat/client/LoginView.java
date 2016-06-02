@@ -56,8 +56,8 @@ public class LoginView {
         loginButton.setDisable(true);
 
         ///////////////FOR TEST
-        portTextField.setText("3000");
-        ipTextField.setText("127.0.0.1");
+        portTextField.setText("60002");
+        ipTextField.setText("192.168.1.24");
         nicknameTextField.setText("Wind");
         loginButton.setDisable(false);
         /////////////////////////

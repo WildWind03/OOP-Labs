@@ -1,4 +1,4 @@
 <event name="message">
     <message>Wind: fddfhdh</message>
-    <type>Windogram</type>
+    <name>Windogram</name>
 </event>

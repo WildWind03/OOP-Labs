@@ -7,9 +7,9 @@ public class CommandText implements ClientMessage {
     private static final Logger logger = Logger.getLogger(CommandText.class.getName());
     private final String messageType = "message";
     private final String message;
-    private final long session;
+    private final String session;
 
-    public CommandText(String message, long session) {
+    public CommandText(String message, String session) {
         this.message = message;
         this.session = session;
     }

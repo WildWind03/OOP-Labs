@@ -21,7 +21,7 @@ public class Server {
     private final LinkedList<Thread> portListenersThreads = new LinkedList<>();
 
     private final CycleQueue<Message> messagesForNewClients = new CycleQueue<>(COUNT_OF_MESSAGES_TO_SEND_WHEN_AUTHORIZE);
-    private final ConcurrentHashMap<Long, Client> clients = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Client> clients = new ConcurrentHashMap<String, Client>();
     private final BlockingQueue<Message> messagesFromClients = new LinkedBlockingQueue<>();
 
     private final ServerMessageController messageController = new ServerMessageController(messagesForNewClients, clients, messagesFromClients);
@@ -75,7 +75,7 @@ public class Server {
             thread.join();
         }
 
-        for (Map.Entry<Long, Client> client : clients.entrySet()) {
+        for (Map.Entry<String, Client> client : clients.entrySet()) {
             client.getValue().delete();
         }
     }
