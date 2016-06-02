@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat.client;
 
+import com.thoughtworks.xstream.mapper.Mapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,8 +24,6 @@ public class ClientViewController extends Observable implements Observer {
     TextField inputField;
     @FXML
     TextArea chatText;
-    @FXML
-    Button listOfUsers;
     @FXML
     ListView<String> userList;
 
@@ -60,7 +59,7 @@ public class ClientViewController extends Observable implements Observer {
 
         KeyCode keyCode = keyEvent.getCode();
 
-        if (keyCode == KeyCode.ENTER) {
+        if (KeyCode.ENTER == keyCode) {
             sendTextMessage(inputField.getText());
             inputField.clear();
         }
@@ -87,14 +86,26 @@ public class ClientViewController extends Observable implements Observer {
 
 
     public void onClientListFailedAnswer(ClientListFailedAnswer clientListFailedAnswer) {
+        if (null == clientListFailedAnswer) {
+            throw new NullPointerException("clientListFailedAnswer is null");
+        }
+
         chatText.appendText("Error! Can not get list of clients. Reason: " + clientListFailedAnswer.getReason() + "\n");
     }
 
     public void onClientLeftEvent(ClientLeftEvent clientLeftEvent) {
+        if (null == clientLeftEvent) {
+            throw new NullPointerException("clientLeftEvent is null");
+        }
+
         chatText.appendText(clientLeftEvent.getName() + " left the chat room\n");
     }
 
     public void onClientListSuccessAnswer(ClientsListSuccessAnswer clientsListSuccessAnswer) {
+        if (null == clientsListSuccessAnswer) {
+            throw new NullPointerException("ClientListSuccessAnswer is null");
+        }
+
         LinkedList<ClientDescriptor> clients = clientsListSuccessAnswer.getClients();
 
         LinkedList<String> clientNames = new LinkedList<>();
@@ -112,31 +123,53 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onLogoutFailedAnswer(LogoutFailedAnswer logoutFailedAnswer) {
+        if (null == logoutFailedAnswer) {
+            throw new NullPointerException("logoutFailedAnswer");
+        }
     }
 
     public void onLogoutSuccessAnswer(LogoutSuccessAnswer logoutSuccessAnswer) {
+        if (null == logoutSuccessAnswer) {
+            throw new NullPointerException("logoutSuccessAnswer is null");
+        }
     }
 
     public void onMessageDeliveredAnswer(MessageDeliveredAnswer messageDeliveredAnswer) {
+        throw new NullPointerException("messageDeliveredAnswer is null");
     }
 
     public void onMessageNotDeliveredAnswer(MessageNotDeliveredAnswer messageNotDeliveredAnswer) {
+        if (null == messageNotDeliveredAnswer) {
+            throw new NullPointerException("messageNotDeliveredAnswer is null");
+        }
+
         chatText.appendText("The message hasn't been delivered to user. Reason: " + messageNotDeliveredAnswer.getReason() + "\n");
     }
 
     public void onNewClientEvent(NewClientEvent newClientEvent) {
+        if (null == newClientEvent) {
+            throw new NullPointerException("newClientEvent is null");
+        }
+
         chatText.appendText(newClientEvent.getNickname() + " joined\n");
     }
 
     public void onNewMessageEvent(NewMessageEvent newMessageEvent) {
+        if (null == newMessageEvent) {
+            throw new NullPointerException("newMessageEvent is null");
+        }
+
         chatText.appendText(newMessageEvent.getAuthor() + ": " + newMessageEvent.getMessage() + "\n");
     }
 
     public void onConnectionFailedEvent(ConnectionFailedEvent connectionFailedEvent) {
+        if (null == connectionFailedEvent) {
+            throw new NullPointerException("connectionFailedEvent is null");
+        }
+
         logger.info("The connection failed!");
 
         Platform.runLater(() -> {
-            listOfUsers.setDisable(true);
             inputField.setDisable(true);
             chatText.setDisable(true);
 
@@ -162,8 +195,14 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onLoginFailedAnswer(LoginFailedAnswer loginFailedAnswer) {
+        if (null == loginFailedAnswer) {
+            throw new NullPointerException("LoginFailedAnswer is null");
+        }
     }
 
     public void onLoginSuccessAnswer(LoginSuccessAnswer loginSuccessAnswer) {
+        if (null == loginSuccessAnswer) {
+            throw new NullPointerException("loginSuccessAnswer is null");
+        }
     }
 }

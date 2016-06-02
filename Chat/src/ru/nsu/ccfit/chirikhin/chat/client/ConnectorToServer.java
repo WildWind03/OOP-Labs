@@ -13,6 +13,7 @@ public class ConnectorToServer {
         if (port < 0 || timeout < 0 || null == ip) {
             throw new IllegalArgumentException("Illegal args");
         }
+
         Socket socket = new Socket();
         try {
             socket.connect(new InetSocketAddress(ip, port), timeout);

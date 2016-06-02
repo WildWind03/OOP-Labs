@@ -7,6 +7,10 @@ public class LogoutFailedAnswer implements ServerEvent{
     private final String reason;
 
     public LogoutFailedAnswer(String reason) {
+        if (null == reason) {
+            throw new NullPointerException("reason can not be null");
+        }
+
         this.reason = reason;
     }
 
@@ -16,6 +20,10 @@ public class LogoutFailedAnswer implements ServerEvent{
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController is null");
+        }
+
         clientViewController.onLogoutFailedAnswer(this);
     }
 }
