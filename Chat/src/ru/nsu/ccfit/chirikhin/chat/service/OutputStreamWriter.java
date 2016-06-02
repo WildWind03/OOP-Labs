@@ -2,17 +2,18 @@ package ru.nsu.ccfit.chirikhin.chat.service;
 
 import org.apache.log4j.Logger;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.BlockingQueue;
 
-public class OutputStreamWriter implements Runnable {
+public class OutputStreamWriter implements Runnable, Closeable {
     private static final Logger logger = Logger.getLogger(OutputStreamWriter.class.getName());
 
     private final MessageSender messageSender;
     private final BlockingQueue <Message> clientMessages;
 
-    private boolean isExit = false;
+    private boolean sendAndStopMode = false;
 
     public OutputStreamWriter(OutputStream outputStream, ProtocolName protocolName, BlockingQueue<Message> clientMessages) throws IOException {
         if (null == outputStream || null == protocolName || null == clientMessages) {
@@ -26,7 +27,7 @@ public class OutputStreamWriter implements Runnable {
     @Override
     public void run() {
         try {
-            while (!Thread.currentThread().isInterrupted() && !isExit) {
+            while (!Thread.currentThread().isInterrupted() && !sendAndStopMode) {
                 Message message = clientMessages.take();
                 messageSender.send(message);
             }
@@ -36,7 +37,7 @@ public class OutputStreamWriter implements Runnable {
             logger.error("Can't send message");
         }
 
-        if (isExit) {
+        if (sendAndStopMode) {
             try {
                 int size = clientMessages.size();
                 for (int k = 0; k < size; ++k) {
@@ -46,6 +47,9 @@ public class OutputStreamWriter implements Runnable {
                     }
                     messageSender.send(message);
                 }
+
+
+                close();
             } catch (IOException e) {
                 logger.error("Can't send message");
             }
@@ -53,9 +57,10 @@ public class OutputStreamWriter implements Runnable {
     }
 
     public void finishAndStop() {
-        isExit = true;
+        sendAndStopMode = true;
     }
 
+    @Override
     public void close() {
         try {
             messageSender.close();

@@ -1,5 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
+import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.service.ConfigParser;
 import ru.nsu.ccfit.chirikhin.chat.service.ConsoleParser;
 import ru.nsu.ccfit.chirikhin.chat.service.LoggerController;
@@ -11,6 +12,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public class Main {
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) throws ServerConfigException, IOException {
         try {
             LinkedList<String> parameters = new LinkedList<>();
@@ -39,7 +42,10 @@ public class Main {
                 }
             }
         } catch (Exception e) {
+            logger.error(e.getMessage());
             System.out.println(e.toString());
+        } catch (Throwable t) {
+            logger.error("Unknown exception");
         }
     }
 }

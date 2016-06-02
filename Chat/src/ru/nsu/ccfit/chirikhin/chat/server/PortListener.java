@@ -67,6 +67,10 @@ public class PortListener implements Runnable, Closeable {
             logger.error("Interrupt");
         } catch (ParserConfigurationException e) {
             logger.error("Error while parsing xml");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } catch (Throwable t) {
+            logger.error("Unknown exception");
         }
     }
 

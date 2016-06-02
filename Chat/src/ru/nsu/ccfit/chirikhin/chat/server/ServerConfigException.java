@@ -5,22 +5,7 @@ import org.apache.log4j.Logger;
 public class ServerConfigException extends Exception {
     private static final Logger logger = Logger.getLogger(ServerConfigException.class.getName());
 
-    public ServerConfigException() {
-    }
-
-    public ServerConfigException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public ServerConfigException(String message) {
         super(message);
-    }
-
-    public ServerConfigException(Throwable cause) {
-        super(cause);
-    }
-
-    public ServerConfigException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

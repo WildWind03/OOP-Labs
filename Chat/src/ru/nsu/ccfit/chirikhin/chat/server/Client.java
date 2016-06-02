@@ -22,9 +22,9 @@ public class Client {
 
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
-    private String username = "NONAME";
-    private boolean isExit = false;
-    private String chatClientName = "UNKNOWN_CLIENT";
+    private String username = "Rhinoceros";
+    private boolean sendAndStopMode = false;
+    private String chatClientName = "Magic valley";
     private boolean isLoggedIn = false;
 
     @Override
@@ -48,7 +48,7 @@ public class Client {
     }
 
     public Client(Socket socket, ProtocolName protocolName, BlockingQueue<Message> messagesForServer, String uniqueSessionId) throws IOException, ParserConfigurationException {
-        if (null == socket || null == protocolName || null == messagesForServer) {
+        if (null == socket || null == protocolName || null == messagesForServer || null == uniqueSessionId) {
             logger.error("Null reference in constructor");
             throw new NullPointerException("Null reference in constructor");
         }
@@ -71,7 +71,7 @@ public class Client {
             }
         }, () -> {
             try {
-                if (!isExit()) {
+                if (!isSendAndStopMode()) {
                     messagesForServer.put(new CommandUnexpectedLogout(uniqueSessionId));
                 }
             } catch (InterruptedException e) {
@@ -125,13 +125,14 @@ public class Client {
         return chatClientName;
     }
 
-    public boolean isExit() {
-        return isExit;
+    public boolean isSendAndStopMode() {
+        return sendAndStopMode;
     }
 
     public void finishAndStop() {
         readerThread.interrupt();
         writerThread.interrupt();
+
         try {
             inputStreamReader.close();
             readerThread.join();
@@ -141,35 +142,29 @@ public class Client {
             logger.error("IO while closing");
         }
 
-        isExit = true;
+        sendAndStopMode = true;
         outputStreamWriter.finishAndStop();
     }
 
     public void delete() {
+        outputStreamWriter.close();
 
-        if (!isExit) {
+        if (!sendAndStopMode) {
             readerThread.interrupt();
             writerThread.interrupt();
-        }
 
-        try {
-
-            if (!isExit) {
+            try {
                 inputStreamReader.close();
+            } catch (IOException e) {
+                logger.error("Error while closing input stream reader");
             }
 
-            outputStreamWriter.close();
-        } catch (IOException e) {
-            logger.error("Error while closing input stream reader");
-        }
-
-        try {
-            if (!isExit) {
+            try {
                 readerThread.join();
                 writerThread.join();
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
             }
-        } catch (InterruptedException e) {
-            logger.error("Interrupt");
         }
 
         logger.info("ClientView has been deleted!");
