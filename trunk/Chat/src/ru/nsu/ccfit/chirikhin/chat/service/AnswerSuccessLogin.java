@@ -5,9 +5,9 @@ import ru.nsu.ccfit.chirikhin.chat.client.ClientMessageController;
 
 public class AnswerSuccessLogin implements ServerMessage {
     private static final Logger logger = Logger.getLogger(AnswerSuccessLogin.class.getName());
-    private final long session;
+    private final String session;
 
-    public AnswerSuccessLogin(long session) {
+    public AnswerSuccessLogin(String session) {
         this.session = session;
     }
 
@@ -16,7 +16,7 @@ public class AnswerSuccessLogin implements ServerMessage {
         clientMessageController.handleSuccessLoginServerMessage(this);
     }
 
-    public long getSession() {
+    public String getSession() {
         return session;
     }
 }

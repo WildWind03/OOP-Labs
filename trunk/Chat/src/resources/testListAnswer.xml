@@ -2,11 +2,11 @@
     <listusers>
         <listusers>
             <name>Wind</name>
-            <type>Windogram</type>
+            <name>Windogram</name>
         </listusers>
         <listusers>
             <name>14203</name>
-            <type>NONAME</type>
+            <name>NONAME</name>
         </listusers>
     </listusers>
 </success>

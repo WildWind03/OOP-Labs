@@ -8,15 +8,15 @@ public class EventText implements ServerMessage {
     private final String messageType = "message";
 
     private final String message;
-    private final String type;
+    private final String name;
 
-    public EventText(String type, String message) {
-        this.type = type;
+    public EventText(String name, String message) {
+        this.name = name;
         this.message = message;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     public String getMessage() {

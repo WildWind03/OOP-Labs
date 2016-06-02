@@ -7,13 +7,13 @@ public class CommandLogout implements ClientMessage {
     private static final Logger logger = Logger.getLogger(CommandLogout.class.getName());
     private final String messageType = "logout";
 
-    private final long session;
+    private final String session;
 
-    public long getSession() {
+    public String getSession() {
         return session;
     }
 
-    public CommandLogout(long session) {
+    public CommandLogout(String session) {
         this.session = session;
     }
 

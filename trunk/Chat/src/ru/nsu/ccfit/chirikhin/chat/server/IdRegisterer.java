@@ -9,8 +9,8 @@ public class IdRegisterer {
 
     private final AtomicLong counter = new AtomicLong(0);
 
-    public long getNewId() {
-        return counter.getAndIncrement();
+    public String getNewId() {
+        return  Long.toString(counter.getAndIncrement());
     }
 
 }

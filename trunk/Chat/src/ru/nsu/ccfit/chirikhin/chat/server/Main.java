@@ -24,8 +24,8 @@ public class Main {
             }
 
             ServerConfig serverConfig = new ServerConfig();
-            serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(3000, ProtocolName.SERIALIZE));
-            serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(3001, ProtocolName.XML));
+            serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(8000, ProtocolName.SERIALIZE));
+            serverConfig.addNewSocketListenerDescription(new SocketListenerDescriptor(9000, ProtocolName.XML));
             Server server = new Server(serverConfig);
             server.start();
 
