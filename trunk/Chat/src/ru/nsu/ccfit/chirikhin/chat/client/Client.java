@@ -93,17 +93,20 @@ public class Client {
     }
 
     public void setSessionId(String sessionId) {
+        if (null == sessionId) {
+            throw new NullPointerException("Session id can not be null");
+        }
+
         this.sessionId = sessionId;
     }
 
     public void setLoginState(LoginState newState) {
         if (null == newState) {
-            throw new NullPointerException("Null reference insted of newState");
+            throw new NullPointerException("Null reference instead of newState");
         }
 
-        loginState = newState;
-
         synchronized (lock) {
+            loginState = newState;
             lock.notifyAll();
         }
     }
@@ -116,6 +119,7 @@ public class Client {
         if (null == o) {
             throw new NullPointerException("Observer is null");
         }
+
         clientMessageController.addObserver(o);
     }
 

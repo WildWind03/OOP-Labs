@@ -14,11 +14,13 @@ import java.util.Optional;
 
 public class LoginView {
     private static final Logger logger = Logger.getLogger(LoginView.class.getName());
+    private final static String CHAT_CLIENT_NAME = "Windogram";
+    private final static String HEADER_TEXT = "Windogram: Authorization";
 
     public Optional<ClientProperties> show() {
         Dialog<ClientProperties> dialog = new Dialog<>();
-        dialog.setTitle("Chat Client");
-        dialog.setHeaderText("Chat Client: Authorization");
+        dialog.setTitle(CHAT_CLIENT_NAME);
+        dialog.setHeaderText(HEADER_TEXT);
 
         dialog.setGraphic(new ImageView(this.getClass().getResource("/chat.png").toString()));
 
@@ -41,7 +43,7 @@ public class LoginView {
 
         ChoiceBox<String> protocolType = new ChoiceBox<>();
         protocolType.setItems(FXCollections.observableArrayList("SERIALIZE", "XML"));
-        protocolType.getSelectionModel().selectFirst();
+        protocolType.getSelectionModel().selectLast();
 
         grid.add(new Label("Nickname:"), 0, 0);
         grid.add(nicknameTextField, 1, 0);
@@ -56,8 +58,8 @@ public class LoginView {
         loginButton.setDisable(true);
 
         ///////////////FOR TEST
-        portTextField.setText("60002");
-        ipTextField.setText("192.168.1.24");
+        portTextField.setText("9000");
+        ipTextField.setText("127.0.0.1");
         nicknameTextField.setText("Wind");
         loginButton.setDisable(false);
         /////////////////////////

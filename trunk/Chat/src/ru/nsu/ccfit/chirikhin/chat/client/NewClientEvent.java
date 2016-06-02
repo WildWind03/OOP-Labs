@@ -11,12 +11,19 @@ public class NewClientEvent implements ServerEvent {
     }
 
     public NewClientEvent(String nickname) {
+        if (null == nickname) {
+            throw new NullPointerException("nickname can not be null");
+        }
 
         this.nickname = nickname;
     }
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController is null");
+        }
+
         clientViewController.onNewClientEvent(this);
     }
 }

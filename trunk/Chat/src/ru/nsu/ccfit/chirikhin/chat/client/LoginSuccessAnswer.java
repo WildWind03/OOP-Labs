@@ -7,6 +7,9 @@ public class LoginSuccessAnswer implements ServerEvent{
     private final String sessionId;
 
     public LoginSuccessAnswer(String sessionId) {
+        if (null == sessionId) {
+            throw new NullPointerException("sessionId is null");
+        }
         this.sessionId = sessionId;
     }
 
@@ -16,6 +19,10 @@ public class LoginSuccessAnswer implements ServerEvent{
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController is null");
+        }
+
         clientViewController.onLoginSuccessAnswer(this);
     }
 }

@@ -17,12 +17,20 @@ public class NewMessageEvent implements ServerEvent {
 
     public NewMessageEvent(String message, String clientType) {
 
+        if (null == message || null == clientType) {
+            throw new NullPointerException("invalid args. null reference");
+        }
+
         this.message = message;
         this.author = clientType;
     }
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController is null");
+        }
+
         clientViewController.onNewMessageEvent(this);
     }
 }

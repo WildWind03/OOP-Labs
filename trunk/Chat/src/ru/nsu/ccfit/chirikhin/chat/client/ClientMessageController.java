@@ -15,21 +15,37 @@ public class ClientMessageController extends Observable implements Runnable {
     private final BlockingQueue<ClientMessageEnum> historyOfCommands;
 
     public ClientMessageController(BlockingQueue<ClientMessageEnum> historyOfCommands, BlockingQueue<Message> messages, Client client) {
+        if (null == historyOfCommands || null == messages || null == client) {
+            throw new NullPointerException("Null references in constructor");
+        }
+
         this.historyOfCommands = historyOfCommands;
         this.client = client;
         this.messages = messages;
     }
 
     public void handleTextMessage(EventText serverMessage) {
+        if (null == serverMessage) {
+            throw new NullPointerException("server message is null");
+        }
+
         notifyView(new NewMessageEvent(serverMessage.getMessage(), serverMessage.getName()));
     }
 
     public void handleNewClientServerMessage(EventNewClient eventNewClient) {
+        if (null == eventNewClient) {
+            throw new NullPointerException("eventNewClient is null");
+        }
+
         client.sendMessage(new CommandClientList(client.getSessionId()));
         notifyView(new NewClientEvent(eventNewClient.getName()));
     }
 
     public void handleErrorServerMessage(AnswerError answerError) throws ClientMessageControllerFunctionalityException {
+        if (null == answerError) {
+            throw new NullPointerException("answerError is null");
+        }
+
         ClientMessageEnum prevMessage = historyOfCommands.poll();
 
         if (null == prevMessage) {
@@ -54,11 +70,19 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleServerClientListMessage(AnswerClientList answerClientList) {
+        if (null == answerClientList) {
+            throw new NullPointerException("answerClientList is null");
+        }
+
         historyOfCommands.poll();
         notifyView(new ClientsListSuccessAnswer(answerClientList.getListusers()));
     }
 
     public void handleSuccessLoginServerMessage(AnswerSuccessLogin serverSuccessMessage) {
+        if (null == serverSuccessMessage) {
+            throw new NullPointerException("serverSuccessMessage is null");
+        }
+
         logger.info("Handling success login server message");
         historyOfCommands.poll();
         client.setSessionId(serverSuccessMessage.getSession());
@@ -67,6 +91,9 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleSuccessServerAnswer(AnswerSuccess answerSuccess) throws ClientMessageControllerFunctionalityException {
+        if (null == answerSuccess) {
+            throw new NullPointerException("AnswerSuccess is null");
+        }
         ClientMessageEnum prevMessage = historyOfCommands.poll();
 
         if (null == prevMessage) {
@@ -84,11 +111,19 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleUserLogoutMessage(EventLogout message) {
+        if (null == message) {
+            throw new NullPointerException("eventLogout is null");
+        }
+
         client.sendMessage(new CommandClientList(client.getSessionId()));
         notifyView(new ClientLeftEvent(message.getName()));
     }
 
     public void notifyView(ServerEvent serverEvent) {
+        if (null == serverEvent) {
+            throw new NullPointerException("serverEvent is null");
+        }
+
         setChanged();
         notifyObservers(serverEvent);
     }
@@ -105,10 +140,6 @@ public class ClientMessageController extends Observable implements Runnable {
 
                 ServerMessage serverMessage = (ServerMessage) message;
                 serverMessage.process(this);
-
-                if (serverMessage instanceof EventConnectionFailed) {
-                    Thread.currentThread().interrupt();
-                }
             }
         } catch (InterruptedException e) {
             logger.error("Interrupt");
@@ -116,9 +147,16 @@ public class ClientMessageController extends Observable implements Runnable {
     }
 
     public void handleEventConnectionFailed(EventConnectionFailed eventConnectionFailed) {
+        if (null == eventConnectionFailed) {
+            throw new NullPointerException("eventConnectionFailed is null");
+        }
+
         client.disconnect();
+
         if (LoginState.SUCCESS == client.getLoginState()) {
             notifyView(new ConnectionFailedEvent());
         }
+
+        Thread.currentThread().interrupt();
     }
 }

@@ -7,6 +7,10 @@ public class LogoutSuccessAnswer implements ServerEvent {
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController is null");
+        }
+
         clientViewController.onLogoutSuccessAnswer(this);
     }
 }

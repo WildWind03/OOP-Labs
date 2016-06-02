@@ -11,12 +11,19 @@ public class MessageNotDeliveredAnswer implements ServerEvent{
     }
 
     public MessageNotDeliveredAnswer(String reason) {
+        if (null == reason) {
+            throw new NullPointerException("reason can not be null");
+        }
 
         this.reason = reason;
     }
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("ClientViewController is null");
+        }
+
         clientViewController.onMessageNotDeliveredAnswer(this);
     }
 }

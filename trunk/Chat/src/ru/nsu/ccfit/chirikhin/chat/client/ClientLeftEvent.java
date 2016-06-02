@@ -14,11 +14,16 @@ public class ClientLeftEvent implements ServerEvent{
         if (null == name) {
             throw new NullPointerException("Name is null");
         }
+
         this.name = name;
     }
 
     @Override
     public void process(ClientViewController clientViewController) {
+        if (null == clientViewController) {
+            throw new NullPointerException("Client View Controller is null");
+        }
+
         clientViewController.onClientLeftEvent(this);
     }
 }
