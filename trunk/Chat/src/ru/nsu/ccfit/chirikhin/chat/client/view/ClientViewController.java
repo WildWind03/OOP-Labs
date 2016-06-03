@@ -62,8 +62,10 @@ public class ClientViewController extends Observable implements Observer {
         KeyCode keyCode = keyEvent.getCode();
 
         if (KeyCode.ENTER == keyCode) {
-            sendTextMessage(inputField.getText());
-            inputField.clear();
+            if (!inputField.getText().isEmpty()) {
+                sendTextMessage(inputField.getText());
+                inputField.clear();
+            }
         }
     }
 
