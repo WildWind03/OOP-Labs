@@ -1,30 +1,33 @@
-package ru.nsu.ccfit.chirikhin.chat.service;
+package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import ru.nsu.ccfit.chirikhin.chat.service.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
+import java.util.concurrent.BlockingQueue;
 
-public class InputStreamReader implements Runnable, Closeable {
+public class ServerInputStreamReader implements Runnable, Closeable {
 
-    private final static Logger logger = Logger.getLogger(InputStreamReader.class.getName());
+    private final static Logger logger = Logger.getLogger(ru.nsu.ccfit.chirikhin.chat.server.ServerInputStreamReader.class.getName());
 
     private final MessageSerializer messageSerializer;
-    private final MessageHandler messageHandler;
     private final NoArgHandler exceptionHandler;
+    private final MessageHandler messageHandler;
 
-    public InputStreamReader(InputStream inputStream, ProtocolName protocolName, MessageHandler messageHandler, NoArgHandler exceptionHandler) throws IOException, ParserConfigurationException {
-        if (null == inputStream || null == protocolName || null == messageHandler || null == exceptionHandler) {
+    public ServerInputStreamReader(InputStream inputStream, ProtocolName protocolName, NoArgHandler exceptionHandler, MessageHandler messageHandler) throws IOException, ParserConfigurationException {
+        if (null == inputStream || null == protocolName || null == exceptionHandler) {
             throw new NullPointerException("Null in constructor");
         }
 
-        this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, inputStream);
-        this.messageHandler = messageHandler;
         this.exceptionHandler = exceptionHandler;
+        this.messageHandler = messageHandler;
+        this.messageSerializer = MessageSerializerFactory.createSerializer(protocolName, inputStream);
     }
 
     @Override
@@ -35,14 +38,14 @@ public class InputStreamReader implements Runnable, Closeable {
 
                 try {
                     message = messageSerializer.serialize();
+                    messageHandler.handle(message);
                 } catch (SocketTimeoutException e) {
                     continue;
                 } catch (InvalidXMLException e) {
                     logger.error("Invalid XML");
-                    continue;
+                    break;
                 }
 
-                messageHandler.handle(message);
             }
         } catch (IOException | ClassNotFoundException | SAXException e) {
             logger.error("Error while reading message!");
