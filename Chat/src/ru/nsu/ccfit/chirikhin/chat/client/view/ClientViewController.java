@@ -211,4 +211,8 @@ public class ClientViewController extends Observable implements Observer {
             throw new NullPointerException("loginSuccessAnswer is null");
         }
     }
+
+    public void onEventStop() {
+
+    }
 }
