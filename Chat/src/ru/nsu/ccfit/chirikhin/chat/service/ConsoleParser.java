@@ -15,7 +15,7 @@ public class ConsoleParser {
         }
 
         if (NORMAL_COUNT_OF_ARGS != args.size()) {
-            throw new IllegalArgumentException("Invalid size of list");
+            throw new IllegalArgumentException("Invalid count of app args");
         }
 
         pathToFile = args.get(0);
