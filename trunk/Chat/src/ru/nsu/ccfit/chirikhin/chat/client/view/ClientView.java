@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.chirikhin.chat.client;
+package ru.nsu.ccfit.chirikhin.chat.client.view;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.client.model.ClientProperties;
+import ru.nsu.ccfit.chirikhin.chat.client.model.ConnectionState;
+import ru.nsu.ccfit.chirikhin.chat.client.controller.Controller;
 import ru.nsu.ccfit.chirikhin.chat.service.ConfigParser;
 import ru.nsu.ccfit.chirikhin.chat.service.ConsoleParser;
 import ru.nsu.ccfit.chirikhin.chat.service.InvalidConfigException;

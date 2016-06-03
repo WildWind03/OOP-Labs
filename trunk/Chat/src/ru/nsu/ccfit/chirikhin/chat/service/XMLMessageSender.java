@@ -8,7 +8,6 @@ import java.nio.charset.Charset;
 public class XMLMessageSender implements MessageSender {
     private static final Logger logger = Logger.getLogger(XMLMessageSender.class.getName());
     private final XMLMessageParser xmlMessageParser = new XMLMessageParser();
-    //private final OutputStream outputStream;
     private final DataOutputStream dataOutputStream;
 
     public XMLMessageSender(OutputStream outputStream) {
@@ -16,7 +15,6 @@ public class XMLMessageSender implements MessageSender {
             throw new NullPointerException("Null in constructor");
         }
 
-        //this.outputStream = outputStream;
         this.dataOutputStream = new DataOutputStream(outputStream);
     }
 
@@ -31,13 +29,10 @@ public class XMLMessageSender implements MessageSender {
         int size = xmlBytes.length;
         dataOutputStream.writeInt(size);
         dataOutputStream.write(xmlBytes);
-        //outputStream.write(size);
-        //outputStream.write(xmlBytes);
     }
 
     @Override
     public void close() throws IOException {
-        //outputStream.close();
         dataOutputStream.close();
     }
 }

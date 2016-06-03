@@ -10,6 +10,9 @@ public class CommandText implements ClientMessage {
     private final String session;
 
     public CommandText(String message, String session) {
+        if (null == message || null == session) {
+            throw new NullPointerException("Message and session can not be null");
+        }
         this.message = message;
         this.session = session;
     }

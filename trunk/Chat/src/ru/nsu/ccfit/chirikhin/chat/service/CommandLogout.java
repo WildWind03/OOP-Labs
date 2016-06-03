@@ -14,11 +14,19 @@ public class CommandLogout implements ClientMessage {
     }
 
     public CommandLogout(String session) {
+        if (null == session) {
+            throw new NullPointerException("Session can not be null");
+        }
+
         this.session = session;
     }
 
     @Override
     public void process(ServerMessageController messageController) throws MessageProcessException {
+        if (null == messageController) {
+            throw new NullPointerException("Null serverMessageController");
+        }
+
         messageController.handleExitMessage(this, getSession());
     }
 }

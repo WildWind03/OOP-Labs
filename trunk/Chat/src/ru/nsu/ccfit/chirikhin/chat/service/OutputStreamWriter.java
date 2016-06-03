@@ -35,6 +35,10 @@ public class OutputStreamWriter implements Runnable, Closeable {
             logger.error("Interrupt exception");
         } catch (IOException e) {
             logger.error("Can't send message");
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } catch (Throwable t) {
+            logger.error("Unknown exception");
         }
 
         if (sendAndStopMode) {
@@ -52,6 +56,10 @@ public class OutputStreamWriter implements Runnable, Closeable {
                 close();
             } catch (IOException e) {
                 logger.error("Can't send message");
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            } catch (Throwable t) {
+                logger.error("Unknown exception");
             }
         }
     }

@@ -47,6 +47,12 @@ public class InputStreamReader implements Runnable, Closeable {
         } catch (IOException | ClassNotFoundException | SAXException e) {
             logger.error("Error while reading message!");
             exceptionHandler.handle();
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            exceptionHandler.handle();
+        } catch (Throwable t) {
+            logger.error("Unknown error");
+            exceptionHandler.handle();
         }
     }
 

@@ -11,6 +11,10 @@ public class CommandLogin implements ClientMessage {
     private final String type;
 
     public CommandLogin(String name, String type) {
+        if (null == name || null == type) {
+            throw new NullPointerException("Name and type can not be null");
+        }
+
         this.name = name;
         this.type = type;
     }
