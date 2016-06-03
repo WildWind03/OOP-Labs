@@ -27,8 +27,8 @@ public class Client {
     private final BlockingQueue<Message> messagesFromServer = new LinkedBlockingQueue<>();
     private final BlockingQueue<Message> messagesForServer = new LinkedBlockingQueue<>();
     private final BlockingQueue<ClientMessageEnum> historyOfCommands = new LinkedBlockingQueue<>();
-    private final InputStreamReader inputStreamReader;
-    private final OutputStreamWriter outputStreamWriter;
+    private final ClientInputStreamReader inputStreamReader;
+    private final ClientOutputStreamWriter clientOutputStreamWriter;
 
 
     private final ClientMessageController clientMessageController = new ClientMessageController(historyOfCommands, messagesFromServer, this);
@@ -44,22 +44,10 @@ public class Client {
         Socket socket = connectorToServer.connect(clientProperties.getPort(), clientProperties.getIp(), TIMEOUT_FOR_WAIT_ANSWER_IN_CONNECT);
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
-        outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), clientProperties.getProtocolName(), messagesForServer);
-        inputStreamReader = new InputStreamReader(socket.getInputStream(), clientProperties.getProtocolName(), message -> {
-            try {
-                messagesFromServer.put(message);
-            } catch (InterruptedException e) {
-                logger.error("Interrupt while putting messages to messageFromServer");
-            }
-        }, () -> {
-            try {
-                messagesFromServer.put(new EventConnectionFailed());
-            } catch (InterruptedException e) {
-                logger.error("Interrupt while putting EventConnectionFailed");
-            }
-        });
+        clientOutputStreamWriter = new ClientOutputStreamWriter(socket.getOutputStream(), clientProperties.getProtocolName(), messagesForServer);
+        inputStreamReader = new ClientInputStreamReader(socket.getInputStream(), clientProperties.getProtocolName(), messagesFromServer);
 
-        writeThread = new Thread(outputStreamWriter, "User Writer Thread");
+        writeThread = new Thread(clientOutputStreamWriter, "User Writer Thread");
         readThread = new Thread(inputStreamReader, "User Reader Thread");
 
         writeThread.start();
@@ -145,7 +133,7 @@ public class Client {
 
         try {
             inputStreamReader.close();
-            outputStreamWriter.close();
+            clientOutputStreamWriter.close();
         } catch (IOException e) {
             logger.error("Error while closing Input Stream Reader");
         }

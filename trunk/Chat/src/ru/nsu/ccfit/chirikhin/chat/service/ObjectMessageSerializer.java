@@ -36,6 +36,13 @@ public class ObjectMessageSerializer implements MessageSerializer {
             throw new ClassCastException("Can not read! Object is not a message!");
         }
 
+        System.out.println("Ser: " + object.getClass());
+        System.out.flush();
+
+        if (object instanceof EventNewClient) {
+            System.out.println(((EventNewClient) object).getName());
+        }
+
         return (Message) object;
     }
 }

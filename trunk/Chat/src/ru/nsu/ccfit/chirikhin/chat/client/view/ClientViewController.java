@@ -64,6 +64,9 @@ public class ClientViewController extends Observable implements Observer {
         if (KeyCode.ENTER == keyCode) {
             if (!inputField.getText().isEmpty()) {
                 sendTextMessage(inputField.getText());
+                for (int k = 0; k < 1000; ++k) {
+                    sendTextMessage("Hello " + k);
+                }
                 inputField.clear();
             }
         }
@@ -94,7 +97,7 @@ public class ClientViewController extends Observable implements Observer {
             throw new NullPointerException("clientListFailedAnswer is null");
         }
 
-        chatText.appendText("Error! Can not get list of clients. Reason: " + clientListFailedAnswer.getReason() + "\n");
+        Platform.runLater( () ->chatText.appendText("Error! Can not get list of clients. Reason: " + clientListFailedAnswer.getReason() + "\n"));
     }
 
     public void onClientLeftEvent(ClientLeftEvent clientLeftEvent) {
@@ -102,7 +105,7 @@ public class ClientViewController extends Observable implements Observer {
             throw new NullPointerException("clientLeftEvent is null");
         }
 
-        chatText.appendText(clientLeftEvent.getName() + " left the chat room\n");
+        Platform.runLater( () -> chatText.appendText(clientLeftEvent.getName() + " left the chat room\n"));
     }
 
     public void onClientListSuccessAnswer(ClientsListSuccessAnswer clientsListSuccessAnswer) {
@@ -149,7 +152,7 @@ public class ClientViewController extends Observable implements Observer {
             throw new NullPointerException("messageNotDeliveredAnswer is null");
         }
 
-        chatText.appendText("The message hasn't been delivered to user. Reason: " + messageNotDeliveredAnswer.getReason() + "\n");
+        Platform.runLater(() -> chatText.appendText("The message hasn't been delivered to user. Reason: " + messageNotDeliveredAnswer.getReason() + "\n"));
     }
 
     public void onNewClientEvent(NewClientEvent newClientEvent) {
@@ -157,7 +160,7 @@ public class ClientViewController extends Observable implements Observer {
             throw new NullPointerException("newClientEvent is null");
         }
 
-        chatText.appendText(newClientEvent.getNickname() + " joined\n");
+        Platform.runLater(() -> chatText.appendText(newClientEvent.getNickname() + " joined\n"));
     }
 
     public void onNewMessageEvent(NewMessageEvent newMessageEvent) {
@@ -165,7 +168,7 @@ public class ClientViewController extends Observable implements Observer {
             throw new NullPointerException("newMessageEvent is null");
         }
 
-        chatText.appendText(newMessageEvent.getAuthor() + ": " + newMessageEvent.getMessage() + "\n");
+        Platform.runLater(() -> chatText.appendText(newMessageEvent.getAuthor() + ": " + newMessageEvent.getMessage() + "\n"));
     }
 
     public void onConnectionFailedEvent(ConnectionFailedEvent connectionFailedEvent) {
@@ -210,9 +213,5 @@ public class ClientViewController extends Observable implements Observer {
         if (null == loginSuccessAnswer) {
             throw new NullPointerException("loginSuccessAnswer is null");
         }
-    }
-
-    public void onEventStop() {
-
     }
 }
