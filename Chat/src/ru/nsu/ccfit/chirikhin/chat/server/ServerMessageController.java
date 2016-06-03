@@ -29,8 +29,8 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleLoginMessage(CommandLogin message, String sessionId) {
-        if (null == message) {
-            throw new NullPointerException("Null instead of message");
+        if (null == message || null == sessionId) {
+            throw new NullPointerException("Null args");
         }
 
         Client client = clients.get(sessionId);
@@ -60,14 +60,14 @@ public class ServerMessageController implements Runnable {
                 sendMessageToTheClient(new AnswerError(e.getMessage()), sessionId);
             }
         } else {
-            sendMessageToTheClient(new AnswerError("The client have already been registered!"), sessionId);
+            sendMessageToTheClient(new AnswerError("The client has already been registered!"), sessionId);
         }
     }
 
     public void handleTextMessage(CommandText message, String sessionId) {
 
-        if (null == message) {
-            throw new NullPointerException("Null instead of message");
+        if (null == message || null == sessionId) {
+            throw new NullPointerException("Null args");
         }
 
         Client client = clients.get(sessionId);
@@ -86,13 +86,22 @@ public class ServerMessageController implements Runnable {
             addMessageToServerStorage(eventText);
         } else {
             logger.info("Client is not logged in");
+            sendMessageToTheClient(new AnswerError("You are not logged in"), sessionId);
         }
     }
     public void handleClientListMessage(CommandClientList commandClientList, String sessionId) {
+        if (null == commandClientList || null == sessionId) {
+            throw new NullPointerException("Null args");
+        }
         Client client = clients.get(sessionId);
 
         if (null == client) {
             throw new NullPointerException("There is no client with such sessionId: " + sessionId);
+        }
+
+        if (!client.isLoggedIn()) {
+            sendMessageToTheClient(new AnswerError("You are not logged in"), sessionId);
+            return;
         }
 
         LinkedList<ClientDescriptor> clientsList = new LinkedList<>();
@@ -108,10 +117,19 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleExitMessage(ClientMessage message, String sessionId) {
+        if (null == message || null == sessionId) {
+            throw new NullPointerException("Null args");
+        }
+
         Client client = clients.get(sessionId);
 
         if (null == client) {
             throw new NullPointerException("There is no client with such sessionId: " + sessionId);
+        }
+
+        if (!client.isLoggedIn()) {
+            sendMessageToTheClient(new AnswerError("You are not logged in"), sessionId);
+            return;
         }
 
         sendMessageToTheClient(new AnswerSuccess(), sessionId);
@@ -123,6 +141,10 @@ public class ServerMessageController implements Runnable {
     }
 
     public void handleConnectionFailedMessage(ClientMessage message, String sessionId) {
+        if (null == message || null == sessionId) {
+            throw new NullPointerException("Null args");
+        }
+
         Client client = clients.get(sessionId);
 
         if (null == client) {
@@ -166,8 +188,8 @@ public class ServerMessageController implements Runnable {
 
 
     private void setUsername(String newUsername, String sessionId) throws NicknameBusyException {
-        if (null == newUsername) {
-            throw new NullPointerException("Username can not be null");
+        if (null == newUsername || null == sessionId) {
+            throw new NullPointerException("Null args");
         }
 
         Client client = clients.get(sessionId);
@@ -184,11 +206,15 @@ public class ServerMessageController implements Runnable {
     }
 
     private void sendMessageToTheClient(ServerMessage serverMessage, String sessionId) {
-        if (null == serverMessage) {
-            throw new NullPointerException("Null instead of clientMessage");
+        if (null == serverMessage || null == sessionId) {
+            throw new NullPointerException("Null args");
         }
 
         Client client = clients.get(sessionId);
+
+        if (null == client) {
+            throw new NullPointerException("There is no client with such session id: " + sessionId);
+        }
         client.receiveMessage(serverMessage);
     }
 
@@ -219,6 +245,10 @@ public class ServerMessageController implements Runnable {
             logger.error("Interrupt");
         } catch (MessageProcessException e) {
             logger.error(e.toString());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        } catch (Throwable t) {
+            logger.error("Unknown error");
         }
     }
 }

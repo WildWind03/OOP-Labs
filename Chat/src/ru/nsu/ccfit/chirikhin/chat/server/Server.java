@@ -33,7 +33,7 @@ public class Server {
             throw new NullPointerException("Null pointer in constructor");
         }
 
-        logger.info("Server created");
+        logger.info("Server has been created");
 
         serverConfig
                 .stream()
@@ -51,14 +51,14 @@ public class Server {
                 });
     }
 
-    public void start() throws IOException {
+    public void start() {
         portListenersThreads.forEach(Thread::start);
         messageControllerThread.start();
 
-        logger.info("Server started");
+        logger.info("Server has been started");
     }
 
-    public void stop() throws InterruptedException {
+    public void stop()  {
         for (PortListener portListener : portListeners) {
             try {
                 portListener.close();
@@ -68,11 +68,19 @@ public class Server {
         }
 
         messageControllerThread.interrupt();
-        messageControllerThread.join();
+        try {
+            messageControllerThread.join();
+        } catch (InterruptedException e) {
+            logger.error("Interrupt");
+        }
 
         for (Thread thread : portListenersThreads) {
             thread.interrupt();
-            thread.join();
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                logger.error("Interrupt");
+            }
         }
 
         for (Map.Entry<String, Client> client : clients.entrySet()) {
