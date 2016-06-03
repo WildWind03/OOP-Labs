@@ -15,17 +15,17 @@ public class Client {
 
     private final Thread writerThread;
     private final Thread readerThread;
-    private final InputStreamReader inputStreamReader;
-    private final OutputStreamWriter outputStreamWriter;
+    private final ServerInputStreamReader inputStreamReader;
+    private final ServerOutputStreamWriter serverOutputStreamWriter;
 
     private final String uniqueSessionId;
 
     private final BlockingQueue<Message> messagesForClient = new LinkedBlockingQueue<>();
 
     private String username = "Rhinoceros";
-    private boolean sendAndStopMode = false;
     private String chatClientName = "Magic valley";
     private boolean isLoggedIn = false;
+    private boolean isFinished = false;
 
     @Override
     public boolean equals(Object o) {
@@ -57,29 +57,24 @@ public class Client {
 
         socket.setSoTimeout(TIMEOUT_FOR_READING_FROM_SOCKET);
 
-        outputStreamWriter = new OutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
-
-        inputStreamReader = new InputStreamReader(socket.getInputStream(), protocolName, message -> {
-            if (message instanceof CommandLogin) {
-                message = new CommandSignedLogin((CommandLogin) message, uniqueSessionId);
-            }
-
+        serverOutputStreamWriter = new ServerOutputStreamWriter(socket.getOutputStream(), protocolName, messagesForClient);
+        inputStreamReader = new ServerInputStreamReader(socket.getInputStream(), protocolName, () -> {
             try {
-                messagesForServer.put(message);
-            } catch (InterruptedException e) {
-                logger.error("Interrupt");
-            }
-        }, () -> {
-            try {
-                if (!isSendAndStopMode()) {
+                if (!isFinished) {
                     messagesForServer.put(new CommandUnexpectedLogout(uniqueSessionId));
                 }
             } catch (InterruptedException e) {
                 logger.error("Interrupt");
             }
+        }, message -> {
+            if (message instanceof CommandLogin) {
+                message = new CommandSignedLogin((CommandLogin)message, uniqueSessionId);
+            }
+
+            messagesForServer.put(message);
         });
 
-        writerThread = new Thread(outputStreamWriter, "Client Writer Thread");
+        writerThread = new Thread(serverOutputStreamWriter, "Client Writer Thread");
         readerThread = new Thread(inputStreamReader, "Client Reader Thread");
         writerThread.start();
         readerThread.start();
@@ -125,46 +120,22 @@ public class Client {
         return chatClientName;
     }
 
-    public boolean isSendAndStopMode() {
-        return sendAndStopMode;
-    }
+    public void delete() {
+        try {
+            inputStreamReader.close();
+        } catch (IOException e) {
+            logger.error("Error while closing input stream reader");
+        }
 
-    public void finishAndStop() {
+        serverOutputStreamWriter.close();
         readerThread.interrupt();
         writerThread.interrupt();
 
         try {
-            inputStreamReader.close();
             readerThread.join();
+            writerThread.join();
         } catch (InterruptedException e) {
             logger.error("Interrupt");
-        } catch (IOException e) {
-            logger.error("IO while closing");
-        }
-
-        sendAndStopMode = true;
-        outputStreamWriter.finishAndStop();
-    }
-
-    public void delete() {
-        outputStreamWriter.close();
-
-        if (!sendAndStopMode) {
-            readerThread.interrupt();
-            writerThread.interrupt();
-
-            try {
-                inputStreamReader.close();
-            } catch (IOException e) {
-                logger.error("Error while closing input stream reader");
-            }
-
-            try {
-                readerThread.join();
-                writerThread.join();
-            } catch (InterruptedException e) {
-                logger.error("Interrupt");
-            }
         }
 
         logger.info("ClientView has been deleted!");

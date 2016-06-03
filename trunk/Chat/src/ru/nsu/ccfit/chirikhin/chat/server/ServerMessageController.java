@@ -133,11 +133,10 @@ public class ServerMessageController implements Runnable {
         }
 
         sendMessageToTheClient(new AnswerSuccess(), sessionId);
-        clients.remove(sessionId);
+        sendMessageToTheClient(new EventStop(sessionId, this), sessionId);
 
         sendMessageToAllClients(new EventLogout(client.getUsername()));
         addMessageToServerStorage(new EventLogout(client.getUsername()));
-        client.finishAndStop();
     }
 
     public void handleConnectionFailedMessage(ClientMessage message, String sessionId) {
@@ -150,6 +149,7 @@ public class ServerMessageController implements Runnable {
         if (null == client) {
             throw new NullPointerException("There is no client with such sessionId: " + sessionId);
         }
+
 
         client.delete();
 
@@ -250,5 +250,20 @@ public class ServerMessageController implements Runnable {
         } catch (Throwable t) {
             logger.error("Unknown error");
         }
+    }
+
+    public void onEventStop(EventStop eventStop) {
+        if (null == eventStop) {
+            throw new NullPointerException("Event stop can not be null");
+        }
+
+        Client client = clients.get(eventStop.getSession());
+
+        if (null == client) {
+            throw new NullPointerException("Client can't be found. Id is " + eventStop.getSession());
+        }
+
+        client.delete();
+        clients.remove(eventStop.getSession());
     }
 }
