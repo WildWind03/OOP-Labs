@@ -8,12 +8,20 @@ public class CommandSignedLogin implements ClientMessage{
 
 
     public CommandSignedLogin(CommandLogin commandLogin, String session) {
+        if (null == commandLogin || null == session) {
+            throw new NullPointerException("Null args");
+        }
+
         this.commandLogin = commandLogin;
         this.session = session;
     }
 
     @Override
     public void process(ServerMessageController messageController) {
+        if (null == messageController) {
+            throw new NullPointerException("Null serverMessageController");
+        }
+
         messageController.handleLoginMessage(commandLogin, session);
     }
 }

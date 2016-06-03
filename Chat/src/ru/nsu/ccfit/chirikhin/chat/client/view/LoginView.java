@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.chirikhin.chat.client;
+package ru.nsu.ccfit.chirikhin.chat.client.view;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -8,6 +8,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.client.model.ClientProperties;
+import ru.nsu.ccfit.chirikhin.chat.client.model.IPChecker;
+import ru.nsu.ccfit.chirikhin.chat.client.model.ProtocolParser;
 import ru.nsu.ccfit.chirikhin.chat.service.ProtocolName;
 
 import java.util.Optional;

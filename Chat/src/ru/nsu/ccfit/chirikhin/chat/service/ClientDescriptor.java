@@ -11,6 +11,10 @@ public class ClientDescriptor implements Serializable{
     private final String type;
 
     public ClientDescriptor(String name, String type) {
+        if (null == name || null == type) {
+            throw new NullPointerException("Name or type can't be null");
+        }
+
         this.name = name;
         this.type = type;
     }

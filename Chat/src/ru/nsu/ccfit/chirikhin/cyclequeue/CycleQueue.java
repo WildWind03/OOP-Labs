@@ -16,6 +16,9 @@ public class CycleQueue<T> {
     private int currentSize = 0;
 
     public CycleQueue(int maxSize) {
+        if (maxSize <= 0) {
+            throw new IllegalArgumentException("Max size must be positive");
+        }
         this.maxSize = maxSize;
     }
 

@@ -1,6 +1,5 @@
-package ru.nsu.ccfit.chirikhin.chat.client;
+package ru.nsu.ccfit.chirikhin.chat.client.view;
 
-import com.thoughtworks.xstream.mapper.Mapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +9,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.client.controller.Info;
+import ru.nsu.ccfit.chirikhin.chat.client.controller.InfoFromView;
+import ru.nsu.ccfit.chirikhin.chat.client.model.*;
 import ru.nsu.ccfit.chirikhin.chat.service.ClientDescriptor;
 
 import java.util.LinkedList;
@@ -135,7 +137,9 @@ public class ClientViewController extends Observable implements Observer {
     }
 
     public void onMessageDeliveredAnswer(MessageDeliveredAnswer messageDeliveredAnswer) {
-        throw new NullPointerException("messageDeliveredAnswer is null");
+        if (null == messageDeliveredAnswer) {
+            throw new NullPointerException("messageDeliveredAnswer is null");
+        }
     }
 
     public void onMessageNotDeliveredAnswer(MessageNotDeliveredAnswer messageNotDeliveredAnswer) {

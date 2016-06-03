@@ -1,4 +1,4 @@
-package ru.nsu.ccfit.chirikhin.chat.client;
+package ru.nsu.ccfit.chirikhin.chat.client.controller;
 
 import org.apache.log4j.Logger;
 

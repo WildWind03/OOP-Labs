@@ -30,14 +30,7 @@ public class ObjectMessageSerializer implements MessageSerializer {
 
     @Override
     public Message serialize() throws ClassNotFoundException, SAXException, IOException {
-        Object object = null;
-        try {
-            object = objectInputStream.readObject();
-        } catch (IOException e) {
-            logger.error("IO while reading object");
-            throw e;
-
-        }
+        Object object = objectInputStream.readObject();
 
         if (!(object instanceof Message)) {
             throw new ClassCastException("Can not read! Object is not a message!");

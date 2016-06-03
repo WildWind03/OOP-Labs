@@ -87,7 +87,7 @@
 
     <target name="jarclient" depends="clean, compile">
         <taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpath="${JAVA_HOME}/lib/ant-javafx.jar"/>
-        <fx:application id="ChatClientID" name="Chat Client" mainClass="ru.nsu.ccfit.chirikhin.chat.client.ClientView"/>
+        <fx:application id="ChatClientID" name="Chat Client" mainClass="ru.nsu.ccfit.chirikhin.chat.client.view.ClientView"/>
         <fx:resources id="appRes">
             <fx:fileset dir="${build.dist.dir}" includes="ChatClient.jar"/>
             <fx:fileset dir="./"/>

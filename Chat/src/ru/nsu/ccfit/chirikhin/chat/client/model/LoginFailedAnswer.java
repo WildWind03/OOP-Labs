@@ -1,8 +1,7 @@
-package ru.nsu.ccfit.chirikhin.chat.client;
+package ru.nsu.ccfit.chirikhin.chat.client.model;
 
 import org.apache.log4j.Logger;
-
-import java.util.stream.Stream;
+import ru.nsu.ccfit.chirikhin.chat.client.view.ClientViewController;
 
 public class LoginFailedAnswer implements ServerEvent{
     private static final Logger logger = Logger.getLogger(LoginFailedAnswer.class.getName());

@@ -1,6 +1,11 @@
-package ru.nsu.ccfit.chirikhin.chat.client;
+package ru.nsu.ccfit.chirikhin.chat.client.controller;
 
 import org.apache.log4j.Logger;
+import ru.nsu.ccfit.chirikhin.chat.client.model.Client;
+import ru.nsu.ccfit.chirikhin.chat.client.model.ClientProperties;
+import ru.nsu.ccfit.chirikhin.chat.client.model.ConnectionFailedException;
+import ru.nsu.ccfit.chirikhin.chat.client.model.LoginState;
+import ru.nsu.ccfit.chirikhin.chat.client.view.ClientViewController;
 import ru.nsu.ccfit.chirikhin.chat.service.CommandClientList;
 import ru.nsu.ccfit.chirikhin.chat.service.CommandText;
 

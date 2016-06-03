@@ -290,23 +290,6 @@ public class XMLMessageParser {
     }
 
     public String createXMLFromMessage(Message message) {
-        /*xStream.registerConverter(new Converter() {
-            @Override
-            public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
-                writer.setValue("");
-            }
-
-            @Override
-            public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext context) {
-                return null;
-            }
-
-            @Override
-            public boolean canConvert(Class type) {
-                return type.equals(AnswerSuccess.class);
-            }
-        });*/
-
         return xStream.toXML(message);
 
     }
