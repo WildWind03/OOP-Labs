@@ -118,8 +118,10 @@ public class ClientView extends Application {
             stage.show();
         } catch (Exception e) {
             logger.error("Runtime error " + e.getMessage());
+            System.out.println(e.toString());
             System.exit(ERROR_EXIT);
         } catch (Throwable throwable) {
+            System.out.println("Unknown exception");
             logger.error(("Unknown runtime error"));
             System.exit(ERROR_EXIT);
         }
