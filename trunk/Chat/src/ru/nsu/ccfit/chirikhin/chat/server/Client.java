@@ -103,13 +103,17 @@ public class Client {
             throw new NullPointerException("Message can not be null");
         }
 
-        logger.info("User " + getUsername() + " received new message");
+        logger.info("User " + getUsername() + " received new message: " + clientMessage.getClass());
 
         try {
             messagesForClient.put(clientMessage);
         } catch (InterruptedException e) {
             logger.error("Interrupt");
         }
+    }
+
+    public String getSessionId() {
+        return uniqueSessionId;
     }
 
     public boolean isLoggedIn() {

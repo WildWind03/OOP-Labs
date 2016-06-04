@@ -168,7 +168,8 @@ public class ServerMessageController implements Runnable {
 
         for (Map.Entry<String, Client> client : clients.entrySet()) {
             logger.info("Client " + client.getValue().getUsername() + " is ready to get new server message");
-            client.getValue().receiveMessage(serverMessage);
+            //client.getValue().receiveMessage(serverMessage);
+            sendMessageToTheClient(serverMessage, client.getValue().getSessionId());
         }
     }
 
@@ -215,6 +216,15 @@ public class ServerMessageController implements Runnable {
         if (null == client) {
             throw new NullPointerException("There is no client with such session id: " + sessionId);
         }
+
+        if (serverMessage instanceof EventNewClient || serverMessage instanceof EventText
+                || serverMessage instanceof EventLogout) {
+            if (!client.isLoggedIn()) {
+                logger.error("Trying to send message to not logged in user");
+                return;
+            }
+        }
+
         client.receiveMessage(serverMessage);
     }
 

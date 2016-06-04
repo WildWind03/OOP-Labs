@@ -7,8 +7,10 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class XMLMessageSerializer implements MessageSerializer {
     private static final Logger logger = Logger.getLogger(XMLMessageSerializer.class.getName());
@@ -32,19 +34,18 @@ public class XMLMessageSerializer implements MessageSerializer {
     public Message serialize() throws IOException, ClassNotFoundException, SAXException, InvalidXMLException {
         int size = dataInputStream.readInt();
 
-        System.out.println(size);
-        System.out.flush();
         if (size < 0) {
             throw new IOException("Size can not be less than zero");
         }
-        byte[] xmlBytes = new byte[size];
+
+        byte[] xmlBytes;
+        try {
+            xmlBytes = new byte[size];
+        } catch (Throwable t) {
+            throw new InvalidXMLException("Invalid size!");
+        }
+
         dataInputStream.readFully(xmlBytes);
-
-        String str1 = new String(xmlBytes);
-        System.out.println(str1);
-        System.out.flush();
-
-        String str = new String(xmlBytes, StandardCharsets.UTF_8);
 
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(xmlBytes);
 

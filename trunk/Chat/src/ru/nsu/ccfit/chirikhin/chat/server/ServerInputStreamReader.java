@@ -1,7 +1,6 @@
 package ru.nsu.ccfit.chirikhin.chat.server;
 
 import org.apache.log4j.Logger;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import ru.nsu.ccfit.chirikhin.chat.service.*;
 
@@ -10,7 +9,6 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
-import java.util.concurrent.BlockingQueue;
 
 public class ServerInputStreamReader implements Runnable, Closeable {
 

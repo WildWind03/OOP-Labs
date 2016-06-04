@@ -2,7 +2,6 @@ package ru.nsu.ccfit.chirikhin.cyclequeue;
 
 import org.apache.log4j.Logger;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

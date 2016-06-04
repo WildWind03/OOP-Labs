@@ -2,9 +2,6 @@ package ru.nsu.ccfit.chirikhin.chat.service;
 
 import org.apache.log4j.Logger;
 import ru.nsu.ccfit.chirikhin.chat.client.model.ClientMessageController;
-import ru.nsu.ccfit.chirikhin.chat.client.model.ServerEvent;
-import ru.nsu.ccfit.chirikhin.chat.client.view.ClientViewController;
-import ru.nsu.ccfit.chirikhin.chat.server.Client;
 import ru.nsu.ccfit.chirikhin.chat.server.ServerMessageController;
 
 public class EventStop implements ServerMessage {

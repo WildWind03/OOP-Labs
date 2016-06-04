@@ -2,7 +2,9 @@ package ru.nsu.ccfit.chirikhin.chat.service;
 
 import org.apache.log4j.Logger;
 
-import java.io.*;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 public class XMLMessageSender implements MessageSender {
