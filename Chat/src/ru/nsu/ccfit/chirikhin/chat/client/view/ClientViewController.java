@@ -5,7 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import org.apache.log4j.Logger;
@@ -64,9 +67,6 @@ public class ClientViewController extends Observable implements Observer {
         if (KeyCode.ENTER == keyCode) {
             if (!inputField.getText().isEmpty()) {
                 sendTextMessage(inputField.getText());
-                for (int k = 0; k < 1000; ++k) {
-                    sendTextMessage("Hello " + k);
-                }
                 inputField.clear();
             }
         }

@@ -1,7 +1,10 @@
 package ru.nsu.ccfit.chirikhin.chat.client.model;
 
 import org.apache.log4j.Logger;
-import ru.nsu.ccfit.chirikhin.chat.service.*;
+import ru.nsu.ccfit.chirikhin.chat.service.ClientMessageEnum;
+import ru.nsu.ccfit.chirikhin.chat.service.CommandLogin;
+import ru.nsu.ccfit.chirikhin.chat.service.CommandLogout;
+import ru.nsu.ccfit.chirikhin.chat.service.Message;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;

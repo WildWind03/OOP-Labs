@@ -46,6 +46,7 @@ public class ClientMessageController extends Observable implements Runnable {
             throw new NullPointerException("answerError is null");
         }
 
+
         ClientMessageEnum prevMessage = historyOfCommands.poll();
 
         if (null == prevMessage) {
@@ -55,6 +56,7 @@ public class ClientMessageController extends Observable implements Runnable {
         switch(prevMessage) {
             case LOGIN:
                 client.setLoginState(LoginState.ERROR);
+                client.disconnect();
                 notifyView(new LoginFailedAnswer(answerError.getReason()));
                 break;
             case LOGOUT:
